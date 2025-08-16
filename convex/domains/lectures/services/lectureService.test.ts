@@ -95,8 +95,8 @@ describe("lectureService", () => {
     test("現在時刻が締切前の場合、activeが返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const closeDate = "2024-12-31";
         const closeTime = "23:59";
@@ -118,8 +118,8 @@ describe("lectureService", () => {
     test("現在時刻が締切後の場合、closedが返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const closeDate = "2024-03-15";
         const closeTime = "12:00";
@@ -141,8 +141,8 @@ describe("lectureService", () => {
     test("現在時刻が締切時刻と同じ場合、closedが返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const closeDate = "2024-03-15";
         const closeTime = "12:00";
@@ -166,8 +166,8 @@ describe("lectureService", () => {
     test("アクティブ状態で締切時刻前の場合、締切可能であること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const currentStatus = "active";
         const closeDate = "2024-12-31";
@@ -195,8 +195,8 @@ describe("lectureService", () => {
     test("既に締切済みの場合、締切不可であること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const currentStatus = "closed";
         const closeDate = "2024-03-15";
@@ -224,8 +224,8 @@ describe("lectureService", () => {
     test("締切時刻を過ぎている場合、締切不可であること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const currentStatus = "active";
         const closeDate = "2024-03-15";
@@ -253,8 +253,8 @@ describe("lectureService", () => {
     test("エッジケース：締切時刻と現在時刻が同じ場合", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const currentStatus = "active";
         const closeDate = "2024-03-15";
@@ -361,8 +361,8 @@ describe("lectureService", () => {
     test("回答期間が正しく計算されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const lectureDate = "2024-03-15";
         const lectureTime = "10:00";
@@ -380,7 +380,9 @@ describe("lectureService", () => {
         expect(period.startDateTime.toISOString()).toBe(
           "2024-03-15T01:00:00.000Z",
         );
-        expect(period.endDateTime.toISOString()).toBe("2024-03-18T14:59:00.000Z");
+        expect(period.endDateTime.toISOString()).toBe(
+          "2024-03-18T14:59:00.000Z",
+        );
         expect(period.durationHours).toBeCloseTo(85.98, 1); // 約86時間
       } finally {
         // タイムゾーンを元に戻す
@@ -395,8 +397,8 @@ describe("lectureService", () => {
     test("同日の回答期間が正しく計算されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const lectureDate = "2024-03-15";
         const lectureTime = "10:00";
@@ -426,8 +428,8 @@ describe("lectureService", () => {
     test("日本語ロケールで正しくフォーマットされること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const lectureDate = "2024-03-15";
         const lectureTime = "10:30";
@@ -452,8 +454,8 @@ describe("lectureService", () => {
     test("デフォルト（日本語）ロケールで正しくフォーマットされること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const lectureDate = "2024-03-15";
         const lectureTime = "09:05";
@@ -476,8 +478,8 @@ describe("lectureService", () => {
     test("日本語ロケールで正しい曜日が返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         // 2024-03-15は金曜日
         const lectureDate = "2024-03-15";
@@ -498,8 +500,8 @@ describe("lectureService", () => {
     test("デフォルト（日本語）ロケールで正しい曜日が返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         // 2024-03-17は日曜日
         const lectureDate = "2024-03-17";
@@ -520,8 +522,8 @@ describe("lectureService", () => {
     test("各曜日が正しく返されること", () => {
       // タイムゾーンをJSTに固定（CI環境対応）
       const originalTZ = process.env.TZ;
-      process.env.TZ = 'Asia/Tokyo';
-      
+      process.env.TZ = "Asia/Tokyo";
+
       try {
         const dates = [
           { date: "2024-03-17", expected: "日" }, // 日曜日
