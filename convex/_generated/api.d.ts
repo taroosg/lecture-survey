@@ -14,7 +14,16 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as domains_lectures_api_mutations from "../domains/lectures/api/mutations.js";
+import type * as domains_lectures_api_queries from "../domains/lectures/api/queries.js";
+import type * as domains_lectures_repositories_lectureRepository from "../domains/lectures/repositories/lectureRepository.js";
+import type * as domains_lectures_services_lectureService from "../domains/lectures/services/lectureService.js";
+import type * as domains_lectures_services_lectureValidator from "../domains/lectures/services/lectureValidator.js";
 import type * as http from "../http.js";
+import type * as shared_lib_constants from "../shared/lib/constants.js";
+import type * as shared_lib_dateUtils from "../shared/lib/dateUtils.js";
+import type * as shared_lib_idUtils from "../shared/lib/idUtils.js";
+import type * as shared_lib_validation from "../shared/lib/validation.js";
 import type * as shared_schemas_lectures from "../shared/schemas/lectures.js";
 import type * as shared_schemas_operationLogs from "../shared/schemas/operationLogs.js";
 import type * as shared_schemas_questionSets from "../shared/schemas/questionSets.js";
@@ -31,7 +40,16 @@ import type * as shared_schemas_users from "../shared/schemas/users.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  "domains/lectures/api/mutations": typeof domains_lectures_api_mutations;
+  "domains/lectures/api/queries": typeof domains_lectures_api_queries;
+  "domains/lectures/repositories/lectureRepository": typeof domains_lectures_repositories_lectureRepository;
+  "domains/lectures/services/lectureService": typeof domains_lectures_services_lectureService;
+  "domains/lectures/services/lectureValidator": typeof domains_lectures_services_lectureValidator;
   http: typeof http;
+  "shared/lib/constants": typeof shared_lib_constants;
+  "shared/lib/dateUtils": typeof shared_lib_dateUtils;
+  "shared/lib/idUtils": typeof shared_lib_idUtils;
+  "shared/lib/validation": typeof shared_lib_validation;
   "shared/schemas/lectures": typeof shared_schemas_lectures;
   "shared/schemas/operationLogs": typeof shared_schemas_operationLogs;
   "shared/schemas/questionSets": typeof shared_schemas_questionSets;
