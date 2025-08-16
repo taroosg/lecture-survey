@@ -14,8 +14,6 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
-import type * as domains_lectures___fixtures___lecture_test_data from "../domains/lectures/__fixtures__/lecture-test-data.js";
-import type * as domains_lectures___fixtures___mock_data from "../domains/lectures/__fixtures__/mock-data.js";
 import type * as domains_lectures_api_mutations from "../domains/lectures/api/mutations.js";
 import type * as domains_lectures_api_queries from "../domains/lectures/api/queries.js";
 import type * as domains_lectures_repositories_lectureRepository from "../domains/lectures/repositories/lectureRepository.js";
@@ -42,8 +40,6 @@ import type * as shared_schemas_users from "../shared/schemas/users.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
-  "domains/lectures/__fixtures__/lecture-test-data": typeof domains_lectures___fixtures___lecture_test_data;
-  "domains/lectures/__fixtures__/mock-data": typeof domains_lectures___fixtures___mock_data;
   "domains/lectures/api/mutations": typeof domains_lectures_api_mutations;
   "domains/lectures/api/queries": typeof domains_lectures_api_queries;
   "domains/lectures/repositories/lectureRepository": typeof domains_lectures_repositories_lectureRepository;
