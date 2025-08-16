@@ -1,0 +1,40 @@
+{
+  "setId": "test_valid_set",
+  "name": "有効なテスト質問セット",
+  "description": "テスト用の有効な質問セット",
+  "version": "1.0",
+  "requiresEventName": false,
+  "isActive": true,
+  "sortOrder": 0,
+  "questions": [
+    {
+      "questionId": "test_gender",
+      "questionText": "性別を教えてください",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 1,
+      "analysisType": "categorical",
+      "options": [
+        {
+          "value": "male",
+          "label": "男性",
+          "sortOrder": 1
+        },
+        {
+          "value": "female",
+          "label": "女性",
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "questionId": "test_comment",
+      "questionText": "コメントをお書きください",
+      "questionType": "text",
+      "isRequired": false,
+      "sortOrder": 2,
+      "analysisType": "text",
+      "options": []
+    }
+  ]
+}
