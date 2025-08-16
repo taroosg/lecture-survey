@@ -1,0 +1,23 @@
+{
+  "name": "無効なテスト質問セット",
+  "description": "setIdが不足している無効な質問セット",
+  "version": "1.0",
+  "requiresEventName": false,
+  "isActive": true,
+  "sortOrder": 0,
+  "questions": [
+    {
+      "questionText": "無効な質問（questionIdが不足）",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 1,
+      "analysisType": "categorical",
+      "options": [
+        {
+          "label": "無効な選択肢（valueが不足）",
+          "sortOrder": 1
+        }
+      ]
+    }
+  ]
+}

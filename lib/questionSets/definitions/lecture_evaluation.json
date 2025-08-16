@@ -1,0 +1,175 @@
+{
+  "setId": "lecture_evaluation",
+  "name": "講義評価質問項目",
+  "description": "講義の理解度・満足度に関する質問項目",
+  "version": "1.0",
+  "requiresEventName": false,
+  "isActive": true,
+  "sortOrder": 0,
+  "questions": [
+    {
+      "questionId": "gender",
+      "questionText": "性別を教えてください",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 1,
+      "analysisType": "categorical",
+      "options": [
+        {
+          "value": "male",
+          "label": "男性",
+          "sortOrder": 1
+        },
+        {
+          "value": "female",
+          "label": "女性",
+          "sortOrder": 2
+        },
+        {
+          "value": "other",
+          "label": "その他",
+          "sortOrder": 3
+        },
+        {
+          "value": "prefer_not_to_say",
+          "label": "回答しない",
+          "sortOrder": 4
+        }
+      ]
+    },
+    {
+      "questionId": "age_group",
+      "questionText": "年代を教えてください",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 2,
+      "analysisType": "categorical",
+      "options": [
+        {
+          "value": "under_20",
+          "label": "20歳未満",
+          "sortOrder": 1
+        },
+        {
+          "value": "20s",
+          "label": "20代",
+          "sortOrder": 2
+        },
+        {
+          "value": "30s",
+          "label": "30代",
+          "sortOrder": 3
+        },
+        {
+          "value": "40s",
+          "label": "40代",
+          "sortOrder": 4
+        },
+        {
+          "value": "50s",
+          "label": "50代",
+          "sortOrder": 5
+        },
+        {
+          "value": "60s",
+          "label": "60代",
+          "sortOrder": 6
+        },
+        {
+          "value": "over_70",
+          "label": "70代以上",
+          "sortOrder": 7
+        }
+      ]
+    },
+    {
+      "questionId": "understanding",
+      "questionText": "講義の理解度を5段階で評価してください",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 3,
+      "analysisType": "likert",
+      "options": [
+        {
+          "value": "1",
+          "label": "1（理解できなかった）",
+          "numericValue": 1,
+          "sortOrder": 1
+        },
+        {
+          "value": "2",
+          "label": "2（あまり理解できなかった）",
+          "numericValue": 2,
+          "sortOrder": 2
+        },
+        {
+          "value": "3",
+          "label": "3（普通）",
+          "numericValue": 3,
+          "sortOrder": 3
+        },
+        {
+          "value": "4",
+          "label": "4（理解できた）",
+          "numericValue": 4,
+          "sortOrder": 4
+        },
+        {
+          "value": "5",
+          "label": "5（非常によく理解できた）",
+          "numericValue": 5,
+          "sortOrder": 5
+        }
+      ]
+    },
+    {
+      "questionId": "satisfaction",
+      "questionText": "講義の満足度を5段階で評価してください",
+      "questionType": "radio",
+      "isRequired": true,
+      "sortOrder": 4,
+      "analysisType": "likert",
+      "options": [
+        {
+          "value": "1",
+          "label": "1（不満）",
+          "numericValue": 1,
+          "sortOrder": 1
+        },
+        {
+          "value": "2",
+          "label": "2（やや不満）",
+          "numericValue": 2,
+          "sortOrder": 2
+        },
+        {
+          "value": "3",
+          "label": "3（普通）",
+          "numericValue": 3,
+          "sortOrder": 3
+        },
+        {
+          "value": "4",
+          "label": "4（満足）",
+          "numericValue": 4,
+          "sortOrder": 4
+        },
+        {
+          "value": "5",
+          "label": "5（非常に満足）",
+          "numericValue": 5,
+          "sortOrder": 5
+        }
+      ]
+    },
+    {
+      "questionId": "free_comment",
+      "questionText": "講義について、ご意見・ご感想がございましたら自由にお書きください（任意）",
+      "questionType": "text",
+      "isRequired": false,
+      "sortOrder": 5,
+      "analysisType": "text",
+      "options": []
+    }
+  ]
+}
