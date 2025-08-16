@@ -93,99 +93,190 @@ describe("lectureService", () => {
 
   describe("calculateSurveyStatus", () => {
     test("現在時刻が締切前の場合、activeが返されること", () => {
-      const closeDate = "2024-12-31";
-      const closeTime = "23:59";
-      const currentTime = new Date("2024-12-30T12:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const closeDate = "2024-12-31";
+        const closeTime = "23:59";
+        const currentTime = new Date("2024-12-30T12:00:00").getTime();
 
-      const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
+        const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
 
-      expect(status).toBe("active");
+        expect(status).toBe("active");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("現在時刻が締切後の場合、closedが返されること", () => {
-      const closeDate = "2024-03-15";
-      const closeTime = "12:00";
-      const currentTime = new Date("2024-03-15T13:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const closeDate = "2024-03-15";
+        const closeTime = "12:00";
+        const currentTime = new Date("2024-03-15T13:00:00").getTime();
 
-      const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
+        const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
 
-      expect(status).toBe("closed");
+        expect(status).toBe("closed");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("現在時刻が締切時刻と同じ場合、closedが返されること", () => {
-      const closeDate = "2024-03-15";
-      const closeTime = "12:00";
-      const currentTime = new Date("2024-03-15T12:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const closeDate = "2024-03-15";
+        const closeTime = "12:00";
+        const currentTime = new Date("2024-03-15T12:00:00").getTime();
 
-      const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
+        const status = calculateSurveyStatus(closeDate, closeTime, currentTime);
 
-      expect(status).toBe("closed");
+        expect(status).toBe("closed");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
   });
 
   describe("isClosable", () => {
     test("アクティブ状態で締切時刻前の場合、締切可能であること", () => {
-      const currentStatus = "active";
-      const closeDate = "2024-12-31";
-      const closeTime = "23:59";
-      const currentTime = new Date("2024-12-30T12:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const currentStatus = "active";
+        const closeDate = "2024-12-31";
+        const closeTime = "23:59";
+        const currentTime = new Date("2024-12-30T12:00:00").getTime();
 
-      const closable = isClosable(
-        currentStatus,
-        closeDate,
-        closeTime,
-        currentTime,
-      );
+        const closable = isClosable(
+          currentStatus,
+          closeDate,
+          closeTime,
+          currentTime,
+        );
 
-      expect(closable).toBe(true);
+        expect(closable).toBe(true);
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("既に締切済みの場合、締切不可であること", () => {
-      const currentStatus = "closed";
-      const closeDate = "2024-03-15";
-      const closeTime = "12:00";
-      const currentTime = new Date("2024-03-15T10:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const currentStatus = "closed";
+        const closeDate = "2024-03-15";
+        const closeTime = "12:00";
+        const currentTime = new Date("2024-03-15T10:00:00").getTime();
 
-      const closable = isClosable(
-        currentStatus,
-        closeDate,
-        closeTime,
-        currentTime,
-      );
+        const closable = isClosable(
+          currentStatus,
+          closeDate,
+          closeTime,
+          currentTime,
+        );
 
-      expect(closable).toBe(false);
+        expect(closable).toBe(false);
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("締切時刻を過ぎている場合、締切不可であること", () => {
-      const currentStatus = "active";
-      const closeDate = "2024-03-15";
-      const closeTime = "12:00";
-      const currentTime = new Date("2024-03-15T13:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const currentStatus = "active";
+        const closeDate = "2024-03-15";
+        const closeTime = "12:00";
+        const currentTime = new Date("2024-03-15T13:00:00").getTime();
 
-      const closable = isClosable(
-        currentStatus,
-        closeDate,
-        closeTime,
-        currentTime,
-      );
+        const closable = isClosable(
+          currentStatus,
+          closeDate,
+          closeTime,
+          currentTime,
+        );
 
-      expect(closable).toBe(false);
+        expect(closable).toBe(false);
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("エッジケース：締切時刻と現在時刻が同じ場合", () => {
-      const currentStatus = "active";
-      const closeDate = "2024-03-15";
-      const closeTime = "12:00";
-      const currentTime = new Date("2024-03-15T12:00:00").getTime();
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const currentStatus = "active";
+        const closeDate = "2024-03-15";
+        const closeTime = "12:00";
+        const currentTime = new Date("2024-03-15T12:00:00").getTime();
 
-      const closable = isClosable(
-        currentStatus,
-        closeDate,
-        closeTime,
-        currentTime,
-      );
+        const closable = isClosable(
+          currentStatus,
+          closeDate,
+          closeTime,
+          currentTime,
+        );
 
-      expect(closable).toBe(true);
+        expect(closable).toBe(true);
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
   });
 
@@ -268,99 +359,190 @@ describe("lectureService", () => {
 
   describe("calculateResponsePeriod", () => {
     test("回答期間が正しく計算されること", () => {
-      const lectureDate = "2024-03-15";
-      const lectureTime = "10:00";
-      const closeDate = "2024-03-18";
-      const closeTime = "23:59";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const lectureDate = "2024-03-15";
+        const lectureTime = "10:00";
+        const closeDate = "2024-03-18";
+        const closeTime = "23:59";
 
-      const period = calculateResponsePeriod(
-        lectureDate,
-        lectureTime,
-        closeDate,
-        closeTime,
-      );
+        const period = calculateResponsePeriod(
+          lectureDate,
+          lectureTime,
+          closeDate,
+          closeTime,
+        );
 
-      // JST +9で計算されるため、UTC-9された値になる
-      expect(period.startDateTime.toISOString()).toBe(
-        "2024-03-15T01:00:00.000Z",
-      );
-      expect(period.endDateTime.toISOString()).toBe("2024-03-18T14:59:00.000Z");
-      expect(period.durationHours).toBeCloseTo(85.98, 1); // 約86時間
+        // JST固定で計算されるため、UTC-9された値になる
+        expect(period.startDateTime.toISOString()).toBe(
+          "2024-03-15T01:00:00.000Z",
+        );
+        expect(period.endDateTime.toISOString()).toBe("2024-03-18T14:59:00.000Z");
+        expect(period.durationHours).toBeCloseTo(85.98, 1); // 約86時間
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("同日の回答期間が正しく計算されること", () => {
-      const lectureDate = "2024-03-15";
-      const lectureTime = "10:00";
-      const closeDate = "2024-03-15";
-      const closeTime = "18:00";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const lectureDate = "2024-03-15";
+        const lectureTime = "10:00";
+        const closeDate = "2024-03-15";
+        const closeTime = "18:00";
 
-      const period = calculateResponsePeriod(
-        lectureDate,
-        lectureTime,
-        closeDate,
-        closeTime,
-      );
+        const period = calculateResponsePeriod(
+          lectureDate,
+          lectureTime,
+          closeDate,
+          closeTime,
+        );
 
-      expect(period.durationHours).toBe(8);
+        expect(period.durationHours).toBe(8);
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
   });
 
   describe("formatLectureDateTime", () => {
     test("日本語ロケールで正しくフォーマットされること", () => {
-      const lectureDate = "2024-03-15";
-      const lectureTime = "10:30";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const lectureDate = "2024-03-15";
+        const lectureTime = "10:30";
 
-      const formatted = formatLectureDateTime(
-        lectureDate,
-        lectureTime,
-        "ja-JP",
-      );
+        const formatted = formatLectureDateTime(
+          lectureDate,
+          lectureTime,
+          "ja-JP",
+        );
 
-      expect(formatted).toBe("2024年3月15日 10:30");
+        expect(formatted).toBe("2024年3月15日 10:30");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("デフォルト（日本語）ロケールで正しくフォーマットされること", () => {
-      const lectureDate = "2024-03-15";
-      const lectureTime = "09:05";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const lectureDate = "2024-03-15";
+        const lectureTime = "09:05";
 
-      const formatted = formatLectureDateTime(lectureDate, lectureTime);
+        const formatted = formatLectureDateTime(lectureDate, lectureTime);
 
-      expect(formatted).toBe("2024年3月15日 09:05");
+        expect(formatted).toBe("2024年3月15日 09:05");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
   });
 
   describe("getWeekdayName", () => {
     test("日本語ロケールで正しい曜日が返されること", () => {
-      // 2024-03-15は金曜日
-      const lectureDate = "2024-03-15";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        // 2024-03-15は金曜日
+        const lectureDate = "2024-03-15";
 
-      const weekday = getWeekdayName(lectureDate, "ja-JP");
+        const weekday = getWeekdayName(lectureDate, "ja-JP");
 
-      expect(weekday).toBe("金");
+        expect(weekday).toBe("金");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("デフォルト（日本語）ロケールで正しい曜日が返されること", () => {
-      // 2024-03-17は日曜日
-      const lectureDate = "2024-03-17";
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        // 2024-03-17は日曜日
+        const lectureDate = "2024-03-17";
 
-      const weekday = getWeekdayName(lectureDate);
+        const weekday = getWeekdayName(lectureDate);
 
-      expect(weekday).toBe("日");
+        expect(weekday).toBe("日");
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
+      }
     });
 
     test("各曜日が正しく返されること", () => {
-      const dates = [
-        { date: "2024-03-17", expected: "日" }, // 日曜日
-        { date: "2024-03-18", expected: "月" }, // 月曜日
-        { date: "2024-03-19", expected: "火" }, // 火曜日
-        { date: "2024-03-20", expected: "水" }, // 水曜日
-        { date: "2024-03-21", expected: "木" }, // 木曜日
-        { date: "2024-03-22", expected: "金" }, // 金曜日
-        { date: "2024-03-23", expected: "土" }, // 土曜日
-      ];
+      // タイムゾーンをJSTに固定（CI環境対応）
+      const originalTZ = process.env.TZ;
+      process.env.TZ = 'Asia/Tokyo';
+      
+      try {
+        const dates = [
+          { date: "2024-03-17", expected: "日" }, // 日曜日
+          { date: "2024-03-18", expected: "月" }, // 月曜日
+          { date: "2024-03-19", expected: "火" }, // 火曜日
+          { date: "2024-03-20", expected: "水" }, // 水曜日
+          { date: "2024-03-21", expected: "木" }, // 木曜日
+          { date: "2024-03-22", expected: "金" }, // 金曜日
+          { date: "2024-03-23", expected: "土" }, // 土曜日
+        ];
 
-      for (const { date, expected } of dates) {
-        expect(getWeekdayName(date)).toBe(expected);
+        for (const { date, expected } of dates) {
+          expect(getWeekdayName(date)).toBe(expected);
+        }
+      } finally {
+        // タイムゾーンを元に戻す
+        if (originalTZ) {
+          process.env.TZ = originalTZ;
+        } else {
+          delete process.env.TZ;
+        }
       }
     });
   });
