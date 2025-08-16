@@ -1,3 +1,7 @@
+// TODO: APIレイヤーのテスト実装が必要
+// convex-testライブラリを使用したテストを将来実装する
+// 参考: https://docs.convex.dev/testing/convex-test
+
 import { mutation } from "../../../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
