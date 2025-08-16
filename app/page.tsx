@@ -15,7 +15,7 @@ export default function Home() {
       </header>
       <main className="p-8 flex flex-col gap-8">
         <h1 className="text-4xl font-bold text-center">
-          Convex + Next.js + Convex Auth
+          Convex + Next.js + Convex Auth!
         </h1>
         <Content />
       </main>
