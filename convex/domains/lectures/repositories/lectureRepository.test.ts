@@ -13,19 +13,19 @@ import {
   type LectureData,
 } from "./lectureRepository";
 
-// モックの型定義
+// モックの型定義（any型でTypeScriptエラーを回避）
 interface MockDb {
-  query: (table: string) => MockQuery;
-  insert: (table: string, data: any) => Promise<Id<"lectures">>;
-  patch: (id: Id<"lectures">, data: any) => Promise<void>;
-  delete: (id: Id<"lectures">) => Promise<void>;
-  get: (id: Id<"lectures">) => Promise<LectureData | null>;
+  query: any;
+  insert: any;
+  patch: any;
+  delete: any;
+  get: any;
 }
 
 interface MockQuery {
-  withIndex: (index: string, fn: (q: any) => any) => MockQuery;
-  unique: () => Promise<LectureData | null>;
-  collect: () => Promise<LectureData[]>;
+  withIndex: any;
+  unique: any;
+  collect: any;
 }
 
 describe("lectureRepository", () => {
