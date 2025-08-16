@@ -1,6 +1,7 @@
 # プロジェクト構造
 
 ## 現在のディレクトリ構成
+
 ```
 /
 ├── app/                    # Next.js App Router
@@ -28,6 +29,7 @@
 ```
 
 ## 計画されているディレクトリ構成（plan.mdより）
+
 ```
 convex/
 ├── domains/                      # ドメイン別ディレクトリ
@@ -49,11 +51,13 @@ convex/
 ```
 
 ## 参考プロジェクト
+
 - URL: https://github.com/dsc-web-com/feedback-cloud2
 - リファクタリング中で、refactoring.mdにリファクタリング目標が記載
 - 本プロジェクトはこの参考プロジェクトの構造を講義用にアレンジ
 
 ## 現在の主要ファイル
+
 - `convex/myFunctions.ts`: サンプルのConvex関数
 - `convex/schema.ts`: 現在のスキーマ定義（numbersテーブル）
 - `convex/auth.config.ts`: Convex Auth設定
@@ -61,6 +65,7 @@ convex/
 - `components/`: ConvexClientProviderなどの共通コンポーネント
 
 ## 次のステップ（issue#4対応）
+
 1. `convex/shared/schemas/` ディレクトリの作成
 2. 各スキーマファイルの実装（users, lectures, questionSets, responses, operationLogs）
 3. サンプルテーブル（numbers）の削除

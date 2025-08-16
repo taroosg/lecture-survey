@@ -15,7 +15,11 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
-import type * as myFunctions from "../myFunctions.js";
+import type * as shared_schemas_lectures from "../shared/schemas/lectures.js";
+import type * as shared_schemas_operationLogs from "../shared/schemas/operationLogs.js";
+import type * as shared_schemas_questionSets from "../shared/schemas/questionSets.js";
+import type * as shared_schemas_responses from "../shared/schemas/responses.js";
+import type * as shared_schemas_users from "../shared/schemas/users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,7 +32,11 @@ import type * as myFunctions from "../myFunctions.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
-  myFunctions: typeof myFunctions;
+  "shared/schemas/lectures": typeof shared_schemas_lectures;
+  "shared/schemas/operationLogs": typeof shared_schemas_operationLogs;
+  "shared/schemas/questionSets": typeof shared_schemas_questionSets;
+  "shared/schemas/responses": typeof shared_schemas_responses;
+  "shared/schemas/users": typeof shared_schemas_users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
