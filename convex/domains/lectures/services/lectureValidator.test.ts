@@ -240,7 +240,7 @@ describe("lectureValidator", () => {
 
     test("状態変更の妥当性チェックが機能すること", () => {
       const updateData: LectureUpdateData = {
-        surveyStatus: undefined,
+        surveyStatus: "invalid" as any,
       };
       const result = validateLectureUpdate(updateData);
       expect(result.isValid).toBe(false);
