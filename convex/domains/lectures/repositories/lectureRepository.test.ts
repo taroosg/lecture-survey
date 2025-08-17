@@ -45,7 +45,7 @@ describe("lectureRepository", () => {
     description: "プログラミングの基礎を学びます",
     surveyCloseDate: "2025-01-03",
     surveyCloseTime: "23:59",
-    surveyUrl: "https://example.com/survey/test_slug",
+    surveyUrl: "/survey/test_slug",
     surveySlug: "test_slug",
     surveyStatus: "active",
     createdBy: testUserId,
@@ -79,7 +79,6 @@ describe("lectureRepository", () => {
       surveyCloseDate: "2025-01-03",
       surveyCloseTime: "23:59",
       createdBy: testUserId,
-      baseUrl: "https://example.com",
     };
 
     test("正常な講義作成のテスト", async () => {

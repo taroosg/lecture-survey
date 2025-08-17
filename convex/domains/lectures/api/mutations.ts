@@ -36,7 +36,6 @@ export const createNewLecture = mutation({
     description: v.optional(v.string()),
     surveyCloseDate: v.string(),
     surveyCloseTime: v.string(),
-    baseUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // 認証チェック
@@ -67,10 +66,6 @@ export const createNewLecture = mutation({
     const createData: CreateLectureData = {
       ...lectureData,
       createdBy: userId,
-      baseUrl:
-        args.baseUrl ||
-        process.env.NEXT_PUBLIC_APP_URL ||
-        "http://localhost:3000",
     };
 
     // 講義作成
@@ -288,7 +283,6 @@ export const duplicateLecture = mutation({
     const createData: CreateLectureData = {
       ...duplicateData,
       createdBy: userId,
-      baseUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     };
 
     // 新しい講義を作成

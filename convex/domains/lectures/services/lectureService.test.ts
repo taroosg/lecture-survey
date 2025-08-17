@@ -14,80 +14,64 @@ import {
 
 describe("lectureService", () => {
   describe("generateSurveySlug", () => {
-    test("一意性の確保テスト - 同じ入力でも異なるスラッグが生成されること", () => {
-      const title = "プログラミング基礎";
-      const date = "2024-03-15";
-      const time = "10:00";
-
-      const slug1 = generateSurveySlug(title, date, time);
-      const slug2 = generateSurveySlug(title, date, time);
+    test("一意性の確保テスト - 呼び出しごとに異なるスラッグが生成されること", () => {
+      const slug1 = generateSurveySlug();
+      const slug2 = generateSurveySlug();
 
       expect(slug1).not.toBe(slug2);
-      expect(slug1.length).toBeGreaterThan(0);
-      expect(slug2.length).toBeGreaterThan(0);
+      expect(slug1.length).toBe(16);
+      expect(slug2.length).toBe(16);
     });
 
     test("URL安全な文字列生成テスト", () => {
-      const title = "プログラミング基礎！@#$%";
-      const date = "2024-03-15";
-      const time = "10:00";
+      const slug = generateSurveySlug();
 
-      const slug = generateSurveySlug(title, date, time);
-
-      // URL安全な文字のみが含まれることを確認
-      expect(slug).toMatch(/^[a-z0-9_]+$/);
+      // 英数字のみが含まれることを確認
+      expect(slug).toMatch(/^[a-z0-9]+$/);
+      expect(slug.length).toBe(16);
     });
 
-    test("文字数制限のテスト", () => {
-      const longTitle = "非常に長い講義タイトルです".repeat(10);
-      const date = "2024-03-15";
-      const time = "10:00";
+    test("ランダムスラッグの複数生成テスト", () => {
+      const slugs = Array.from({ length: 100 }, () => generateSurveySlug());
 
-      const slug = generateSurveySlug(longTitle, date, time);
+      // すべてのスラッグが一意であることを確認
+      const uniqueSlugs = new Set(slugs);
+      expect(uniqueSlugs.size).toBe(100);
 
-      // スラッグが適切な長さになることを確認
-      expect(slug.length).toBeLessThan(100);
-    });
-
-    test("特殊文字を含むタイトルが適切に処理されること", () => {
-      const title = "Web開発 & データベース設計";
-      const date = "2024-03-15";
-      const time = "10:00";
-
-      const slug = generateSurveySlug(title, date, time);
-
-      expect(slug).toContain("20240315");
-      expect(slug).toContain("1000");
+      // すべてのスラッグが正しい形式であることを確認
+      slugs.forEach((slug) => {
+        expect(slug).toMatch(/^[a-z0-9]+$/);
+        expect(slug.length).toBe(16);
+      });
     });
   });
 
   describe("generateSurveyUrl", () => {
-    test("正しいURL形式生成テスト", () => {
-      const baseUrl = "https://example.com";
+    test("正しい相対パス形式生成テスト", () => {
       const slug = "test_slug_123";
 
-      const url = generateSurveyUrl(baseUrl, slug);
+      const url = generateSurveyUrl(slug);
 
-      expect(url).toBe("https://example.com/survey/test_slug_123");
+      expect(url).toBe("/survey/test_slug_123");
     });
 
-    test("末尾スラッシュがある場合の処理テスト", () => {
-      const baseUrl = "https://example.com/";
-      const slug = "test_slug_123";
+    test("ランダムスラッグでのURL生成テスト", () => {
+      const slug = generateSurveySlug();
 
-      const url = generateSurveyUrl(baseUrl, slug);
+      const url = generateSurveyUrl(slug);
 
-      expect(url).toBe("https://example.com/survey/test_slug_123");
+      expect(url).toBe(`/survey/${slug}`);
+      expect(url).toMatch(/^\/survey\/[a-z0-9]{16}$/);
     });
 
     test("slugの組み込み確認テスト", () => {
-      const baseUrl = "https://example.com";
-      const slug = "programming_20240315_1000_abc123";
+      const slug = "abc123def456test";
 
-      const url = generateSurveyUrl(baseUrl, slug);
+      const url = generateSurveyUrl(slug);
 
       expect(url).toContain(slug);
       expect(url).toContain("/survey/");
+      expect(url).toBe(`/survey/${slug}`);
     });
   });
 

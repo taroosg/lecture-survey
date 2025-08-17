@@ -15,7 +15,6 @@ export interface CreateLectureData {
   surveyCloseDate: string;
   surveyCloseTime: string;
   createdBy: Id<"users">;
-  baseUrl: string;
 }
 
 // 講義更新用データ型
@@ -70,7 +69,7 @@ export const createLecture = async (
   const maxAttempts = 10;
 
   do {
-    slug = generateSurveySlug(data.title, data.lectureDate, data.lectureTime);
+    slug = generateSurveySlug();
     const existing = await db
       .query("lectures")
       .withIndex("by_survey_slug", (q) => q.eq("surveySlug", slug))
@@ -87,7 +86,7 @@ export const createLecture = async (
   } while (attempts < maxAttempts);
 
   // URLを生成
-  const surveyUrl = generateSurveyUrl(data.baseUrl, slug);
+  const surveyUrl = generateSurveyUrl(slug);
 
   // 講義データを挿入
   const lectureId = await db.insert("lectures", {

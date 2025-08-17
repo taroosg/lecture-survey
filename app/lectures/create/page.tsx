@@ -26,7 +26,6 @@ export default function CreateLecturePage() {
         description: formData.description,
         surveyCloseDate: formData.surveyCloseDate,
         surveyCloseTime: formData.surveyCloseTime,
-        baseUrl: process.env.NEXT_PUBLIC_APP_URL || window.location.origin,
       });
 
       if (newLecture?._id) {
