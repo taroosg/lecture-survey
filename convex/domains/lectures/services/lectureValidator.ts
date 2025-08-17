@@ -8,7 +8,6 @@ export const lectureDataValidator = v.object({
   description: v.optional(v.string()),
   surveyCloseDate: v.string(), // YYYY-MM-DD
   surveyCloseTime: v.string(), // HH:MM
-  organizationName: v.string(),
 });
 
 export const lectureUpdateValidator = v.object({
@@ -35,7 +34,6 @@ export type LectureData = {
   description?: string;
   surveyCloseDate: string;
   surveyCloseTime: string;
-  organizationName: string;
 };
 
 // 講義更新データの型
@@ -140,12 +138,6 @@ export const validateLectureData = (data: LectureData): ValidationResult => {
     errors.push(
       "アンケート締切時刻は正しい時刻形式（HH:MM）で入力してください",
     );
-  }
-
-  if (!data.organizationName || data.organizationName.trim().length === 0) {
-    errors.push("組織名は必須です");
-  } else if (data.organizationName.length > 100) {
-    errors.push("組織名は100文字以下で入力してください");
   }
 
   // 日付・時刻が有効な場合、締切日時が講義日時より後かチェック

@@ -49,7 +49,6 @@ describe("lectureRepository", () => {
     surveySlug: "test_slug",
     surveyStatus: "active",
     createdBy: testUserId,
-    organizationName: "テスト大学",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     ...overrides,
@@ -79,7 +78,6 @@ describe("lectureRepository", () => {
       description: "プログラミングの基礎を学びます",
       surveyCloseDate: "2025-01-03",
       surveyCloseTime: "23:59",
-      organizationName: "テスト大学",
       createdBy: testUserId,
       baseUrl: "https://example.com",
     };

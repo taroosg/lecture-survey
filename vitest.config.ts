@@ -15,7 +15,7 @@ export default defineConfig({
       {
         test: {
           name: "components",
-          include: ["components/**/*.test.tsx"],
+          include: ["components/**/*.test.tsx", "app/**/*.test.tsx"],
           environment: "jsdom",
           setupFiles: ["./vitest.setup.ts"],
         },
@@ -24,6 +24,13 @@ export default defineConfig({
         test: {
           name: "lib",
           include: ["lib/**/*.test.ts"],
+          environment: "node",
+        },
+      },
+      {
+        test: {
+          name: "utils",
+          include: ["utils/**/*.test.ts"],
           environment: "node",
         },
       },
