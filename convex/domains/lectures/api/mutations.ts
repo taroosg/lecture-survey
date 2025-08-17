@@ -45,16 +45,6 @@ export const createNewLecture = mutation({
       throw new Error("認証が必要です");
     }
 
-    // ユーザー情報を取得
-    const user = await ctx.db.get(userId);
-    if (!user) {
-      throw new Error("ユーザー情報が見つかりません");
-    }
-
-    if (!user.organizationName) {
-      throw new Error("ユーザーの組織名が設定されていません");
-    }
-
     // バリデーション用データを準備
     const lectureData: LectureData = {
       title: args.title,
@@ -63,7 +53,6 @@ export const createNewLecture = mutation({
       description: args.description,
       surveyCloseDate: args.surveyCloseDate,
       surveyCloseTime: args.surveyCloseTime,
-      organizationName: user.organizationName,
     };
 
     // バリデーション実行
@@ -264,16 +253,6 @@ export const duplicateLecture = mutation({
       throw new Error("認証が必要です");
     }
 
-    // ユーザー情報を取得
-    const user = await ctx.db.get(userId);
-    if (!user) {
-      throw new Error("ユーザー情報が見つかりません");
-    }
-
-    if (!user.organizationName) {
-      throw new Error("ユーザーの組織名が設定されていません");
-    }
-
     // 元の講義を取得
     const originalLecture = await ctx.db.get(args.lectureId);
     if (!originalLecture) {
@@ -295,7 +274,6 @@ export const duplicateLecture = mutation({
         args.newSurveyCloseDate || originalLecture.surveyCloseDate,
       surveyCloseTime:
         args.newSurveyCloseTime || originalLecture.surveyCloseTime,
-      organizationName: user.organizationName,
     };
 
     // バリデーション実行

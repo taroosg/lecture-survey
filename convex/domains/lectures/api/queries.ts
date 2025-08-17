@@ -9,7 +9,6 @@ import {
   getLectureBySlug,
   getLectureById,
   getLecturesByUser,
-  getLecturesByOrganization,
   getLectureStats,
   type LectureFilter,
 } from "../repositories/lectureRepository";
@@ -90,7 +89,6 @@ export const getLectureBySlugPublic = query({
       lectureTime: lecture.lectureTime,
       description: lecture.description,
       surveyStatus: lecture.surveyStatus,
-      organizationName: lecture.organizationName,
     };
   },
 });
@@ -108,43 +106,6 @@ export const getLectureStatistics = query({
     }
 
     return await getLectureStats(ctx.db, userId);
-  },
-});
-
-/**
- * 組織別の講義一覧を取得（管理者用）
- */
-export const getLecturesByOrganizationName = query({
-  args: {
-    organizationName: v.string(),
-    surveyStatus: v.optional(v.union(v.literal("active"), v.literal("closed"))),
-    dateFrom: v.optional(v.string()),
-    dateTo: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // 認証チェック
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("認証が必要です");
-    }
-
-    // ユーザーの組織名を確認
-    const user = await ctx.db.get(userId);
-    if (!user || user.organizationName !== args.organizationName) {
-      throw new Error("指定された組織の講義にアクセスする権限がありません");
-    }
-
-    const filter: LectureFilter = {
-      surveyStatus: args.surveyStatus,
-      dateFrom: args.dateFrom,
-      dateTo: args.dateTo,
-    };
-
-    return await getLecturesByOrganization(
-      ctx.db,
-      args.organizationName,
-      filter,
-    );
   },
 });
 

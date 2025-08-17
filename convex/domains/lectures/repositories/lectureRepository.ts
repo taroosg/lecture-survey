@@ -14,7 +14,6 @@ export interface CreateLectureData {
   description?: string;
   surveyCloseDate: string;
   surveyCloseTime: string;
-  organizationName: string;
   createdBy: Id<"users">;
   baseUrl: string;
 }
@@ -32,7 +31,6 @@ export interface UpdateLectureData {
 
 // 講義検索フィルター型
 export interface LectureFilter {
-  organizationName?: string;
   createdBy?: Id<"users">;
   surveyStatus?: "active" | "closed";
   dateFrom?: string;
@@ -53,7 +51,6 @@ export interface LectureData {
   surveyStatus: "active" | "closed";
   closedAt?: number;
   createdBy: Id<"users">;
-  organizationName: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -104,7 +101,6 @@ export const createLecture = async (
     surveySlug: slug,
     surveyStatus: "active",
     createdBy: data.createdBy,
-    organizationName: data.organizationName,
     createdAt: now,
     updatedAt: now,
   });
@@ -203,53 +199,6 @@ export const getLecturesByUser = async (
   const lectures = await query.collect();
 
   // フィルタリング
-  let filteredLectures = lectures;
-
-  if (filter?.surveyStatus) {
-    filteredLectures = filteredLectures.filter(
-      (lecture) => lecture.surveyStatus === filter.surveyStatus,
-    );
-  }
-
-  if (filter?.dateFrom) {
-    filteredLectures = filteredLectures.filter(
-      (lecture) => lecture.lectureDate >= filter.dateFrom!,
-    );
-  }
-
-  if (filter?.dateTo) {
-    filteredLectures = filteredLectures.filter(
-      (lecture) => lecture.lectureDate <= filter.dateTo!,
-    );
-  }
-
-  // 講義日順でソート（新しい順）
-  filteredLectures.sort((a, b) => {
-    const dateComparison = b.lectureDate.localeCompare(a.lectureDate);
-    if (dateComparison !== 0) return dateComparison;
-    return b.lectureTime.localeCompare(a.lectureTime);
-  });
-
-  return filteredLectures as LectureData[];
-};
-
-/**
- * 組織別の講義一覧を取得する
- */
-export const getLecturesByOrganization = async (
-  db: DatabaseReader,
-  organizationName: string,
-  filter?: LectureFilter,
-): Promise<LectureData[]> => {
-  let query = db
-    .query("lectures")
-    .withIndex("by_organization", (q) =>
-      q.eq("organizationName", organizationName),
-    );
-
-  const lectures = await query.collect();
-
-  // フィルタリング（ユーザー別と同じロジック）
   let filteredLectures = lectures;
 
   if (filter?.surveyStatus) {

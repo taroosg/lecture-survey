@@ -105,7 +105,6 @@ describe("lectureValidator", () => {
       description: "プログラミングの基礎を学びます",
       surveyCloseDate: "2026-01-03",
       surveyCloseTime: "23:59",
-      organizationName: "テスト大学",
     };
 
     test("正常な講義データでバリデーションが成功すること", () => {
@@ -187,13 +186,6 @@ describe("lectureValidator", () => {
         "講義説明は500文字以下で入力してください",
       );
     });
-
-    test("組織名が未入力の場合エラーになること", () => {
-      const invalidData = { ...validLectureData, organizationName: "" };
-      const result = validateLectureData(invalidData);
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain("組織名は必須です");
-    });
   });
 
   describe("validateLectureUpdate", () => {
@@ -266,7 +258,6 @@ describe("lectureValidator", () => {
         lectureTime: "25:00",
         surveyCloseDate: "",
         surveyCloseTime: "invalid-time",
-        organizationName: "",
       };
 
       const result = validateLectureData(invalidData);
@@ -279,7 +270,6 @@ describe("lectureValidator", () => {
       expect(result.errors).toContain(
         "講義時刻は正しい時刻形式（HH:MM）で入力してください",
       );
-      expect(result.errors).toContain("組織名は必須です");
     });
   });
 });
