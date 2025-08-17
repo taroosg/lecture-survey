@@ -100,7 +100,6 @@ describe("CreateLecturePage", () => {
           description: undefined,
           surveyCloseDate: "2025-12-01",
           surveyCloseTime: "12:00",
-          baseUrl: "http://localhost:3000",
         });
 
         // 講義一覧画面にリダイレクトされることを確認

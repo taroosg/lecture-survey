@@ -14,36 +14,27 @@ export interface LectureInfo {
 
 /**
  * アンケート用スラッグを生成（純粋関数）
+ * 参考プロジェクトと同様のシンプルなランダム文字列を生成
  */
-export const generateSurveySlug = (
-  lectureTitle: string,
-  lectureDate: string,
-  lectureTime: string,
-): string => {
-  // タイトルから日本語および英数字以外の文字を除去し、英数字のみにする
-  const titlePart = lectureTitle
-    .replace(/[^\w\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, "")
-    .replace(/\s+/g, "")
-    .slice(0, 20); // 20文字まで
+export const generateSurveySlug = (): string => {
+  // ConvexのIDと同様の文字セット（英数字）
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-  // 日付と時刻を結合
-  const datePart = lectureDate.replace(/-/g, "");
-  const timePart = lectureTime.replace(":", "");
+  // 16文字のランダム文字列を生成（ConvexのIDと同程度の長さ）
+  let result = "";
+  for (let i = 0; i < 16; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
 
-  // ランダム文字列（実際の実装では外部から注入される）
-  const randomPart = Math.random().toString(36).substring(2, 8);
-
-  return `${titlePart}_${datePart}_${timePart}_${randomPart}`
-    .toLowerCase()
-    .replace(/[^a-z0-9_]/g, "");
+  return result;
 };
 
 /**
  * アンケートURLを生成（純粋関数）
+ * 参考プロジェクトと同様の相対パス形式
  */
-export const generateSurveyUrl = (baseUrl: string, slug: string): string => {
-  const cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-  return `${cleanBaseUrl}/survey/${slug}`;
+export const generateSurveyUrl = (slug: string): string => {
+  return `/survey/${slug}`;
 };
 
 /**
