@@ -21,13 +21,11 @@ export const lecturesTable = defineTable({
 
   // 作成者情報
   createdBy: v.id("users"),
-  organizationName: v.string(),
 
   createdAt: v.number(),
   updatedAt: v.number(),
 })
   .index("by_creator", ["createdBy"])
-  .index("by_organization", ["organizationName"])
   .index("by_survey_status", ["surveyStatus"])
   .index("by_lecture_date", ["lectureDate"])
   .index("by_survey_slug", ["surveySlug"]);
