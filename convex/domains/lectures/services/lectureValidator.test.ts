@@ -186,7 +186,6 @@ describe("lectureValidator", () => {
         "講義説明は500文字以下で入力してください",
       );
     });
-
   });
 
   describe("validateLectureUpdate", () => {
