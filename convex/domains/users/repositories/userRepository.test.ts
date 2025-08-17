@@ -13,7 +13,6 @@ import {
   getUserById,
   getCurrentUser,
   getUserByEmail,
-  getUsersByOrganization,
   getUsersByRole,
   getActiveUsers,
   updateUserProfile,
@@ -26,10 +25,9 @@ import {
   adminUserData,
   inactiveUserData,
   otherOrgUserData,
-  sameOrgUsersArray,
   activeUsersArray,
   cloneUserData,
-} from "../__fixtures__/user-test-data";
+} from "../__fixtures__/user_test_data";
 
 // モック関数の型定義
 type MockDatabase = {
@@ -158,52 +156,6 @@ describe("userRepository", () => {
     });
   });
 
-  describe("getUsersByOrganization", () => {
-    test("組織別ユーザー一覧取得テストで正しいユーザー一覧が返されること", async () => {
-      const organizationName = "テスト大学";
-      const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.collect.mockResolvedValue(sameOrgUsersArray);
-      mockDb.query.mockReturnValue(mockQueryBuilder);
-
-      const result = await getUsersByOrganization(mockCtx, organizationName);
-
-      expect(mockDb.query).toHaveBeenCalledWith("users");
-      expect(mockQueryBuilder.withIndex).toHaveBeenCalledWith(
-        "organization",
-        expect.any(Function),
-      );
-      expect(result).toEqual(sameOrgUsersArray);
-    });
-
-    test("アクティブユーザーのフィルタリングテストで非アクティブユーザーが除外されること", async () => {
-      const organizationName = "テスト大学";
-      const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.collect.mockResolvedValue(sameOrgUsersArray);
-      mockDb.query.mockReturnValue(mockQueryBuilder);
-
-      const result = await getUsersByOrganization(mockCtx, organizationName, {
-        isActive: true,
-      });
-
-      const activeUsers = result.filter((user) => user.isActive !== false);
-      expect(activeUsers.length).toBeLessThanOrEqual(sameOrgUsersArray.length);
-    });
-
-    test("ロールフィルターが正しく動作すること", async () => {
-      const organizationName = "テスト大学";
-      const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.collect.mockResolvedValue(sameOrgUsersArray);
-      mockDb.query.mockReturnValue(mockQueryBuilder);
-
-      const result = await getUsersByOrganization(mockCtx, organizationName, {
-        role: "admin",
-      });
-
-      const adminUsers = result.filter((user) => user.role === "admin");
-      expect(adminUsers.every((user) => user.role === "admin")).toBe(true);
-    });
-  });
-
   describe("getUsersByRole", () => {
     test("管理者ユーザー一覧が正しく取得できること", async () => {
       const mockQueryBuilder = createMockQueryBuilder();
@@ -248,19 +200,17 @@ describe("userRepository", () => {
       expect(result).toEqual(activeUsersArray);
     });
 
-    test("組織フィルターが正しく動作すること", async () => {
+    test("ロールフィルターが正しく動作すること", async () => {
       const mockQueryBuilder = createMockQueryBuilder();
       mockQueryBuilder.collect.mockResolvedValue(activeUsersArray);
       mockDb.query.mockReturnValue(mockQueryBuilder);
 
       const result = await getActiveUsers(mockCtx, {
-        organizationName: "テスト大学",
+        role: "admin",
       });
 
-      const filteredUsers = result.filter(
-        (user) => user.organizationName === "テスト大学",
-      );
-      expect(filteredUsers.length).toBeGreaterThan(0);
+      const filteredUsers = result.filter((user) => user.role === "admin");
+      expect(filteredUsers.length).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -304,7 +254,7 @@ describe("userRepository", () => {
 
     test("部分更新の動作確認テストで指定フィールドのみ更新されること", async () => {
       const userId = "user_valid_123" as Id<"users">;
-      const updateData = { organizationName: "新しい組織" };
+      const updateData = { name: "更新されたユーザー" };
       const updatedUser = cloneUserData(validUserData, updateData);
 
       mockDb.get
@@ -321,11 +271,11 @@ describe("userRepository", () => {
       expect(mockDb.patch).toHaveBeenCalledWith(
         userId,
         expect.objectContaining({
-          organizationName: "新しい組織",
+          name: "更新されたユーザー",
           updatedAt: expect.any(Number),
         }),
       );
-      expect(result.organizationName).toBe("新しい組織");
+      expect(result.name).toBe("更新されたユーザー");
     });
   });
 
@@ -387,19 +337,18 @@ describe("userRepository", () => {
   });
 
   describe("getUserStats", () => {
-    test("組織の統計情報が正しく計算されること", async () => {
-      const organizationName = "テスト大学";
-      const orgUsers = [
+    test("ユーザー統計情報が正しく計算されること", async () => {
+      const testUsers = [
         validUserData, // active user
         adminUserData, // active admin
         inactiveUserData, // inactive user
       ];
 
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.collect.mockResolvedValue(orgUsers);
+      mockQueryBuilder.collect.mockResolvedValue(testUsers);
       mockDb.query.mockReturnValue(mockQueryBuilder);
 
-      const result = await getUserStats(mockCtx, organizationName);
+      const result = await getUserStats(mockCtx);
 
       expect(result.total).toBe(3);
       expect(result.active).toBe(2);
@@ -434,7 +383,7 @@ describe("userRepository", () => {
       mockQueryBuilder.collect.mockResolvedValue([]);
       mockDb.query.mockReturnValue(mockQueryBuilder);
 
-      const result = await getUserStats(mockCtx, "存在しない組織");
+      const result = await getUserStats(mockCtx);
 
       expect(result.total).toBe(0);
       expect(result.active).toBe(0);

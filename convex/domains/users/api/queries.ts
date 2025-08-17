@@ -58,7 +58,6 @@ export const getUserProfile = query({
   },
 });
 
-
 /**
  * 管理者ユーザー一覧取得
  * 管理者のみアクセス可能

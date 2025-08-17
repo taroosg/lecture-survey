@@ -19,7 +19,7 @@ import {
   edgeCaseStrings,
   testEmails,
   testRoles,
-} from "../__fixtures__/user-test-data";
+} from "../__fixtures__/user_test_data";
 
 describe("validateUserProfile", () => {
   test("正常なユーザープロファイルが渡された場合、バリデーションが成功すること", () => {

@@ -19,7 +19,7 @@ import type * as domains_lectures_api_queries from "../domains/lectures/api/quer
 import type * as domains_lectures_repositories_lectureRepository from "../domains/lectures/repositories/lectureRepository.js";
 import type * as domains_lectures_services_lectureService from "../domains/lectures/services/lectureService.js";
 import type * as domains_lectures_services_lectureValidator from "../domains/lectures/services/lectureValidator.js";
-import type * as domains_users___fixtures___user_test_data from "../domains/users/__fixtures__/user-test-data.js";
+import type * as domains_users___fixtures___user_test_data from "../domains/users/__fixtures__/user_test_data.js";
 import type * as domains_users_api_mutations from "../domains/users/api/mutations.js";
 import type * as domains_users_api_queries from "../domains/users/api/queries.js";
 import type * as domains_users_repositories_userRepository from "../domains/users/repositories/userRepository.js";
@@ -51,7 +51,7 @@ declare const fullApi: ApiFromModules<{
   "domains/lectures/repositories/lectureRepository": typeof domains_lectures_repositories_lectureRepository;
   "domains/lectures/services/lectureService": typeof domains_lectures_services_lectureService;
   "domains/lectures/services/lectureValidator": typeof domains_lectures_services_lectureValidator;
-  "domains/users/__fixtures__/user-test-data": typeof domains_users___fixtures___user_test_data;
+  "domains/users/__fixtures__/user_test_data": typeof domains_users___fixtures___user_test_data;
   "domains/users/api/mutations": typeof domains_users_api_mutations;
   "domains/users/api/queries": typeof domains_users_api_queries;
   "domains/users/repositories/userRepository": typeof domains_users_repositories_userRepository;

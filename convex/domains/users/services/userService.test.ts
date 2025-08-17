@@ -24,7 +24,7 @@ import {
   testLectureData,
   otherUserLectureData,
   cloneUserData,
-} from "../__fixtures__/user-test-data";
+} from "../__fixtures__/user_test_data";
 
 describe("isUserActive", () => {
   test("アクティブユーザーの判定でtrueが返されること", () => {

@@ -157,7 +157,6 @@ export const updateUserActiveStatus = mutation({
   },
 });
 
-
 /**
  * ユーザープロファイル一括更新
  * 管理者のみ実行可能

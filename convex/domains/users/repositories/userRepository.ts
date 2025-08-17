@@ -84,7 +84,6 @@ export const getUserByEmail = async (
     .first();
 };
 
-
 /**
  * ロール別ユーザー一覧取得
  * @param ctx - Convexクエリコンテキスト
