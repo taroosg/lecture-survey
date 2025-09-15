@@ -26,6 +26,9 @@ import type * as domains_users_repositories_userRepository from "../domains/user
 import type * as domains_users_services_userService from "../domains/users/services/userService.js";
 import type * as domains_users_services_userValidator from "../domains/users/services/userValidator.js";
 import type * as http from "../http.js";
+import type * as services_lectures_validators_lectureValidator from "../services/lectures/validators/lectureValidator.js";
+import type * as services_users_helpers_userHelpers from "../services/users/helpers/userHelpers.js";
+import type * as services_users_validators_userValidator from "../services/users/validators/userValidator.js";
 import type * as shared_lib_constants from "../shared/lib/constants.js";
 import type * as shared_lib_dateUtils from "../shared/lib/dateUtils.js";
 import type * as shared_lib_idUtils from "../shared/lib/idUtils.js";
@@ -58,6 +61,9 @@ declare const fullApi: ApiFromModules<{
   "domains/users/services/userService": typeof domains_users_services_userService;
   "domains/users/services/userValidator": typeof domains_users_services_userValidator;
   http: typeof http;
+  "services/lectures/validators/lectureValidator": typeof services_lectures_validators_lectureValidator;
+  "services/users/helpers/userHelpers": typeof services_users_helpers_userHelpers;
+  "services/users/validators/userValidator": typeof services_users_validators_userValidator;
   "shared/lib/constants": typeof shared_lib_constants;
   "shared/lib/dateUtils": typeof shared_lib_dateUtils;
   "shared/lib/idUtils": typeof shared_lib_idUtils;
