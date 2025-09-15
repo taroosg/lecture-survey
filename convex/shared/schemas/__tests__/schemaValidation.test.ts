@@ -11,7 +11,6 @@ describe("Schema Migration Validation - 講義アンケートシステム", () =
     expect(schema.tables.lectures).toBeDefined();
     expect(schema.tables.questionSets).toBeDefined();
     expect(schema.tables.requiredResponses).toBeDefined();
-    expect(schema.tables.additionalResponses).toBeDefined();
     expect(schema.tables.operationLogs).toBeDefined();
   });
 

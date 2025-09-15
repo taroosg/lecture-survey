@@ -12,7 +12,7 @@ import {
   isCloseDateTimeAfterLectureDateTime,
   type LectureData,
   type LectureUpdateData,
-} from "./lectureValidator";
+} from "../lectureValidator";
 
 // テスト用データ
 const validLectureData: LectureData = {

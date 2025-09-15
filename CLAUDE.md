@@ -93,7 +93,7 @@ This is a full-stack application built with **Convex + Next.js + Convex Auth**.
     4. 作業内容をコミットする．変更が大きい場合には一つの論理的な単位に分割してコミットする．
     5. リモートブランチにpushする．
     6. プルリクエスト作成時には作業ブランチからdevelopブランチに対して作成する．
-- 開発ドキュメント（`document.md` 及び `document` ディレクトリ内のmdファイル）に実装要件が記載されているので実装前に内容を確認してください．
+- 参考プロジェクトの開発ドキュメント（`feedback-cloud2-main/docs` ディレクトリ内のmdファイル）に実装要件が記載されているので実装前に内容を確認してください．
 
 ## 修正時の注意点
 

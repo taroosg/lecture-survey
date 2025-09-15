@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { extendedUsersTable } from "./users";
+import { extendedUsersTable } from "../users";
 
 describe("extendedUsersTable スキーマテスト", () => {
   test("usersテーブル定義が正常である", () => {
