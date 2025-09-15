@@ -13,7 +13,7 @@ import {
   getCurrentJSTDateString,
   getCurrentJSTTimeString,
   debugJSTDateTime,
-} from "./dateUtils";
+} from "../dateUtils";
 
 describe("日時ユーティリティ関数", () => {
   // モックされた現在時刻を保存

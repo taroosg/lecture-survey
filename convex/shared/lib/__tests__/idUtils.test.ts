@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { generateRandomSlug } from "./idUtils";
+import { generateRandomSlug } from "../idUtils";
 
 describe("idUtils", () => {
   describe("generateRandomSlug", () => {

@@ -10,7 +10,7 @@ import {
   getUserDisplayName,
   canManageUser,
   type UserData,
-} from "./userHelpers";
+} from "../userHelpers";
 
 // テスト用データ
 const validUserData: UserData = {

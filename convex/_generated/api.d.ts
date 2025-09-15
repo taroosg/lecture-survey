@@ -26,6 +26,10 @@ import type * as domains_users_repositories_userRepository from "../domains/user
 import type * as domains_users_services_userService from "../domains/users/services/userService.js";
 import type * as domains_users_services_userValidator from "../domains/users/services/userValidator.js";
 import type * as http from "../http.js";
+import type * as mutations_lectures_createLecture from "../mutations/lectures/createLecture.js";
+import type * as mutations_lectures_index from "../mutations/lectures/index.js";
+import type * as mutations_lectures_submitResponse from "../mutations/lectures/submitResponse.js";
+import type * as mutations_lectures_updateLecture from "../mutations/lectures/updateLecture.js";
 import type * as mutations_users_bulkUpdateUserProfiles from "../mutations/users/bulkUpdateUserProfiles.js";
 import type * as mutations_users_index from "../mutations/users/index.js";
 import type * as mutations_users_updateUserActiveStatus from "../mutations/users/updateUserActiveStatus.js";
@@ -72,6 +76,10 @@ declare const fullApi: ApiFromModules<{
   "domains/users/services/userService": typeof domains_users_services_userService;
   "domains/users/services/userValidator": typeof domains_users_services_userValidator;
   http: typeof http;
+  "mutations/lectures/createLecture": typeof mutations_lectures_createLecture;
+  "mutations/lectures/index": typeof mutations_lectures_index;
+  "mutations/lectures/submitResponse": typeof mutations_lectures_submitResponse;
+  "mutations/lectures/updateLecture": typeof mutations_lectures_updateLecture;
   "mutations/users/bulkUpdateUserProfiles": typeof mutations_users_bulkUpdateUserProfiles;
   "mutations/users/index": typeof mutations_users_index;
   "mutations/users/updateUserActiveStatus": typeof mutations_users_updateUserActiveStatus;

@@ -11,12 +11,12 @@ import {
   validateFreeComment,
   validateLectureResponse,
   type LectureResponseData,
-} from "./validation";
+} from "../validation";
 import {
   VALID_GENDERS,
   VALID_AGE_GROUPS,
   VALID_RATING_VALUES,
-} from "./constants";
+} from "../constants";
 
 describe("バリデーション関数", () => {
   describe("validateGender", () => {

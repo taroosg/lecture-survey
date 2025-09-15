@@ -5,8 +5,8 @@
 
 import { describe, test, expect } from "vitest";
 import { convexTest } from "convex-test";
-import schema from "../../schema";
-import { internal } from "../../_generated/api";
+import schema from "../../../schema";
+import { internal } from "../../../_generated/api";
 
 // テスト用のユーザーデータ
 const testUserData = {

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { requiredResponsesTable } from "./responses";
+import { requiredResponsesTable } from "../responses";
 
 describe("responsesテーブル スキーマテスト", () => {
   test("requiredResponsesテーブル定義が正常である", () => {

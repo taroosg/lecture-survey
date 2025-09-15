@@ -17,7 +17,7 @@ import {
   type RatingValue,
   type LectureQuestionId,
   type SurveyStatus,
-} from "./constants";
+} from "../constants";
 
 describe("講義用定数", () => {
   describe("VALID_GENDERS", () => {
