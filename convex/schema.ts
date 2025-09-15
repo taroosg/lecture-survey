@@ -6,10 +6,7 @@ import { authTables } from "@convex-dev/auth/server";
 import { extendedUsersTable } from "./shared/schemas/users";
 import { lecturesTable } from "./shared/schemas/lectures";
 import { questionSetsTable } from "./shared/schemas/questionSets";
-import {
-  requiredResponsesTable,
-  additionalResponsesTable,
-} from "./shared/schemas/responses";
+import { requiredResponsesTable } from "./shared/schemas/responses";
 import { operationLogsTable } from "./shared/schemas/operationLogs";
 
 // The schema is normally optional, but Convex Auth
@@ -25,6 +22,5 @@ export default defineSchema({
   lectures: lecturesTable,
   questionSets: questionSetsTable,
   requiredResponses: requiredResponsesTable,
-  additionalResponses: additionalResponsesTable,
   operationLogs: operationLogsTable,
 });

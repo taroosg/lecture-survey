@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { lecturesTable } from "./lectures";
+import { lecturesTable } from "../lectures";
 
 describe("lecturesTable スキーマテスト", () => {
   test("lecturesテーブル定義が正常である", () => {

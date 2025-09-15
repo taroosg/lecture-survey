@@ -12,7 +12,7 @@ import {
   sanitizeUserInput,
   type UserProfile,
   type UserProfileUpdate,
-} from "./userValidator";
+} from "../userValidator";
 
 // テスト用データ
 const validUserProfile: UserProfile = {
