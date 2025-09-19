@@ -26,9 +26,7 @@ const createLectureTestData = (userId: any) => ({
   description: "プログラミングの基礎を学ぶ講義です",
   surveyCloseDate: "2025-12-02",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/abc123",
-  surveySlug: "abc123",
-  createdBy: userId,
+  userId: userId,
 });
 
 describe("createLecture", () => {
@@ -42,7 +40,7 @@ describe("createLecture", () => {
 
     // createLectureを実行
     const result = await t.mutation(
-      internal.mutations.lectures.createLecture.createLecture,
+      internal.mutations.lectures.createLecture.createLectureInternal,
       createLectureTestData(userId),
     );
 
@@ -63,7 +61,7 @@ describe("createLecture", () => {
     });
 
     const result = await t.mutation(
-      internal.mutations.lectures.createLecture.createLecture,
+      internal.mutations.lectures.createLecture.createLectureInternal,
       createLectureTestData(userId),
     );
 
@@ -80,7 +78,7 @@ describe("createLecture", () => {
     const { description, ...lectureData } = createLectureTestData(userId);
 
     const result = await t.mutation(
-      internal.mutations.lectures.createLecture.createLecture,
+      internal.mutations.lectures.createLecture.createLectureInternal,
       lectureData,
     );
 
@@ -96,7 +94,7 @@ describe("createLecture", () => {
     });
 
     const result = await t.mutation(
-      internal.mutations.lectures.createLecture.createLecture,
+      internal.mutations.lectures.createLecture.createLectureInternal,
       createLectureTestData(userId),
     );
 
@@ -114,17 +112,27 @@ describe("bulkCreateLectures", () => {
     });
 
     const lecturesData = [
-      createLectureTestData(userId),
       {
-        ...createLectureTestData(userId),
+        title: "プログラミング基礎",
+        lectureDate: "2025-12-01",
+        lectureTime: "10:00",
+        description: "プログラミングの基礎を学ぶ講義です",
+        surveyCloseDate: "2025-12-02",
+        surveyCloseTime: "18:00",
+      },
+      {
         title: "データベース設計",
-        surveySlug: "db123",
+        lectureDate: "2025-12-01",
+        lectureTime: "10:00",
+        description: "プログラミングの基礎を学ぶ講義です",
+        surveyCloseDate: "2025-12-02",
+        surveyCloseTime: "18:00",
       },
     ];
 
     const result = await t.mutation(
       internal.mutations.lectures.createLecture.bulkCreateLectures,
-      { lectures: lecturesData },
+      { userId, lectures: lecturesData },
     );
 
     expect(result).toHaveLength(2);
@@ -139,9 +147,13 @@ describe("bulkCreateLectures", () => {
   test("空の配列で実行した場合は空の配列が返されること", async () => {
     const t = convexTest(schema);
 
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert("users", testUserData);
+    });
+
     const result = await t.mutation(
       internal.mutations.lectures.createLecture.bulkCreateLectures,
-      { lectures: [] },
+      { userId, lectures: [] },
     );
 
     expect(result).toHaveLength(0);
@@ -155,17 +167,27 @@ describe("bulkCreateLectures", () => {
     });
 
     const lecturesData = [
-      createLectureTestData(userId),
       {
-        ...createLectureTestData(userId),
+        title: "プログラミング基礎",
+        lectureDate: "2025-12-01",
+        lectureTime: "10:00",
+        description: "プログラミングの基礎を学ぶ講義です",
+        surveyCloseDate: "2025-12-02",
+        surveyCloseTime: "18:00",
+      },
+      {
         title: "データベース設計",
-        surveySlug: "db123",
+        lectureDate: "2025-12-01",
+        lectureTime: "10:00",
+        description: "プログラミングの基礎を学ぶ講義です",
+        surveyCloseDate: "2025-12-02",
+        surveyCloseTime: "18:00",
       },
     ];
 
     const result = await t.mutation(
       internal.mutations.lectures.createLecture.bulkCreateLectures,
-      { lectures: lecturesData },
+      { userId, lectures: lecturesData },
     );
 
     expect(result).toHaveLength(2);

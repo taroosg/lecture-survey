@@ -182,3 +182,33 @@ export const getRegularUsers = internalQuery({
       .collect();
   },
 });
+
+/**
+ * ユーザー一覧取得（Internal Query）
+ * フィルター条件に基づいてユーザーを取得
+ * 認証と権限チェックは呼び出し元で実施済み
+ */
+export const getUsersInternal = internalQuery({
+  args: {
+    filter: v.optional(
+      v.object({
+        role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
+        isActive: v.optional(v.boolean()),
+      }),
+    ),
+    requestingUserId: v.id("users"),
+  },
+  handler: async (ctx, { filter, requestingUserId }) => {
+    let query = ctx.db.query("users");
+
+    if (filter?.role) {
+      query = query.filter((q) => q.eq(q.field("role"), filter.role));
+    }
+
+    if (filter?.isActive !== undefined) {
+      query = query.filter((q) => q.eq(q.field("isActive"), filter.isActive));
+    }
+
+    return await query.collect();
+  },
+});

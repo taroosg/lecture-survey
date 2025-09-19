@@ -54,7 +54,6 @@ describe("EditLecturePage", () => {
     surveyCloseDate: "2025-12-02",
     surveyCloseTime: "12:00",
     surveyStatus: "active" as const,
-    surveyUrl: "https://example.com/survey/abc123",
     createdBy: "user123",
     organizationName: "テスト組織",
     createdAt: Date.now(),

@@ -27,8 +27,6 @@ const createLectureData = (userId: Id<"users">) => ({
   description: "プログラミングの基礎を学ぶ講義です",
   surveyCloseDate: "2025-12-02",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/abc123",
-  surveySlug: "abc123",
   surveyStatus: "active" as const,
   createdBy: userId,
   createdAt: Date.now(),
@@ -39,18 +37,20 @@ describe("updateLecture", () => {
   test("講義情報を正常に更新できること", async () => {
     const t = convexTest(schema);
 
-    const lectureId = await t.run(async (ctx) => {
+    const { lectureId, userId } = await t.run(async (ctx) => {
       // テストユーザーを作成
       const userId = await ctx.db.insert("users", testUserData);
       // テスト講義を作成
-      return await ctx.db.insert("lectures", createLectureData(userId));
+      const lectureId = await ctx.db.insert("lectures", createLectureData(userId));
+      return { lectureId, userId };
     });
 
     // updateLectureを実行
     const result = await t.mutation(
-      internal.mutations.lectures.updateLecture.updateLecture,
+      internal.mutations.lectures.updateLecture.updateLectureInternal,
       {
         lectureId,
+        userId,
         title: "プログラミング応用",
         description: "より高度なプログラミング技法を学ぶ",
       },
@@ -65,18 +65,19 @@ describe("updateLecture", () => {
   test("存在しない講義IDでnullが返されること", async () => {
     const t = convexTest(schema);
 
-    const nonExistentLectureId = await t.run(async (ctx) => {
+    const { nonExistentLectureId, userId } = await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", testUserData);
       // create-and-delete pattern
       const tempId = await ctx.db.insert("lectures", createLectureData(userId));
       await ctx.db.delete(tempId);
-      return tempId;
+      return { nonExistentLectureId: tempId, userId };
     });
 
     const result = await t.mutation(
-      internal.mutations.lectures.updateLecture.updateLecture,
+      internal.mutations.lectures.updateLecture.updateLectureInternal,
       {
         lectureId: nonExistentLectureId,
+        userId,
         title: "更新タイトル",
       },
     );
@@ -87,22 +88,23 @@ describe("updateLecture", () => {
   test("一部のフィールドのみ更新できること", async () => {
     const t = convexTest(schema);
 
-    const { lectureId, originalData } = await t.run(async (ctx) => {
+    const { lectureId, originalData, userId } = await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", testUserData);
       const lectureId = await ctx.db.insert(
         "lectures",
         createLectureData(userId),
       );
       const originalData = await ctx.db.get(lectureId);
-      return { lectureId, originalData };
+      return { lectureId, originalData, userId };
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1)); // タイミング調整
 
     const result = await t.mutation(
-      internal.mutations.lectures.updateLecture.updateLecture,
+      internal.mutations.lectures.updateLecture.updateLectureInternal,
       {
         lectureId,
+        userId,
         title: "新しいタイトル",
       },
     );
@@ -115,22 +117,23 @@ describe("updateLecture", () => {
   test("updatedAtが更新されること", async () => {
     const t = convexTest(schema);
 
-    const { lectureId, originalUpdatedAt } = await t.run(async (ctx) => {
+    const { lectureId, originalUpdatedAt, userId } = await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", testUserData);
       const lectureId = await ctx.db.insert(
         "lectures",
         createLectureData(userId),
       );
       const lecture = await ctx.db.get(lectureId);
-      return { lectureId, originalUpdatedAt: lecture?.updatedAt };
+      return { lectureId, originalUpdatedAt: lecture?.updatedAt, userId };
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1)); // タイミング調整
 
     const result = await t.mutation(
-      internal.mutations.lectures.updateLecture.updateLecture,
+      internal.mutations.lectures.updateLecture.updateLectureInternal,
       {
         lectureId,
+        userId,
         title: "更新タイトル",
       },
     );

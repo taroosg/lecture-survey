@@ -2,8 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LectureList } from "./LectureList";
-import { LectureData } from "../../convex/domains/lectures/repositories/lectureRepository";
-import { Id } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 import * as convexReact from "convex/react";
 
 // Convex のモック
@@ -14,7 +13,7 @@ vi.mock("convex/react", () => ({
 
 // LectureCard のモック
 interface LectureCardProps {
-  lecture: LectureData;
+  lecture: Doc<"lectures">;
   onCloseSurvey: (lectureId: string) => Promise<void>;
   onDeleteLecture: (lectureId: string) => Promise<void>;
   loading: string | null;
@@ -38,7 +37,7 @@ vi.mock("./LectureCard", () => ({
 }));
 
 // テスト用のモックデータ
-const mockLectures: LectureData[] = [
+const mockLectures: Doc<"lectures">[] = [
   {
     _id: "1" as Id<"lectures">,
     title: "React基礎講義",
@@ -47,8 +46,6 @@ const mockLectures: LectureData[] = [
     description: "Reactの基本的な使い方を学ぶ",
     surveyCloseDate: "2024-01-16",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/react-basics",
-    surveySlug: "react-basics",
     surveyStatus: "active",
     createdBy: "user1" as Id<"users">,
     createdAt: 1705200000000,
@@ -62,8 +59,6 @@ const mockLectures: LectureData[] = [
     description: "Vue.jsの応用的な機能を学ぶ",
     surveyCloseDate: "2024-01-21",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/vue-advanced",
-    surveySlug: "vue-advanced",
     surveyStatus: "closed",
     createdBy: "user1" as Id<"users">,
     createdAt: 1705600000000,
@@ -77,8 +72,6 @@ const mockLectures: LectureData[] = [
     description: "JavaScriptの基本を学ぶ",
     surveyCloseDate: "2024-01-11",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/js-basics",
-    surveySlug: "js-basics",
     surveyStatus: "active",
     createdBy: "user1" as Id<"users">,
     createdAt: 1705000000000,
@@ -99,7 +92,7 @@ describe("LectureList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // 最初のuseMutation呼び出し（closeSurvey）にはmockCloseSurveyを返し、
+    // 最初のuseMutation呼び出し（updateLecture）にはmockCloseSurveyを返し、
     // 2番目の呼び出し（deleteLecture）にはmockDeleteLectureを返す
     mockUseMutation
       .mockReturnValueOnce(mockCloseSurvey)
@@ -334,7 +327,10 @@ describe("LectureList", () => {
       await user.click(closeButtons[0]);
 
       // 最初のアンケート終了ボタンをクリック
-      expect(mockCloseSurvey).toHaveBeenCalledWith({ lectureId: "2" });
+      expect(mockCloseSurvey).toHaveBeenCalledWith({
+        lectureId: "2",
+        surveyStatus: "closed",
+      });
     });
 
     it("削除アクションが正しく呼ばれること", async () => {
@@ -345,7 +341,9 @@ describe("LectureList", () => {
       await user.click(deleteButtons[0]);
 
       // 最初の削除ボタンをクリック
-      expect(mockDeleteLecture).toHaveBeenCalledWith({ lectureId: "2" });
+      expect(mockDeleteLecture).toHaveBeenCalledWith({
+        lectureId: "2",
+      });
     });
 
     it("エラー時のアラート表示テスト", async () => {

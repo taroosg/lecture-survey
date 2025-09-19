@@ -27,8 +27,8 @@ export const getLectureById = internalQuery({
 });
 
 /**
- * スラッグで講義を取得する
- * @param slug - 講義のスラッグ
+ * スラッグで講義を取得する（lectureIdベース）
+ * @param slug - 講義のスラッグ（lectureId）
  * @returns 講義データ（存在しない場合はnull）
  */
 export const getLectureBySlug = internalQuery({
@@ -36,10 +36,12 @@ export const getLectureBySlug = internalQuery({
     slug: v.string(),
   },
   handler: async (ctx, args): Promise<LectureData | null> => {
-    return await ctx.db
-      .query("lectures")
-      .withIndex("by_survey_slug", (q) => q.eq("surveySlug", args.slug))
-      .unique();
+    // slug is now just the lectureId
+    try {
+      return await ctx.db.get(args.slug as Id<"lectures">);
+    } catch {
+      return null;
+    }
   },
 });
 
@@ -82,8 +84,8 @@ export const lectureExists = internalQuery({
 });
 
 /**
- * スラッグによる講義の存在確認
- * @param slug - 講義のスラッグ
+ * スラッグによる講義の存在確認（lectureIdベース）
+ * @param slug - 講義のスラッグ（lectureId）
  * @returns 講義が存在するかどうか
  */
 export const lectureExistsBySlug = internalQuery({
@@ -91,12 +93,13 @@ export const lectureExistsBySlug = internalQuery({
     slug: v.string(),
   },
   handler: async (ctx, args): Promise<boolean> => {
-    const lecture = await ctx.db
-      .query("lectures")
-      .withIndex("by_survey_slug", (q) => q.eq("surveySlug", args.slug))
-      .unique();
-
-    return lecture !== null;
+    // slug is now just the lectureId
+    try {
+      const lecture = await ctx.db.get(args.slug as Id<"lectures">);
+      return lecture !== null;
+    } catch {
+      return false;
+    }
   },
 });
 
@@ -118,5 +121,38 @@ export const searchLecturesByTitle = internalQuery({
         .toLowerCase()
         .includes(args.titlePattern.toLowerCase());
     });
+  },
+});
+
+/**
+ * スラッグで講義を取得（Internal Query）（lectureIdベース）
+ * 公開アンケート用、認証不要
+ */
+export const getLectureBySlugInternal = internalQuery({
+  args: {
+    slug: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // slug is now just the lectureId
+    let lecture;
+    try {
+      lecture = await ctx.db.get(args.slug as Id<"lectures">);
+    } catch {
+      return null;
+    }
+
+    if (!lecture) {
+      return null;
+    }
+
+    // 公開用には一部フィールドのみ返す
+    return {
+      _id: lecture._id,
+      title: lecture.title,
+      lectureDate: lecture.lectureDate,
+      lectureTime: lecture.lectureTime,
+      description: lecture.description,
+      surveyStatus: lecture.surveyStatus,
+    };
   },
 });

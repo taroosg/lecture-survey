@@ -9,10 +9,10 @@ import {
   SortBy,
   SortOrder,
 } from "./lectureListUtils";
-import { LectureData } from "../convex/domains/lectures/repositories/lectureRepository";
+import { Doc } from "../convex/_generated/dataModel";
 
 // テスト用のモックデータ
-const mockLectures: LectureData[] = [
+const mockLectures: Doc<"lectures">[] = [
   {
     _id: "1" as any,
     title: "React基礎講義",
@@ -21,8 +21,6 @@ const mockLectures: LectureData[] = [
     description: "Reactの基本的な使い方を学ぶ",
     surveyCloseDate: "2024-01-16",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/react-basics",
-    surveySlug: "react-basics",
     surveyStatus: "active",
     createdBy: "user1" as any,
     createdAt: 1705200000000, // 2024-01-14
@@ -36,8 +34,6 @@ const mockLectures: LectureData[] = [
     description: "Vue.jsの応用的な機能を学ぶ",
     surveyCloseDate: "2024-01-21",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/vue-advanced",
-    surveySlug: "vue-advanced",
     surveyStatus: "closed",
     createdBy: "user1" as any,
     createdAt: 1705600000000, // 2024-01-19
@@ -51,8 +47,6 @@ const mockLectures: LectureData[] = [
     description: "JavaScriptの基本を学ぶ",
     surveyCloseDate: "2024-01-11",
     surveyCloseTime: "18:00",
-    surveyUrl: "/survey/js-basics",
-    surveySlug: "js-basics",
     surveyStatus: "active",
     createdBy: "user1" as any,
     createdAt: 1705000000000, // 2024-01-12
