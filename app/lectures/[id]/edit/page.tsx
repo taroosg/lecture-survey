@@ -14,10 +14,10 @@ export default function EditLecturePage() {
   const params = useParams();
   const lectureId = params.id as Id<"lectures">;
 
-  const lecture = useQuery(api.lectures.getLecture, {
+  const lecture = useQuery(api.api.lectures.getLecture, {
     lectureId,
   });
-  const updateLecture = useMutation(api.lectures.updateExistingLecture);
+  const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: LectureFormData) => {

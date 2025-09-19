@@ -18,9 +18,9 @@ import {
 const ITEMS_PER_PAGE = 10;
 
 export function LectureList() {
-  const lectures = useQuery(api.lectures.getLectures, {});
-  const deleteLecture = useMutation(api.lectures.removeLecture);
-  const updateLecture = useMutation(api.lectures.updateExistingLecture);
+  const lectures = useQuery(api.api.lectures.getLectures, {});
+  const deleteLecture = useMutation(api.api.lectures.removeLecture);
+  const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
 
   // State management
   const [loading, setLoading] = useState<string | null>(null);

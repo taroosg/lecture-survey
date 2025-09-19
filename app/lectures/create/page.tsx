@@ -10,7 +10,7 @@ import { LectureFormData } from "../../../utils/lectureFormUtils";
 
 export default function CreateLecturePage() {
   const router = useRouter();
-  const createLecture = useMutation(api.lectures.createNewLecture);
+  const createLecture = useMutation(api.api.lectures.createNewLecture);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: LectureFormData) => {
