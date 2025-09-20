@@ -92,11 +92,11 @@ describe("LectureList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // 最初のuseMutation呼び出し（updateLecture）にはmockCloseSurveyを返し、
-    // 2番目の呼び出し（deleteLecture）にはmockDeleteLectureを返す
+    // 最初のuseMutation呼び出し（removeLecture）にはmockDeleteLectureを返し、
+    // 2番目の呼び出し（updateExistingLecture）にはmockCloseSurveyを返す
     mockUseMutation
-      .mockReturnValueOnce(mockCloseSurvey)
-      .mockReturnValueOnce(mockDeleteLecture);
+      .mockReturnValueOnce(mockDeleteLecture)
+      .mockReturnValueOnce(mockCloseSurvey);
   });
 
   afterEach(() => {
