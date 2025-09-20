@@ -41,7 +41,10 @@ describe("updateLecture", () => {
       // テストユーザーを作成
       const userId = await ctx.db.insert("users", testUserData);
       // テスト講義を作成
-      const lectureId = await ctx.db.insert("lectures", createLectureData(userId));
+      const lectureId = await ctx.db.insert(
+        "lectures",
+        createLectureData(userId),
+      );
       return { lectureId, userId };
     });
 
@@ -117,15 +120,17 @@ describe("updateLecture", () => {
   test("updatedAtが更新されること", async () => {
     const t = convexTest(schema);
 
-    const { lectureId, originalUpdatedAt, userId } = await t.run(async (ctx) => {
-      const userId = await ctx.db.insert("users", testUserData);
-      const lectureId = await ctx.db.insert(
-        "lectures",
-        createLectureData(userId),
-      );
-      const lecture = await ctx.db.get(lectureId);
-      return { lectureId, originalUpdatedAt: lecture?.updatedAt, userId };
-    });
+    const { lectureId, originalUpdatedAt, userId } = await t.run(
+      async (ctx) => {
+        const userId = await ctx.db.insert("users", testUserData);
+        const lectureId = await ctx.db.insert(
+          "lectures",
+          createLectureData(userId),
+        );
+        const lecture = await ctx.db.get(lectureId);
+        return { lectureId, originalUpdatedAt: lecture?.updatedAt, userId };
+      },
+    );
 
     await new Promise((resolve) => setTimeout(resolve, 1)); // タイミング調整
 

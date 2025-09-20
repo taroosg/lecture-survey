@@ -133,9 +133,7 @@ describe("LectureCard", () => {
         />,
       );
 
-      const urlLink = screen.getByText(
-        "http://localhost:3000/survey/lecture1",
-      );
+      const urlLink = screen.getByText("http://localhost:3000/survey/lecture1");
       expect(urlLink).toBeInTheDocument();
       expect(urlLink).toHaveAttribute(
         "href",
