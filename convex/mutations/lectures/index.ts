@@ -4,21 +4,13 @@
  */
 
 // 講義作成関連
-export { createLecture, bulkCreateLectures } from "./createLecture";
+export * from "./createLecture";
 
 // 講義更新関連
-export {
-  updateLecture,
-  updateLectureSurveyStatus,
-  autoCloseLecture,
-  bulkUpdateLectures,
-} from "./updateLecture";
+export * from "./updateLecture";
+
+// 講義削除関連
+export * from "./deleteLecture";
 
 // アンケート回答関連
-export {
-  submitResponse,
-  bulkSubmitResponses,
-  submitResponseWithDuplicateCheck,
-  deleteResponse,
-  deleteAllResponsesForLecture,
-} from "./submitResponse";
+export * from "./submitResponse";

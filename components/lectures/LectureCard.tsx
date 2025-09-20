@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LectureData } from "../../convex/domains/lectures/repositories/lectureRepository";
+import { Doc } from "../../convex/_generated/dataModel";
 import {
   formatLectureForDisplay,
   calculateLectureStatus,
 } from "../../utils/lectureListUtils";
 
 interface LectureCardProps {
-  lecture: LectureData;
+  lecture: Doc<"lectures">;
   onCloseSurvey: (lectureId: string) => Promise<void>;
   onDeleteLecture: (lectureId: string) => Promise<void>;
   loading: string | null;
@@ -28,7 +28,8 @@ export function LectureCard({
 
   const handleCopyUrl = async () => {
     try {
-      const fullUrl = `${window.location.origin}${lecture.surveyUrl}`;
+      const surveyUrl = `/survey/${lecture._id}`;
+      const fullUrl = `${window.location.origin}${surveyUrl}`;
       await navigator.clipboard.writeText(fullUrl);
       setCopiedUrl(true);
       setTimeout(() => setCopiedUrl(false), 2000);
@@ -101,13 +102,12 @@ export function LectureCard({
           </div>
           <div className="break-all text-sm">
             <a
-              href={`${window.location.origin}${lecture.surveyUrl}`}
+              href={`${window.location.origin}/survey/${lecture._id}`}
               className="text-blue-600 hover:underline dark:text-blue-400"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {window.location.origin}
-              {lecture.surveyUrl}
+              {window.location.origin}/survey/{lecture._id}
             </a>
           </div>
         </div>

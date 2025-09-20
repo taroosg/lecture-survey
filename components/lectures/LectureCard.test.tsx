@@ -2,11 +2,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LectureCard } from "./LectureCard";
-import { LectureData } from "../../convex/domains/lectures/repositories/lectureRepository";
-import { Id } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 
 // テスト用のモックデータ
-const mockActiveLecture: LectureData = {
+const mockActiveLecture: Doc<"lectures"> = {
   _id: "lecture1" as Id<"lectures">,
   title: "React基礎講義",
   lectureDate: "2024-01-15",
@@ -14,15 +13,13 @@ const mockActiveLecture: LectureData = {
   description: "Reactの基本的な使い方を学ぶ",
   surveyCloseDate: "2024-01-16",
   surveyCloseTime: "18:00",
-  surveyUrl: "/survey/react-basics",
-  surveySlug: "react-basics",
   surveyStatus: "active",
   createdBy: "user1" as Id<"users">,
   createdAt: 1705200000000,
   updatedAt: 1705200000000,
 };
 
-const mockClosedLecture: LectureData = {
+const mockClosedLecture: Doc<"lectures"> = {
   ...mockActiveLecture,
   _id: "lecture2" as Id<"lectures">,
   title: "Vue.js応用講義",
@@ -136,13 +133,11 @@ describe("LectureCard", () => {
         />,
       );
 
-      const urlLink = screen.getByText(
-        "http://localhost:3000/survey/react-basics",
-      );
+      const urlLink = screen.getByText("http://localhost:3000/survey/lecture1");
       expect(urlLink).toBeInTheDocument();
       expect(urlLink).toHaveAttribute(
         "href",
-        "http://localhost:3000/survey/react-basics",
+        "http://localhost:3000/survey/lecture1",
       );
       expect(urlLink).toHaveAttribute("target", "_blank");
     });
@@ -166,7 +161,7 @@ describe("LectureCard", () => {
       await user.click(copyButton);
 
       expect(mockWriteText).toHaveBeenCalledWith(
-        "http://localhost:3000/survey/react-basics",
+        "http://localhost:3000/survey/lecture1",
       );
       expect(screen.getByText("コピー済み")).toBeInTheDocument();
     });

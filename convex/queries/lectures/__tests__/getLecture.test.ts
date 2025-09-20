@@ -36,8 +36,6 @@ const createLectureData1 = (userId: Id<"users">) => ({
   description: "プログラミングの基礎を学ぶ講義です",
   surveyCloseDate: "2025-12-02",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/abc123",
-  surveySlug: "abc123",
   surveyStatus: "active" as const,
   createdBy: userId,
   createdAt: Date.now(),
@@ -51,8 +49,6 @@ const createLectureData2 = (userId: Id<"users">) => ({
   description: "データベース設計の基本を学ぶ",
   surveyCloseDate: "2025-12-04",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/def456",
-  surveySlug: "def456",
   surveyStatus: "active" as const,
   createdBy: userId,
   createdAt: Date.now(),
@@ -66,8 +62,6 @@ const createLectureData3 = (userId: Id<"users">) => ({
   description: "ウェブアプリケーション開発を学ぶ",
   surveyCloseDate: "2025-12-06",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/ghi789",
-  surveySlug: "ghi789",
   surveyStatus: "closed" as const,
   createdBy: userId,
   createdAt: Date.now(),
@@ -102,7 +96,6 @@ describe("getLectureById", () => {
     expect(result).not.toBeNull();
     expect(result?._id).toBe(lectureId);
     expect(result?.title).toBe("プログラミング基礎");
-    expect(result?.surveySlug).toBe("abc123");
   });
 
   test("存在しない講義IDでnullが返されること", async () => {
@@ -137,25 +130,24 @@ describe("getLectureBySlug", () => {
   test("存在するスラッグで講義が取得できること", async () => {
     const t = convexTest(schema);
 
-    await t.run(async (ctx) => {
+    const lectureId = await t.run(async (ctx) => {
       // テストユーザーを作成
       const userId = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成
-      await ctx.db.insert("lectures", createLectureData1(userId));
+      return await ctx.db.insert("lectures", createLectureData1(userId));
     });
 
-    // getLectureBySlugを実行
+    // getLectureBySlugを実行（lectureIdをslugとして使用）
     const result = await t.query(
       internal.queries.lectures.getLecture.getLectureBySlug,
       {
-        slug: "abc123",
+        slug: lectureId,
       },
     );
 
     expect(result).not.toBeNull();
     expect(result?.title).toBe("プログラミング基礎");
-    expect(result?.surveySlug).toBe("abc123");
   });
 
   test("存在しないスラッグでnullが返されること", async () => {
@@ -319,19 +311,19 @@ describe("lectureExistsBySlug", () => {
   test("存在するスラッグでtrueが返されること", async () => {
     const t = convexTest(schema);
 
-    await t.run(async (ctx) => {
+    const lectureId = await t.run(async (ctx) => {
       // テストユーザーを作成
       const userId = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成
-      await ctx.db.insert("lectures", createLectureData1(userId));
+      return await ctx.db.insert("lectures", createLectureData1(userId));
     });
 
-    // lectureExistsBySlugを実行
+    // lectureExistsBySlugを実行（lectureIdをslugとして使用）
     const result = await t.query(
       internal.queries.lectures.getLecture.lectureExistsBySlug,
       {
-        slug: "abc123",
+        slug: lectureId,
       },
     );
 

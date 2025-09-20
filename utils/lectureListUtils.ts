@@ -1,4 +1,4 @@
-import { LectureData } from "../convex/domains/lectures/repositories/lectureRepository";
+import { Doc } from "../convex/_generated/dataModel";
 
 // 講義の並び順タイプ
 export type SortBy = "createdAt" | "lectureDate" | "title";
@@ -35,9 +35,9 @@ export interface PaginationResult<T> {
  * @returns フィルタリングされた講義リスト
  */
 export const filterLectures = (
-  lectures: LectureData[],
+  lectures: Doc<"lectures">[],
   filter: LectureListFilter,
-): LectureData[] => {
+): Doc<"lectures">[] => {
   let filtered = [...lectures];
 
   // 状態別フィルタリング
@@ -81,10 +81,10 @@ export const filterLectures = (
  * @returns ソートされた講義リスト
  */
 export const sortLectures = (
-  lectures: LectureData[],
+  lectures: Doc<"lectures">[],
   sortBy: SortBy,
   sortOrder: SortOrder,
-): LectureData[] => {
+): Doc<"lectures">[] => {
   const sorted = [...lectures];
 
   sorted.sort((a, b) => {
@@ -117,9 +117,9 @@ export const sortLectures = (
  * @returns ページネーション結果
  */
 export const paginateLectures = (
-  lectures: LectureData[],
+  lectures: Doc<"lectures">[],
   config: PaginationConfig,
-): PaginationResult<LectureData> => {
+): PaginationResult<Doc<"lectures">> => {
   const { page, itemsPerPage } = config;
   const totalItems = lectures.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -142,7 +142,7 @@ export const paginateLectures = (
  * @param lecture - 講義データ
  * @returns 表示用フォーマット済み講義データ
  */
-export const formatLectureForDisplay = (lecture: LectureData) => {
+export const formatLectureForDisplay = (lecture: Doc<"lectures">) => {
   return {
     ...lecture,
     lectureDateTime: `${lecture.lectureDate} ${lecture.lectureTime}`,
@@ -164,7 +164,7 @@ export const formatLectureForDisplay = (lecture: LectureData) => {
  * @returns 計算された状態情報
  */
 export const calculateLectureStatus = (
-  lecture: LectureData,
+  lecture: Doc<"lectures">,
   currentTime: Date = new Date(),
 ) => {
   const closeDateTime = new Date(

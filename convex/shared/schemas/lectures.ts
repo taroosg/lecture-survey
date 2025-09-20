@@ -11,9 +11,7 @@ export const lecturesTable = defineTable({
   surveyCloseDate: v.string(), // YYYY-MM-DD
   surveyCloseTime: v.string(), // HH:MM
 
-  // アンケートURL
-  surveyUrl: v.string(),
-  surveySlug: v.string(),
+  // アンケート設定のみ（URL生成はlectureIdベース）
 
   // 状態管理
   surveyStatus: v.union(v.literal("active"), v.literal("closed")),
@@ -27,5 +25,4 @@ export const lecturesTable = defineTable({
 })
   .index("by_creator", ["createdBy"])
   .index("by_survey_status", ["surveyStatus"])
-  .index("by_lecture_date", ["lectureDate"])
-  .index("by_survey_slug", ["surveySlug"]);
+  .index("by_lecture_date", ["lectureDate"]);

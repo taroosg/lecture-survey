@@ -20,13 +20,9 @@ vi.mock("convex/react", () => ({
 // Convex APIの型をモック
 vi.mock("../../../convex/_generated/api", () => ({
   api: {
-    domains: {
+    api: {
       lectures: {
-        api: {
-          mutations: {
-            createNewLecture: "createNewLecture",
-          },
-        },
+        createNewLecture: "createNewLecture",
       },
     },
   },

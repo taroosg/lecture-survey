@@ -7,9 +7,10 @@ import { v } from "convex/values";
 import { internalMutation } from "../../_generated/server";
 
 /**
- * 新しい講義を作成する
+ * 新しい講義を作成する（Internal Mutation）
+ * 認証と権限チェックは呼び出し元で実施済み
  */
-export const createLecture = internalMutation({
+export const createLectureInternal = internalMutation({
   args: {
     title: v.string(),
     lectureDate: v.string(),
@@ -17,9 +18,7 @@ export const createLecture = internalMutation({
     description: v.optional(v.string()),
     surveyCloseDate: v.string(),
     surveyCloseTime: v.string(),
-    surveyUrl: v.string(),
-    surveySlug: v.string(),
-    createdBy: v.id("users"),
+    userId: v.id("users"),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
@@ -31,16 +30,19 @@ export const createLecture = internalMutation({
       description: args.description,
       surveyCloseDate: args.surveyCloseDate,
       surveyCloseTime: args.surveyCloseTime,
-      surveyUrl: args.surveyUrl,
-      surveySlug: args.surveySlug,
       surveyStatus: "active" as const,
-      createdBy: args.createdBy,
+      createdBy: args.userId,
       createdAt: now,
       updatedAt: now,
     };
 
     const lectureId = await ctx.db.insert("lectures", lectureData);
-    return await ctx.db.get(lectureId);
+
+    const createdLecture = await ctx.db.get(lectureId);
+    if (!createdLecture) {
+      throw new Error("講義の作成に失敗しました");
+    }
+    return createdLecture;
   },
 });
 
@@ -49,6 +51,7 @@ export const createLecture = internalMutation({
  */
 export const bulkCreateLectures = internalMutation({
   args: {
+    userId: v.id("users"),
     lectures: v.array(
       v.object({
         title: v.string(),
@@ -57,9 +60,6 @@ export const bulkCreateLectures = internalMutation({
         description: v.optional(v.string()),
         surveyCloseDate: v.string(),
         surveyCloseTime: v.string(),
-        surveyUrl: v.string(),
-        surveySlug: v.string(),
-        createdBy: v.id("users"),
       }),
     ),
   },
@@ -71,11 +71,13 @@ export const bulkCreateLectures = internalMutation({
       const fullLectureData = {
         ...lectureData,
         surveyStatus: "active" as const,
+        createdBy: args.userId,
         createdAt: now,
         updatedAt: now,
       };
 
       const lectureId = await ctx.db.insert("lectures", fullLectureData);
+
       const createdLecture = await ctx.db.get(lectureId);
       if (createdLecture) {
         createdLectures.push(createdLecture);
