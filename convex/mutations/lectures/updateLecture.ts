@@ -7,9 +7,10 @@ import { v } from "convex/values";
 import { internalMutation } from "../../_generated/server";
 
 /**
- * 講義情報を更新する
+ * 既存の講義を更新する（Internal Mutation）
+ * 認証と権限チェックは呼び出し元で実施済み
  */
-export const updateLecture = internalMutation({
+export const updateLectureInternal = internalMutation({
   args: {
     lectureId: v.id("lectures"),
     title: v.optional(v.string()),
@@ -18,36 +19,74 @@ export const updateLecture = internalMutation({
     description: v.optional(v.string()),
     surveyCloseDate: v.optional(v.string()),
     surveyCloseTime: v.optional(v.string()),
-    surveyUrl: v.optional(v.string()),
-    surveySlug: v.optional(v.string()),
+    surveyStatus: v.optional(v.union(v.literal("active"), v.literal("closed"))),
+    userId: v.id("users"),
   },
   handler: async (ctx, args) => {
-    // 講義の存在確認
+    // 既存講義の存在確認
     const existingLecture = await ctx.db.get(args.lectureId);
     if (!existingLecture) {
       return null;
     }
 
-    const updateData: any = {
-      updatedAt: Date.now(),
-    };
+    // 権限チェック（作成者のみ更新可能）
+    if (existingLecture.createdBy !== args.userId) {
+      throw new Error("この講義を更新する権限がありません");
+    }
 
-    // 更新するフィールドのみ追加
-    if (args.title !== undefined) updateData.title = args.title;
-    if (args.lectureDate !== undefined)
+    // 更新データの準備
+    const updateData: any = {};
+
+    if (args.title !== undefined) {
+      if (!args.title.trim()) {
+        throw new Error("タイトルは必須です");
+      }
+      updateData.title = args.title.trim();
+    }
+
+    if (args.lectureDate !== undefined) {
       updateData.lectureDate = args.lectureDate;
-    if (args.lectureTime !== undefined)
-      updateData.lectureTime = args.lectureTime;
-    if (args.description !== undefined)
-      updateData.description = args.description;
-    if (args.surveyCloseDate !== undefined)
-      updateData.surveyCloseDate = args.surveyCloseDate;
-    if (args.surveyCloseTime !== undefined)
-      updateData.surveyCloseTime = args.surveyCloseTime;
-    if (args.surveyUrl !== undefined) updateData.surveyUrl = args.surveyUrl;
-    if (args.surveySlug !== undefined) updateData.surveySlug = args.surveySlug;
+    }
 
-    await ctx.db.patch(args.lectureId, updateData);
+    if (args.lectureTime !== undefined) {
+      updateData.lectureTime = args.lectureTime;
+    }
+
+    if (args.description !== undefined) {
+      updateData.description = args.description.trim();
+    }
+
+    if (args.surveyCloseDate !== undefined) {
+      updateData.surveyCloseDate = args.surveyCloseDate;
+    }
+
+    if (args.surveyCloseTime !== undefined) {
+      updateData.surveyCloseTime = args.surveyCloseTime;
+    }
+
+    if (args.surveyStatus !== undefined) {
+      // 基本的な状態遷移チェック（activeからclosedのみ許可）
+      if (
+        args.surveyStatus === "closed" &&
+        existingLecture.surveyStatus !== "active"
+      ) {
+        throw new Error("アクティブでない講義は締切できません");
+      }
+      updateData.surveyStatus = args.surveyStatus;
+
+      // 締切時は閉鎖時刻を記録
+      if (args.surveyStatus === "closed") {
+        updateData.closedAt = Date.now();
+      }
+    }
+
+    // 講義更新
+    await ctx.db.patch(args.lectureId, {
+      ...updateData,
+      updatedAt: Date.now(),
+    });
+
+    // 更新後の講義を返す
     return await ctx.db.get(args.lectureId);
   },
 });

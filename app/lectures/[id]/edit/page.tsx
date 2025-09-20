@@ -14,12 +14,10 @@ export default function EditLecturePage() {
   const params = useParams();
   const lectureId = params.id as Id<"lectures">;
 
-  const lecture = useQuery(api.domains.lectures.api.queries.getLecture, {
+  const lecture = useQuery(api.api.lectures.getLecture, {
     lectureId,
   });
-  const updateLecture = useMutation(
-    api.domains.lectures.api.mutations.updateExistingLecture,
-  );
+  const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: LectureFormData) => {
@@ -142,7 +140,7 @@ export default function EditLecturePage() {
                 アンケートURL
               </p>
               <p className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                {lecture.surveyUrl}
+                /survey/{lecture._id}
               </p>
             </div>
           </div>

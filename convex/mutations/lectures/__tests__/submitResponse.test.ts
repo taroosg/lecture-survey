@@ -27,8 +27,6 @@ const createLectureData = (userId: Id<"users">) => ({
   description: "プログラミングの基礎を学ぶ講義です",
   surveyCloseDate: "2025-12-02",
   surveyCloseTime: "18:00",
-  surveyUrl: "https://example.com/survey/abc123",
-  surveySlug: "abc123",
   surveyStatus: "active" as const,
   createdBy: userId,
   createdAt: Date.now(),

@@ -18,13 +18,9 @@ import {
 const ITEMS_PER_PAGE = 10;
 
 export function LectureList() {
-  const lectures = useQuery(api.domains.lectures.api.queries.getLectures, {});
-  const closeLecture = useMutation(
-    api.domains.lectures.api.mutations.closeLecture,
-  );
-  const deleteLecture = useMutation(
-    api.domains.lectures.api.mutations.removeeLecture,
-  );
+  const lectures = useQuery(api.api.lectures.getLectures, {});
+  const deleteLecture = useMutation(api.api.lectures.removeLecture);
+  const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
 
   // State management
   const [loading, setLoading] = useState<string | null>(null);
@@ -54,7 +50,10 @@ export function LectureList() {
   const handleCloseSurvey = async (lectureId: string) => {
     setLoading(`close-${lectureId}`);
     try {
-      await closeLecture({ lectureId: lectureId as Id<"lectures"> });
+      await updateLecture({
+        lectureId: lectureId as Id<"lectures">,
+        surveyStatus: "closed",
+      });
     } catch (error) {
       console.error("アンケート終了エラー:", error);
       alert("アンケート終了に失敗しました");

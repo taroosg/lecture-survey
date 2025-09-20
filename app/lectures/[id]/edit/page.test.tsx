@@ -24,16 +24,10 @@ vi.mock("convex/react", () => ({
 // Convex APIの型をモック
 vi.mock("../../../../convex/_generated/api", () => ({
   api: {
-    domains: {
+    api: {
       lectures: {
-        api: {
-          queries: {
-            getLecture: "getLecture",
-          },
-          mutations: {
-            updateExistingLecture: "updateExistingLecture",
-          },
-        },
+        getLecture: "getLecture",
+        updateExistingLecture: "updateExistingLecture",
       },
     },
   },
@@ -54,7 +48,6 @@ describe("EditLecturePage", () => {
     surveyCloseDate: "2025-12-02",
     surveyCloseTime: "12:00",
     surveyStatus: "active" as const,
-    surveyUrl: "https://example.com/survey/abc123",
     createdBy: "user123",
     organizationName: "テスト組織",
     createdAt: Date.now(),
@@ -107,9 +100,7 @@ describe("EditLecturePage", () => {
       expect(screen.getByText("現在の状態")).toBeInTheDocument();
       expect(screen.getByText("受付中")).toBeInTheDocument();
       expect(screen.getByText("アンケートURL")).toBeInTheDocument();
-      expect(
-        screen.getByText("https://example.com/survey/abc123"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("/survey/lecture123")).toBeInTheDocument();
 
       // フォームに既存データが設定されている
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();
