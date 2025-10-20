@@ -13,12 +13,22 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as actions_analysis_closeLectureOrchestrator from "../actions/analysis/closeLectureOrchestrator.js";
+import type * as actions_analysis_executeCompleteAnalysis from "../actions/analysis/executeCompleteAnalysis.js";
+import type * as actions_analysis_helpers from "../actions/analysis/helpers.js";
+import type * as actions_analysis_index from "../actions/analysis/index.js";
 import type * as api_admin from "../api/admin.js";
+import type * as api_analysisResults from "../api/analysisResults.js";
 import type * as api_lectures from "../api/lectures.js";
 import type * as api_responses from "../api/responses.js";
 import type * as api_users from "../api/users.js";
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as http from "../http.js";
+import type * as mutations_analysis_createResultSet from "../mutations/analysis/createResultSet.js";
+import type * as mutations_analysis_index from "../mutations/analysis/index.js";
+import type * as mutations_analysis_saveAnalysisResults from "../mutations/analysis/saveAnalysisResults.js";
+import type * as mutations_analysis_updateLectureStatus from "../mutations/analysis/updateLectureStatus.js";
 import type * as mutations_index from "../mutations/index.js";
 import type * as mutations_lectures_createLecture from "../mutations/lectures/createLecture.js";
 import type * as mutations_lectures_deleteLecture from "../mutations/lectures/deleteLecture.js";
@@ -28,6 +38,13 @@ import type * as mutations_lectures_updateLecture from "../mutations/lectures/up
 import type * as mutations_users_index from "../mutations/users/index.js";
 import type * as mutations_users_updateUserProfile from "../mutations/users/updateUserProfile.js";
 import type * as mutations_users_updateUserRole from "../mutations/users/updateUserRole.js";
+import type * as queries_analysis_getAllLecturesAverage from "../queries/analysis/getAllLecturesAverage.js";
+import type * as queries_analysis_getAnalysisData from "../queries/analysis/getAnalysisData.js";
+import type * as queries_analysis_getBasicStatistics from "../queries/analysis/getBasicStatistics.js";
+import type * as queries_analysis_getClosableLectures from "../queries/analysis/getClosableLectures.js";
+import type * as queries_analysis_getCrossAnalysisData from "../queries/analysis/getCrossAnalysisData.js";
+import type * as queries_analysis_getLatestAnalysisResults from "../queries/analysis/getLatestAnalysisResults.js";
+import type * as queries_analysis_index from "../queries/analysis/index.js";
 import type * as queries_index from "../queries/index.js";
 import type * as queries_lectures_getLecture from "../queries/lectures/getLecture.js";
 import type * as queries_lectures_getLectures from "../queries/lectures/getLectures.js";
@@ -78,12 +95,22 @@ import type * as shared_types_analysis from "../shared/types/analysis.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "actions/analysis/closeLectureOrchestrator": typeof actions_analysis_closeLectureOrchestrator;
+  "actions/analysis/executeCompleteAnalysis": typeof actions_analysis_executeCompleteAnalysis;
+  "actions/analysis/helpers": typeof actions_analysis_helpers;
+  "actions/analysis/index": typeof actions_analysis_index;
   "api/admin": typeof api_admin;
+  "api/analysisResults": typeof api_analysisResults;
   "api/lectures": typeof api_lectures;
   "api/responses": typeof api_responses;
   "api/users": typeof api_users;
   auth: typeof auth;
+  crons: typeof crons;
   http: typeof http;
+  "mutations/analysis/createResultSet": typeof mutations_analysis_createResultSet;
+  "mutations/analysis/index": typeof mutations_analysis_index;
+  "mutations/analysis/saveAnalysisResults": typeof mutations_analysis_saveAnalysisResults;
+  "mutations/analysis/updateLectureStatus": typeof mutations_analysis_updateLectureStatus;
   "mutations/index": typeof mutations_index;
   "mutations/lectures/createLecture": typeof mutations_lectures_createLecture;
   "mutations/lectures/deleteLecture": typeof mutations_lectures_deleteLecture;
@@ -93,6 +120,13 @@ declare const fullApi: ApiFromModules<{
   "mutations/users/index": typeof mutations_users_index;
   "mutations/users/updateUserProfile": typeof mutations_users_updateUserProfile;
   "mutations/users/updateUserRole": typeof mutations_users_updateUserRole;
+  "queries/analysis/getAllLecturesAverage": typeof queries_analysis_getAllLecturesAverage;
+  "queries/analysis/getAnalysisData": typeof queries_analysis_getAnalysisData;
+  "queries/analysis/getBasicStatistics": typeof queries_analysis_getBasicStatistics;
+  "queries/analysis/getClosableLectures": typeof queries_analysis_getClosableLectures;
+  "queries/analysis/getCrossAnalysisData": typeof queries_analysis_getCrossAnalysisData;
+  "queries/analysis/getLatestAnalysisResults": typeof queries_analysis_getLatestAnalysisResults;
+  "queries/analysis/index": typeof queries_analysis_index;
   "queries/index": typeof queries_index;
   "queries/lectures/getLecture": typeof queries_lectures_getLecture;
   "queries/lectures/getLectures": typeof queries_lectures_getLectures;
