@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as api_admin from "../api/admin.js";
 import type * as api_lectures from "../api/lectures.js";
+import type * as api_responses from "../api/responses.js";
 import type * as api_users from "../api/users.js";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
@@ -31,6 +32,8 @@ import type * as queries_index from "../queries/index.js";
 import type * as queries_lectures_getLecture from "../queries/lectures/getLecture.js";
 import type * as queries_lectures_getLectures from "../queries/lectures/getLectures.js";
 import type * as queries_lectures_index from "../queries/lectures/index.js";
+import type * as queries_responses_checkSurveyAvailable from "../queries/responses/checkSurveyAvailable.js";
+import type * as queries_responses_index from "../queries/responses/index.js";
 import type * as queries_users_getAdminUsers from "../queries/users/getAdminUsers.js";
 import type * as queries_users_getCurrentUser from "../queries/users/getCurrentUser.js";
 import type * as queries_users_getUser from "../queries/users/getUser.js";
@@ -62,6 +65,7 @@ import type * as shared_schemas_users from "../shared/schemas/users.js";
 declare const fullApi: ApiFromModules<{
   "api/admin": typeof api_admin;
   "api/lectures": typeof api_lectures;
+  "api/responses": typeof api_responses;
   "api/users": typeof api_users;
   auth: typeof auth;
   http: typeof http;
@@ -78,6 +82,8 @@ declare const fullApi: ApiFromModules<{
   "queries/lectures/getLecture": typeof queries_lectures_getLecture;
   "queries/lectures/getLectures": typeof queries_lectures_getLectures;
   "queries/lectures/index": typeof queries_lectures_index;
+  "queries/responses/checkSurveyAvailable": typeof queries_responses_checkSurveyAvailable;
+  "queries/responses/index": typeof queries_responses_index;
   "queries/users/getAdminUsers": typeof queries_users_getAdminUsers;
   "queries/users/getCurrentUser": typeof queries_users_getCurrentUser;
   "queries/users/getUser": typeof queries_users_getUser;
