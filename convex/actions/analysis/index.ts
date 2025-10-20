@@ -1,3 +1,5 @@
+"use node";
+
 /**
  * Analysis Actions Index
  *
