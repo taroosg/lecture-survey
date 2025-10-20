@@ -41,6 +41,7 @@ import type * as queries_users_getUserProfile from "../queries/users/getUserProf
 import type * as queries_users_getUsers from "../queries/users/getUsers.js";
 import type * as queries_users_index from "../queries/users/index.js";
 import type * as services_lectures_validators_lectureValidator from "../services/lectures/validators/lectureValidator.js";
+import type * as services_questions_definitions from "../services/questions/definitions.js";
 import type * as services_users_helpers_userHelpers from "../services/users/helpers/userHelpers.js";
 import type * as services_users_validators_userValidator from "../services/users/validators/userValidator.js";
 import type * as shared_helpers_authHelpers from "../shared/helpers/authHelpers.js";
@@ -48,11 +49,13 @@ import type * as shared_lib_constants from "../shared/lib/constants.js";
 import type * as shared_lib_dateUtils from "../shared/lib/dateUtils.js";
 import type * as shared_lib_idUtils from "../shared/lib/idUtils.js";
 import type * as shared_lib_validation from "../shared/lib/validation.js";
+import type * as shared_schemas_analysis from "../shared/schemas/analysis.js";
 import type * as shared_schemas_lectures from "../shared/schemas/lectures.js";
 import type * as shared_schemas_operationLogs from "../shared/schemas/operationLogs.js";
 import type * as shared_schemas_questionSets from "../shared/schemas/questionSets.js";
 import type * as shared_schemas_responses from "../shared/schemas/responses.js";
 import type * as shared_schemas_users from "../shared/schemas/users.js";
+import type * as shared_types_analysis from "../shared/types/analysis.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -91,6 +94,7 @@ declare const fullApi: ApiFromModules<{
   "queries/users/getUsers": typeof queries_users_getUsers;
   "queries/users/index": typeof queries_users_index;
   "services/lectures/validators/lectureValidator": typeof services_lectures_validators_lectureValidator;
+  "services/questions/definitions": typeof services_questions_definitions;
   "services/users/helpers/userHelpers": typeof services_users_helpers_userHelpers;
   "services/users/validators/userValidator": typeof services_users_validators_userValidator;
   "shared/helpers/authHelpers": typeof shared_helpers_authHelpers;
@@ -98,11 +102,13 @@ declare const fullApi: ApiFromModules<{
   "shared/lib/dateUtils": typeof shared_lib_dateUtils;
   "shared/lib/idUtils": typeof shared_lib_idUtils;
   "shared/lib/validation": typeof shared_lib_validation;
+  "shared/schemas/analysis": typeof shared_schemas_analysis;
   "shared/schemas/lectures": typeof shared_schemas_lectures;
   "shared/schemas/operationLogs": typeof shared_schemas_operationLogs;
   "shared/schemas/questionSets": typeof shared_schemas_questionSets;
   "shared/schemas/responses": typeof shared_schemas_responses;
   "shared/schemas/users": typeof shared_schemas_users;
+  "shared/types/analysis": typeof shared_types_analysis;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

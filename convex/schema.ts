@@ -8,6 +8,7 @@ import { lecturesTable } from "./shared/schemas/lectures";
 import { questionSetsTable } from "./shared/schemas/questionSets";
 import { requiredResponsesTable } from "./shared/schemas/responses";
 import { operationLogsTable } from "./shared/schemas/operationLogs";
+import { resultSetsTable, resultFactsTable } from "./shared/schemas/analysis";
 
 // The schema is normally optional, but Convex Auth
 // requires indexes defined on `authTables`.
@@ -23,4 +24,8 @@ export default defineSchema({
   questionSets: questionSetsTable,
   requiredResponses: requiredResponsesTable,
   operationLogs: operationLogsTable,
+
+  // 分析結果テーブル
+  resultSets: resultSetsTable,
+  resultFacts: resultFactsTable,
 });
