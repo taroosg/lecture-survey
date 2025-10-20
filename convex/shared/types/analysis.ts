@@ -145,17 +145,44 @@ export interface SatisfactionComparison {
  */
 export interface BasicStatistics {
   totalResponses: number;
-  genderDistribution: Record<string, number>;
-  ageDistribution: Record<string, number>;
-  satisfactionAverages: {
+  distributions: {
+    gender: Array<{
+      _id: string;
+      dim1QuestionCode: string;
+      dim1OptionCode: string;
+      n: number;
+      baseN: number;
+      pct: number;
+    }>;
+    ageGroup: Array<{
+      _id: string;
+      dim1QuestionCode: string;
+      dim1OptionCode: string;
+      n: number;
+      baseN: number;
+      pct: number;
+    }>;
+    understanding: Array<{
+      _id: string;
+      dim1QuestionCode: string;
+      dim1OptionCode: string;
+      n: number;
+      baseN: number;
+      pct: number;
+    }>;
+    satisfaction: Array<{
+      _id: string;
+      dim1QuestionCode: string;
+      dim1OptionCode: string;
+      n: number;
+      baseN: number;
+      pct: number;
+    }>;
+  };
+  averages: {
     understanding: number;
     satisfaction: number;
   };
-  satisfactionDistribution: {
-    understanding: Record<string, number>;
-    satisfaction: Record<string, number>;
-  };
-  satisfactionComparison?: SatisfactionComparison;
 }
 
 /**
@@ -163,34 +190,42 @@ export interface BasicStatistics {
  * 本プロジェクトでは性別と年代のみ
  */
 export interface CrossAnalysisData {
-  genderBySatisfaction: {
-    understanding: Record<string, Record<string, number>>;
-    satisfaction: Record<string, Record<string, number>>;
-  };
-  ageBySatisfaction: {
-    understanding: Record<string, Record<string, number>>;
-    satisfaction: Record<string, Record<string, number>>;
-  };
-  averages: {
-    genderAverages: {
-      understanding: {
-        male: number;
-        female: number;
-        other?: number;
-        preferNotToSay?: number;
-      };
-      satisfaction: {
-        male: number;
-        female: number;
-        other?: number;
-        preferNotToSay?: number;
-      };
-    };
-    ageAverages: {
-      understanding: Record<string, number>; // 年齢層別平均
-      satisfaction: Record<string, number>;
-    };
-  };
+  understandingByGender: Array<{
+    _id: string;
+    dim1QuestionCode: string;
+    dim1OptionCode: string;
+    dim2QuestionCode: string;
+    dim2OptionCode: string;
+    n: number;
+    pct: number;
+  }>;
+  understandingByAgeGroup: Array<{
+    _id: string;
+    dim1QuestionCode: string;
+    dim1OptionCode: string;
+    dim2QuestionCode: string;
+    dim2OptionCode: string;
+    n: number;
+    pct: number;
+  }>;
+  satisfactionByGender: Array<{
+    _id: string;
+    dim1QuestionCode: string;
+    dim1OptionCode: string;
+    dim2QuestionCode: string;
+    dim2OptionCode: string;
+    n: number;
+    pct: number;
+  }>;
+  satisfactionByAgeGroup: Array<{
+    _id: string;
+    dim1QuestionCode: string;
+    dim1OptionCode: string;
+    dim2QuestionCode: string;
+    dim2OptionCode: string;
+    n: number;
+    pct: number;
+  }>;
 }
 
 // Convexバリデータ定義

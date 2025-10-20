@@ -9,8 +9,10 @@ import { internal } from "../_generated/api";
 import { v } from "convex/values";
 import { requireAuth } from "../shared/helpers/authHelpers";
 import type { Doc } from "../_generated/dataModel";
-import type { BasicStatistics } from "../queries/analysis/getBasicStatistics";
-import type { CrossAnalysisData } from "../queries/analysis/getCrossAnalysisData";
+import type {
+  BasicStatistics,
+  CrossAnalysisData,
+} from "../shared/types/analysis";
 
 /**
  * 最新の分析結果を取得

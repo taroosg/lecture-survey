@@ -6,21 +6,7 @@
 
 import { internalQuery } from "../../_generated/server";
 import { v } from "convex/values";
-import type { Doc } from "../../_generated/dataModel";
-
-export interface BasicStatistics {
-  totalResponses: number;
-  distributions: {
-    gender: Doc<"resultFacts">[];
-    ageGroup: Doc<"resultFacts">[];
-    understanding: Doc<"resultFacts">[];
-    satisfaction: Doc<"resultFacts">[];
-  };
-  averages: {
-    understanding: number;
-    satisfaction: number;
-  };
-}
+import type { BasicStatistics } from "../../shared/types/analysis";
 
 /**
  * 指定講義の基本統計を取得
@@ -88,7 +74,7 @@ export const getBasicStatisticsInternal = internalQuery({
 
     return {
       totalResponses: latestResultSet.totalResponses,
-      distributions,
+      distributions: distributions as BasicStatistics["distributions"],
       averages: {
         understanding: understandingAvg?.avgScore ?? 0,
         satisfaction: satisfactionAvg?.avgScore ?? 0,

@@ -6,14 +6,7 @@
 
 import { internalQuery } from "../../_generated/server";
 import { v } from "convex/values";
-import type { Doc } from "../../_generated/dataModel";
-
-export interface CrossAnalysisData {
-  understandingByGender: Doc<"resultFacts">[];
-  understandingByAgeGroup: Doc<"resultFacts">[];
-  satisfactionByGender: Doc<"resultFacts">[];
-  satisfactionByAgeGroup: Doc<"resultFacts">[];
-}
+import type { CrossAnalysisData } from "../../shared/types/analysis";
 
 /**
  * 指定講義のクロス集計データを取得
@@ -53,22 +46,22 @@ export const getCrossAnalysisDataInternal = internalQuery({
         (f) =>
           f.dim1QuestionCode === "understanding" &&
           f.dim2QuestionCode === "gender",
-      ),
+      ) as CrossAnalysisData["understandingByGender"],
       understandingByAgeGroup: crossFacts.filter(
         (f) =>
           f.dim1QuestionCode === "understanding" &&
           f.dim2QuestionCode === "ageGroup",
-      ),
+      ) as CrossAnalysisData["understandingByAgeGroup"],
       satisfactionByGender: crossFacts.filter(
         (f) =>
           f.dim1QuestionCode === "satisfaction" &&
           f.dim2QuestionCode === "gender",
-      ),
+      ) as CrossAnalysisData["satisfactionByGender"],
       satisfactionByAgeGroup: crossFacts.filter(
         (f) =>
           f.dim1QuestionCode === "satisfaction" &&
           f.dim2QuestionCode === "ageGroup",
-      ),
+      ) as CrossAnalysisData["satisfactionByAgeGroup"],
     };
   },
 });
