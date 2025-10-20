@@ -50,6 +50,7 @@ import type * as queries_lectures_getLecture from "../queries/lectures/getLectur
 import type * as queries_lectures_getLectures from "../queries/lectures/getLectures.js";
 import type * as queries_lectures_index from "../queries/lectures/index.js";
 import type * as queries_responses_checkSurveyAvailable from "../queries/responses/checkSurveyAvailable.js";
+import type * as queries_responses_getResponseCount from "../queries/responses/getResponseCount.js";
 import type * as queries_responses_index from "../queries/responses/index.js";
 import type * as queries_users_getAdminUsers from "../queries/users/getAdminUsers.js";
 import type * as queries_users_getCurrentUser from "../queries/users/getCurrentUser.js";
@@ -132,6 +133,7 @@ declare const fullApi: ApiFromModules<{
   "queries/lectures/getLectures": typeof queries_lectures_getLectures;
   "queries/lectures/index": typeof queries_lectures_index;
   "queries/responses/checkSurveyAvailable": typeof queries_responses_checkSurveyAvailable;
+  "queries/responses/getResponseCount": typeof queries_responses_getResponseCount;
   "queries/responses/index": typeof queries_responses_index;
   "queries/users/getAdminUsers": typeof queries_users_getAdminUsers;
   "queries/users/getCurrentUser": typeof queries_users_getCurrentUser;
