@@ -32,6 +32,11 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# E2Eテスト用環境変数ファイル（.env.test.local.exampleはコミット対象）
+.env.test.local
+
+# E2Eテスト実行時の生成ファイル
+.playwright-mcp/
 
 # vercel
 .vercel
