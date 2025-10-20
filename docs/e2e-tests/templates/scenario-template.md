@@ -83,11 +83,11 @@
 
 ## 使用するPlaywright MCPツール
 
-| ツール | 用途 | 使用箇所 |
-|--------|------|----------|
-| `browser_navigate` | ページ遷移 | Phase X, Step Y |
-| `browser_click` | クリック操作 | Phase X, Step Y |
-| ... | ... | ... |
+| ツール             | 用途         | 使用箇所        |
+| ------------------ | ------------ | --------------- |
+| `browser_navigate` | ページ遷移   | Phase X, Step Y |
+| `browser_click`    | クリック操作 | Phase X, Step Y |
+| ...                | ...          | ...             |
 
 ---
 
