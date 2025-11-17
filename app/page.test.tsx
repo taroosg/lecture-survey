@@ -4,27 +4,8 @@
  */
 
 import { render, screen, cleanup } from "@testing-library/react";
-import { describe, test, expect, vi, afterEach } from "vitest";
+import { describe, test, expect, afterEach } from "vitest";
 import Home from "./page";
-
-// Convex認証のモック
-vi.mock("convex/react", () => ({
-  useConvexAuth: vi.fn(() => ({ isAuthenticated: true })),
-}));
-
-// Convex Auth Next.jsのモック
-vi.mock("@convex-dev/auth/react", () => ({
-  useAuthActions: vi.fn(() => ({
-    signOut: vi.fn(() => Promise.resolve()),
-  })),
-}));
-
-// Next.js routerのモック
-vi.mock("next/navigation", () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
-}));
 
 describe("Home (ダッシュボード)", () => {
   afterEach(() => {
@@ -32,24 +13,10 @@ describe("Home (ダッシュボード)", () => {
   });
 
   describe("表示テスト", () => {
-    test("ヘッダーに「講義アンケートシステム」が表示されること", () => {
-      render(<Home />);
-      expect(
-        screen.getByRole("heading", { name: "講義アンケートシステム" }),
-      ).toBeInTheDocument();
-    });
-
     test("「ダッシュボード」タイトルが表示されること", () => {
       render(<Home />);
       expect(
         screen.getByRole("heading", { name: "ダッシュボード" }),
-      ).toBeInTheDocument();
-    });
-
-    test("サインアウトボタンが表示されること", () => {
-      render(<Home />);
-      expect(
-        screen.getByRole("button", { name: "サインアウト" }),
       ).toBeInTheDocument();
     });
   });
@@ -73,15 +40,13 @@ describe("Home (ダッシュボード)", () => {
 
     test("講義作成カードのリンクが正しいこと", () => {
       render(<Home />);
-      const createLinks = screen.getAllByText("講義作成");
-      const createLink = createLinks[0].closest("a");
+      const createLink = screen.getByText("講義作成").closest("a");
       expect(createLink).toHaveAttribute("href", "/lectures/create");
     });
 
     test("講義一覧カードのリンクが正しいこと", () => {
       render(<Home />);
-      const listLinks = screen.getAllByText("講義一覧");
-      const listLink = listLinks[0].closest("a");
+      const listLink = screen.getByText("講義一覧").closest("a");
       expect(listLink).toHaveAttribute("href", "/lectures");
     });
   });
@@ -89,14 +54,14 @@ describe("Home (ダッシュボード)", () => {
   describe("アイコン表示テスト", () => {
     test("講義作成カードのアイコン（📝）が表示されること", () => {
       render(<Home />);
-      const icons = screen.getAllByLabelText("講義作成");
-      expect(icons[0]).toHaveTextContent("📝");
+      const icon = screen.getByLabelText("講義作成");
+      expect(icon).toHaveTextContent("📝");
     });
 
     test("講義一覧カードのアイコン（📊）が表示されること", () => {
       render(<Home />);
-      const icons = screen.getAllByLabelText("講義一覧");
-      expect(icons[0]).toHaveTextContent("📊");
+      const icon = screen.getByLabelText("講義一覧");
+      expect(icon).toHaveTextContent("📊");
     });
   });
 });
