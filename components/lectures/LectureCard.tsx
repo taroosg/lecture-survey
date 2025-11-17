@@ -35,9 +35,11 @@ export function LectureCard({ lecture }: LectureCardProps) {
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
-          <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-            {lecture.title}
-          </h2>
+          <Link href={`/lectures/${lecture._id}`}>
+            <h2 className="mb-2 text-xl font-semibold text-gray-900 transition-colors hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400 cursor-pointer">
+              {lecture.title}
+            </h2>
+          </Link>
           {lecture.description && (
             <p className="mb-3 text-gray-600 dark:text-gray-400">
               {lecture.description}
@@ -92,15 +94,6 @@ export function LectureCard({ lecture }: LectureCardProps) {
               {window.location.origin}/survey/{lecture._id}
             </a>
           </div>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href={`/lectures/${lecture._id}/edit`}
-            className="rounded bg-gray-600 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-400"
-          >
-            詳細・編集
-          </Link>
         </div>
       </div>
     </div>

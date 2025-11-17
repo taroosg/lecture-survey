@@ -82,11 +82,21 @@ describe("LectureCard", () => {
       expect(statusBadge).toHaveClass("bg-yellow-100", "text-yellow-800");
     });
 
-    it("アクションボタンが正しく配置されること", () => {
+    it("URLコピーボタンが表示されること", () => {
       render(<LectureCard lecture={mockActiveLecture} />);
 
-      expect(screen.getByText("詳細・編集")).toBeInTheDocument();
       expect(screen.getByText("URLコピー")).toBeInTheDocument();
+    });
+
+    it("講義タイトルが詳細画面へのリンクになっていること", () => {
+      render(<LectureCard lecture={mockActiveLecture} />);
+
+      const titleElement = screen.getByText("React基礎講義");
+      expect(titleElement).toBeInTheDocument();
+
+      // タイトルの親要素がLinkであることを確認
+      const linkElement = titleElement.closest("a");
+      expect(linkElement).toHaveAttribute("href", "/lectures/lecture1");
     });
 
     it("アンケートURLが正しく表示されること", () => {
