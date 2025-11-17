@@ -2,16 +2,18 @@
 
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import LectureForm from "../../../../components/lectures/LectureForm";
 import { LectureFormData } from "../../../../utils/lectureFormUtils";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { Breadcrumb } from "../../../../components/common/Breadcrumb";
+import { useBreadcrumbForPath } from "../../../../lib/breadcrumb";
 
 export default function EditLecturePage() {
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const lectureId = params.id as Id<"lectures">;
 
   const lecture = useQuery(api.api.lectures.getLecture, {
@@ -19,6 +21,12 @@ export default function EditLecturePage() {
   });
   const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
   const [isLoading, setIsLoading] = useState(false);
+
+  // パンくずリスト用データ
+  const breadcrumbItems = useBreadcrumbForPath(pathname, {
+    lectureTitle: lecture?.title,
+    lectureId,
+  });
 
   const handleSubmit = async (formData: LectureFormData) => {
     setIsLoading(true);
@@ -71,15 +79,8 @@ export default function EditLecturePage() {
     return (
       <main className="p-8 flex flex-col gap-8">
         <div className="max-w-4xl mx-auto w-full">
+          <Breadcrumb items={breadcrumbItems} />
           <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
-          <div className="mb-6">
-            <Link
-              href="/lectures"
-              className="text-blue-600 hover:underline dark:text-blue-400"
-            >
-              ← 講義一覧に戻る
-            </Link>
-          </div>
 
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
             <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
@@ -107,15 +108,8 @@ export default function EditLecturePage() {
   return (
     <main className="p-8 flex flex-col gap-8">
       <div className="max-w-4xl mx-auto w-full">
+        <Breadcrumb items={breadcrumbItems} />
         <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
-        <div className="mb-6">
-          <Link
-            href="/lectures"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
-            ← 講義一覧に戻る
-          </Link>
-        </div>
 
         {/* 講義の状態表示 */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">

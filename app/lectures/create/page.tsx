@@ -2,13 +2,16 @@
 
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import LectureForm from "../../../components/lectures/LectureForm";
 import { LectureFormData } from "../../../utils/lectureFormUtils";
+import { Breadcrumb } from "../../../components/common/Breadcrumb";
+import { useBreadcrumbForPath } from "../../../lib/breadcrumb";
 
 export default function CreateLecturePage() {
+  const pathname = usePathname();
+  const breadcrumbItems = useBreadcrumbForPath(pathname);
   const router = useRouter();
   const createLecture = useMutation(api.api.lectures.createNewLecture);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,17 +51,10 @@ export default function CreateLecturePage() {
   return (
     <main className="p-8 flex flex-col gap-8">
       <div className="max-w-4xl mx-auto w-full">
+        <Breadcrumb items={breadcrumbItems} />
         <h2 className="text-3xl font-bold text-center mb-8">
           新しい講義を作成
         </h2>
-        <div className="mb-6">
-          <Link
-            href="/lectures"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
-            ← 講義一覧に戻る
-          </Link>
-        </div>
         <LectureForm
           onSubmit={handleSubmit}
           onCancel={handleCancel}

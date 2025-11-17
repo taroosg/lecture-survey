@@ -11,6 +11,7 @@ vi.mock("next/navigation", () => ({
     push: mockPush,
   }),
   useParams: () => mockParams,
+  usePathname: () => "/lectures/lecture123/edit",
 }));
 
 // Convex APIをモック
@@ -82,7 +83,6 @@ describe("EditLecturePage", () => {
           "指定された講義が存在しないか、アクセス権限がありません。",
         ),
       ).toBeInTheDocument();
-      expect(screen.getByText("← 講義一覧に戻る")).toBeInTheDocument();
     });
 
     it("講義データが正常に表示されること", () => {
@@ -92,9 +92,6 @@ describe("EditLecturePage", () => {
 
       // ページタイトルが表示されている
       expect(screen.getByText("講義を編集")).toBeInTheDocument();
-
-      // 戻るリンクが表示されている
-      expect(screen.getByText("← 講義一覧に戻る")).toBeInTheDocument();
 
       // 講義状態が表示されている
       expect(screen.getByText("現在の状態")).toBeInTheDocument();

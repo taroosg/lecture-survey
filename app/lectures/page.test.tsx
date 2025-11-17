@@ -2,6 +2,11 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import LecturesPage from "./page";
 
+// next/navigation のモック
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/lectures",
+}));
+
 // LectureList コンポーネントのモック
 vi.mock("../../components/lectures/LectureList", () => ({
   LectureList: () => (

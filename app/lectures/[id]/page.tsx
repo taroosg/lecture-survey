@@ -5,9 +5,12 @@ import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import Link from "next/link";
 import React, { useState, use } from "react";
+import { usePathname } from "next/navigation";
 import SatisfactionSummary from "../../../components/analysis/SatisfactionSummary";
 import BasicStatsGrid from "../../../components/analysis/BasicStatsGrid";
 import CrossAnalysisChartsContainer from "../../../components/analysis/CrossAnalysisChartsContainer";
+import { Breadcrumb } from "../../../components/common/Breadcrumb";
+import { useBreadcrumbForPath } from "../../../lib/breadcrumb";
 
 export default function LectureDetailPage({
   params,
@@ -27,6 +30,7 @@ export default function LectureDetailPage({
 type TabType = "summary" | "basic" | "cross";
 
 function LectureDetailContent({ lectureId }: { lectureId: string }) {
+  const pathname = usePathname();
   const lecture = useQuery(api.api.lectures.getLecture, {
     lectureId: lectureId as Id<"lectures">,
   });
@@ -42,6 +46,12 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
       lectureId: lectureId as Id<"lectures">,
     },
   );
+
+  // パンくずリスト用データ
+  const breadcrumbItems = useBreadcrumbForPath(pathname, {
+    lectureTitle: lecture?.title,
+    lectureId,
+  });
 
   // タブ状態管理
   const [activeTab, setActiveTab] = useState<TabType>("summary");
@@ -100,6 +110,7 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
 
   return (
     <div>
+      <Breadcrumb items={breadcrumbItems} />
       <h2 className="text-3xl font-bold text-center mb-8">講義詳細</h2>
 
       <div>
