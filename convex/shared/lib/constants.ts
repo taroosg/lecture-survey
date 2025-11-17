@@ -8,18 +8,18 @@ export const VALID_GENDERS = [
   "male",
   "female",
   "other",
-  "prefer_not_to_say",
+  "preferNotToSay",
 ] as const;
 
 // 年代の選択肢
 export const VALID_AGE_GROUPS = [
-  "under_20",
+  "under20",
   "20s",
   "30s",
   "40s",
   "50s",
   "60s",
-  "over_70",
+  "over70",
 ] as const;
 
 // 理解度・満足度評価の定数（1-5段階）

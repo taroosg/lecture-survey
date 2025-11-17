@@ -26,7 +26,7 @@ describe("講義用定数", () => {
         "male",
         "female",
         "other",
-        "prefer_not_to_say",
+        "preferNotToSay",
       ]);
     });
 
@@ -50,13 +50,13 @@ describe("講義用定数", () => {
   describe("VALID_AGE_GROUPS", () => {
     it("正確な年代の選択肢が定義されていること", () => {
       expect(VALID_AGE_GROUPS).toEqual([
-        "under_20",
+        "under20",
         "20s",
         "30s",
         "40s",
         "50s",
         "60s",
-        "over_70",
+        "over70",
       ]);
     });
 

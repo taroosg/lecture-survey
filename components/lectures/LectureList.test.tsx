@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LectureList } from "./LectureList";
 import { Doc, Id } from "../../convex/_generated/dataModel";
@@ -14,24 +14,17 @@ vi.mock("convex/react", () => ({
 // LectureCard のモック
 interface LectureCardProps {
   lecture: Doc<"lectures">;
-  onCloseSurvey: (lectureId: string) => Promise<void>;
   onDeleteLecture: (lectureId: string) => Promise<void>;
   loading: string | null;
 }
 
 vi.mock("./LectureCard", () => ({
-  LectureCard: ({
-    lecture,
-    onCloseSurvey,
-    onDeleteLecture,
-    loading,
-  }: LectureCardProps) => (
+  LectureCard: ({ lecture, onDeleteLecture, loading }: LectureCardProps) => (
     <div data-testid={`lecture-card-${lecture._id}`}>
       <h3>{lecture.title}</h3>
       <span>{lecture.surveyStatus}</span>
-      <button onClick={() => onCloseSurvey(lecture._id)}>アンケート終了</button>
       <button onClick={() => onDeleteLecture(lecture._id)}>削除</button>
-      {loading === `close-${lecture._id}` && <span>closing...</span>}
+      {loading === `delete-${lecture._id}` && <span>deleting...</span>}
     </div>
   ),
 }));
@@ -79,7 +72,6 @@ const mockLectures: Doc<"lectures">[] = [
   },
 ];
 
-const mockCloseSurvey = vi.fn();
 const mockDeleteLecture = vi.fn();
 const mockUseQuery = vi.mocked(convexReact.useQuery);
 const mockUseMutation = vi.mocked(convexReact.useMutation);
@@ -92,11 +84,8 @@ describe("LectureList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // 最初のuseMutation呼び出し（removeLecture）にはmockDeleteLectureを返し、
-    // 2番目の呼び出し（updateExistingLecture）にはmockCloseSurveyを返す
-    mockUseMutation
-      .mockReturnValueOnce(mockDeleteLecture)
-      .mockReturnValueOnce(mockCloseSurvey);
+    // useMutation呼び出し（removeLecture）にmockDeleteLectureを返す
+    mockUseMutation.mockReturnValue(mockDeleteLecture);
   });
 
   afterEach(() => {
@@ -319,20 +308,6 @@ describe("LectureList", () => {
       mockUseQuery.mockReturnValue(mockLectures);
     });
 
-    it("アンケート終了アクションが正しく呼ばれること", async () => {
-      const user = userEvent.setup();
-      render(<LectureList />);
-
-      const closeButtons = screen.getAllByText("アンケート終了");
-      await user.click(closeButtons[0]);
-
-      // 最初のアンケート終了ボタンをクリック
-      expect(mockCloseSurvey).toHaveBeenCalledWith({
-        lectureId: "2",
-        surveyStatus: "closed",
-      });
-    });
-
     it("削除アクションが正しく呼ばれること", async () => {
       const user = userEvent.setup();
       render(<LectureList />);
@@ -340,32 +315,10 @@ describe("LectureList", () => {
       const deleteButtons = screen.getAllByText("削除");
       await user.click(deleteButtons[0]);
 
-      // 最初の削除ボタンをクリック
+      // 最初の削除ボタンをクリック（デフォルトで作成日降順なのでID "2" が最初）
       expect(mockDeleteLecture).toHaveBeenCalledWith({
         lectureId: "2",
       });
-    });
-
-    it("エラー時のアラート表示テスト", async () => {
-      const user = userEvent.setup();
-      const mockAlert = vi.spyOn(global, "alert").mockImplementation(() => {});
-      const consoleSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
-      mockCloseSurvey.mockRejectedValue(new Error("API Error"));
-
-      render(<LectureList />);
-
-      const closeButtons = screen.getAllByText("アンケート終了");
-      await user.click(closeButtons[0]);
-
-      await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith("アンケート終了に失敗しました");
-      });
-
-      consoleSpy.mockRestore();
-      mockAlert.mockRestore();
     });
   });
 

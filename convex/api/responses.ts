@@ -2,6 +2,8 @@ import { v } from "convex/values";
 import { query, mutation } from "../_generated/server";
 import { internal } from "../_generated/api";
 import { Id } from "../_generated/dataModel";
+import { requireAuth } from "../shared/helpers/authHelpers";
+import type { ResponseCountResult } from "../queries/responses/getResponseCount";
 
 /**
  * Responses - Public API Layer
@@ -31,6 +33,22 @@ export const checkSurveyAvailable = query({
   }> => {
     return await ctx.runQuery(
       internal.queries.responses.checkSurveyAvailable.checkSurveyAvailable,
+      {
+        lectureId: args.lectureId,
+      },
+    );
+  },
+});
+
+// 回答数取得（認証付き）
+export const getResponseCount = query({
+  args: {
+    lectureId: v.id("lectures"),
+  },
+  handler: async (ctx, args): Promise<ResponseCountResult> => {
+    const { userId } = await requireAuth(ctx);
+    return await ctx.runQuery(
+      internal.queries.responses.getResponseCount.getResponseCount,
       {
         lectureId: args.lectureId,
       },

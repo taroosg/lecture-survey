@@ -5,3 +5,4 @@
  */
 
 export * from "./checkSurveyAvailable";
+export * from "./getResponseCount";

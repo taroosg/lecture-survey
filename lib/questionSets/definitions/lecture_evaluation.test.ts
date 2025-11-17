@@ -112,7 +112,7 @@ describe("lecture_evaluation.json", () => {
       const genderQuestion = lectureEvaluationSet.questions.find(
         (q) => q.questionId === "gender",
       );
-      const expectedValues = ["male", "female", "other", "prefer_not_to_say"];
+      const expectedValues = ["male", "female", "other", "preferNotToSay"];
       const actualValues =
         genderQuestion?.options.map((opt) => opt.value) || [];
       expect(actualValues).toEqual(expectedValues);
@@ -123,13 +123,13 @@ describe("lecture_evaluation.json", () => {
         (q) => q.questionId === "age_group",
       );
       const expectedValues = [
-        "under_20",
+        "under20",
         "20s",
         "30s",
         "40s",
         "50s",
         "60s",
-        "over_70",
+        "over70",
       ];
       const actualValues = ageQuestion?.options.map((opt) => opt.value) || [];
       expect(actualValues).toEqual(expectedValues);
