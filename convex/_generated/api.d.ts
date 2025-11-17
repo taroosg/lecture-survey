@@ -73,7 +73,6 @@ import type * as services_common_index from "../services/common/index.js";
 import type * as services_common_statistics from "../services/common/statistics.js";
 import type * as services_common_utilities from "../services/common/utilities.js";
 import type * as services_lectures_validators_lectureValidator from "../services/lectures/validators/lectureValidator.js";
-import type * as services_questions_definitions from "../services/questions/definitions.js";
 import type * as services_users_helpers_userHelpers from "../services/users/helpers/userHelpers.js";
 import type * as services_users_validators_userValidator from "../services/users/validators/userValidator.js";
 import type * as shared_helpers_authHelpers from "../shared/helpers/authHelpers.js";
@@ -158,7 +157,6 @@ declare const fullApi: ApiFromModules<{
   "services/common/statistics": typeof services_common_statistics;
   "services/common/utilities": typeof services_common_utilities;
   "services/lectures/validators/lectureValidator": typeof services_lectures_validators_lectureValidator;
-  "services/questions/definitions": typeof services_questions_definitions;
   "services/users/helpers/userHelpers": typeof services_users_helpers_userHelpers;
   "services/users/validators/userValidator": typeof services_users_validators_userValidator;
   "shared/helpers/authHelpers": typeof shared_helpers_authHelpers;

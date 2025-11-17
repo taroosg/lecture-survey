@@ -70,8 +70,8 @@ npx playwright test survey-load-test
 
 ### 生成されるテストデータ
 
-- **性別**: ランダム（male, female, other, prefer_not_to_say）
-- **年代**: ランダム（under_20, 20s, 30s, 40s, 50s, 60s, over_70）
+- **性別**: ランダム（male, female, other, preferNotToSay）
+- **年代**: ランダム（under20, 20s, 30s, 40s, 50s, 60s, over70）
 - **理解度**: 平均4.0程度（3, 4, 4, 5 からランダム選択）
 - **満足度**: 平均4.0程度（3, 4, 4, 5 からランダム選択）
 - **フリーコメント**: 事前定義されたコメントからランダム選択

@@ -41,27 +41,46 @@ export const getCrossAnalysisDataInternal = internalQuery({
       .collect();
 
     // クロス集計パターンごとに分類
+    // rowPctをpctとしてマッピング（行方向の割合 = カテゴリ内の分布）
+    const mapCrossFact = (fact: (typeof crossFacts)[0]) => ({
+      _id: fact._id,
+      dim1QuestionCode: fact.dim1QuestionCode,
+      dim1OptionCode: fact.dim1OptionCode,
+      dim2QuestionCode: fact.dim2QuestionCode || "",
+      dim2OptionCode: fact.dim2OptionCode || "",
+      n: fact.n || 0,
+      pct: fact.rowPct || 0, // rowPctをpctとして使用
+    });
+
     return {
-      understandingByGender: crossFacts.filter(
-        (f) =>
-          f.dim1QuestionCode === "understanding" &&
-          f.dim2QuestionCode === "gender",
-      ) as CrossAnalysisData["understandingByGender"],
-      understandingByAgeGroup: crossFacts.filter(
-        (f) =>
-          f.dim1QuestionCode === "understanding" &&
-          f.dim2QuestionCode === "ageGroup",
-      ) as CrossAnalysisData["understandingByAgeGroup"],
-      satisfactionByGender: crossFacts.filter(
-        (f) =>
-          f.dim1QuestionCode === "satisfaction" &&
-          f.dim2QuestionCode === "gender",
-      ) as CrossAnalysisData["satisfactionByGender"],
-      satisfactionByAgeGroup: crossFacts.filter(
-        (f) =>
-          f.dim1QuestionCode === "satisfaction" &&
-          f.dim2QuestionCode === "ageGroup",
-      ) as CrossAnalysisData["satisfactionByAgeGroup"],
+      understandingByGender: crossFacts
+        .filter(
+          (f) =>
+            f.dim1QuestionCode === "understanding" &&
+            f.dim2QuestionCode === "gender",
+        )
+        .map(mapCrossFact),
+      understandingByAgeGroup: crossFacts
+        .filter(
+          (f) =>
+            f.dim1QuestionCode === "understanding" &&
+            f.dim2QuestionCode === "ageGroup",
+        )
+        .map(mapCrossFact),
+      satisfactionByGender: crossFacts
+        .filter(
+          (f) =>
+            f.dim1QuestionCode === "satisfaction" &&
+            f.dim2QuestionCode === "gender",
+        )
+        .map(mapCrossFact),
+      satisfactionByAgeGroup: crossFacts
+        .filter(
+          (f) =>
+            f.dim1QuestionCode === "satisfaction" &&
+            f.dim2QuestionCode === "ageGroup",
+        )
+        .map(mapCrossFact),
     };
   },
 });

@@ -9,11 +9,7 @@ import type {
   SimpleDistributionResult,
 } from "../../../shared/types/analysis";
 import { countOccurrences, calculatePercentage } from "../../common/statistics";
-import {
-  getGenderOptions,
-  getAgeGroupOptions,
-  getSatisfactionLevels,
-} from "../../questions/definitions";
+import { VALID_GENDERS, VALID_AGE_GROUPS } from "../../../shared/lib/constants";
 
 /**
  * 単純分布を計算
@@ -118,12 +114,12 @@ export const extractQuestionValues = (
 export const getAllOptionsForQuestion = (questionCode: string): string[] => {
   switch (questionCode) {
     case "gender":
-      return getGenderOptions();
+      return [...VALID_GENDERS];
     case "ageGroup":
-      return getAgeGroupOptions();
+      return [...VALID_AGE_GROUPS];
     case "understanding":
     case "satisfaction":
-      return getSatisfactionLevels();
+      return ["1", "2", "3", "4", "5"];
     default:
       throw new Error(`不明な質問コード: ${questionCode}`);
   }

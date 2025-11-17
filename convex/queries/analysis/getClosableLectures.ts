@@ -31,12 +31,24 @@ export const getClosableLecturesInternal = internalQuery({
     // 現在時刻で締切時刻を過ぎている講義をフィルタリング
     const currentTimestamp = Date.now();
 
-    return activeLectures.filter((lecture) => {
-      // 締切日時を結合してタイムスタンプに変換
-      const closeDateTimeStr = `${lecture.surveyCloseDate}T${lecture.surveyCloseTime}:00`;
+    const closableLectures = activeLectures.filter((lecture) => {
+      // 締切日時を結合してタイムスタンプに変換（JST = UTC+9として扱う）
+      // 例: "2025-01-17T15:30:00+09:00"
+      const closeDateTimeStr = `${lecture.surveyCloseDate}T${lecture.surveyCloseTime}:00+09:00`;
       const closeTimestamp = new Date(closeDateTimeStr).getTime();
+
+      // デバッグログ
+      console.log(
+        `[getClosableLectures] 講義: ${lecture.title}, 締切: ${closeDateTimeStr}, 締切TS: ${closeTimestamp}, 現在TS: ${currentTimestamp}, 締切済み: ${closeTimestamp <= currentTimestamp}`,
+      );
 
       return closeTimestamp <= currentTimestamp;
     });
+
+    console.log(
+      `[getClosableLectures] アクティブ講義数: ${activeLectures.length}, 締切対象: ${closableLectures.length}`,
+    );
+
+    return closableLectures;
   },
 });

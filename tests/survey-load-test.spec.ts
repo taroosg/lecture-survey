@@ -27,15 +27,15 @@ function randomChoice<T>(array: T[]): T {
  * 理解度・満足度は平均4.0程度を目標として[3, 4, 4, 5]からランダムに選択
  */
 function generateRandomSurveyData(index: number) {
-  const genderValues = ["male", "female", "other", "prefer_not_to_say"];
+  const genderValues = ["male", "female", "other", "preferNotToSay"];
   const ageGroupValues = [
-    "under_20",
+    "under20",
     "20s",
     "30s",
     "40s",
     "50s",
     "60s",
-    "over_70",
+    "over70",
   ];
 
   // 理解度・満足度：平均4.0を目標に[3, 4, 4, 5]からランダム選択

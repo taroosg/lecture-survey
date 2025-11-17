@@ -122,11 +122,6 @@ export const filterValidResponsesForAnalysis = (
       return false;
     }
 
-    // preferNotToSayの除外
-    if (response.gender === "preferNotToSay") {
-      return false;
-    }
-
     // 必須項目の欠損チェック
     return isValidResponseData(response);
   });

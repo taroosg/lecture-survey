@@ -52,7 +52,8 @@ export default function BasicStatsGrid({
     "30s": "30代",
     "40s": "40代",
     "50s": "50代",
-    over60: "60歳以上",
+    "60s": "60代",
+    over70: "70歳以上",
   };
 
   return (
