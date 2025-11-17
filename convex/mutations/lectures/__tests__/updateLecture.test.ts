@@ -132,7 +132,7 @@ describe("updateLecture", () => {
       },
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 1)); // タイミング調整
+    await new Promise((resolve) => setTimeout(resolve, 10)); // タイミング調整
 
     const result = await t.mutation(
       internal.mutations.lectures.updateLecture.updateLectureInternal,
