@@ -10,15 +10,9 @@ import {
 
 interface LectureCardProps {
   lecture: Doc<"lectures">;
-  onDeleteLecture: (lectureId: string) => Promise<void>;
-  loading: string | null;
 }
 
-export function LectureCard({
-  lecture,
-  onDeleteLecture,
-  loading,
-}: LectureCardProps) {
+export function LectureCard({ lecture }: LectureCardProps) {
   const [copiedUrl, setCopiedUrl] = useState(false);
 
   const formattedLecture = formatLectureForDisplay(lecture);
@@ -37,17 +31,15 @@ export function LectureCard({
     }
   };
 
-  const handleDelete = () => {
-    onDeleteLecture(lecture._id);
-  };
-
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex-1">
-          <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-            {lecture.title}
-          </h2>
+      <div className="mb-4">
+        <div>
+          <Link href={`/lectures/${lecture._id}`}>
+            <h2 className="mb-2 text-xl font-semibold text-gray-900 transition-colors hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400 cursor-pointer">
+              {lecture.title}
+            </h2>
+          </Link>
           {lecture.description && (
             <p className="mb-3 text-gray-600 dark:text-gray-400">
               {lecture.description}
@@ -62,6 +54,13 @@ export function LectureCard({
               <span className="font-medium">アンケート締切:</span>{" "}
               {formattedLecture.surveyCloseDateTime}
             </p>
+            <div className="mt-2">
+              <span
+                className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${formattedLecture.statusBadgeColor}`}
+              >
+                {formattedLecture.statusLabel}
+              </span>
+            </div>
             {statusInfo.shouldAutoClose && (
               <p className="text-orange-600 dark:text-orange-400">
                 <span className="font-medium">注意:</span>{" "}
@@ -70,57 +69,35 @@ export function LectureCard({
             )}
           </div>
         </div>
-        <div className="ml-4 text-right">
-          <span
-            className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${formattedLecture.statusBadgeColor}`}
-          >
-            {formattedLecture.statusLabel}
-          </span>
-        </div>
       </div>
 
-      <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
-        <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              アンケートURL:
-            </p>
-            <button
-              onClick={handleCopyUrl}
-              className="rounded bg-gray-500 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500"
-            >
-              {copiedUrl ? "コピー済み" : "URLコピー"}
-            </button>
-          </div>
-          <div className="break-all text-sm">
-            <a
-              href={`${window.location.origin}/survey/${lecture._id}`}
-              className="text-blue-600 hover:underline dark:text-blue-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {window.location.origin}/survey/{lecture._id}
-            </a>
+      {lecture.surveyStatus === "active" && (
+        <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
+          <div className="mb-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                アンケートURL:
+              </p>
+              <button
+                onClick={handleCopyUrl}
+                className="rounded bg-gray-500 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500"
+              >
+                {copiedUrl ? "コピー済み" : "URLコピー"}
+              </button>
+            </div>
+            <div className="break-all text-sm">
+              <a
+                href={`${window.location.origin}/survey/${lecture._id}`}
+                className="text-blue-600 hover:underline dark:text-blue-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {window.location.origin}/survey/{lecture._id}
+              </a>
+            </div>
           </div>
         </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href={`/lectures/${lecture._id}`}
-            className="rounded bg-gray-600 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-400"
-          >
-            詳細・編集
-          </Link>
-
-          <button
-            onClick={handleDelete}
-            disabled={loading === `delete-${lecture._id}`}
-            className="rounded bg-red-600 px-3 py-1 text-sm text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
-          >
-            {loading === `delete-${lecture._id}` ? "処理中..." : "削除"}
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

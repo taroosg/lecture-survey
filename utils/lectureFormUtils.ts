@@ -31,6 +31,7 @@ export interface ValidationResult {
  */
 export function validateLectureForm(
   formData: LectureFormData,
+  isEditMode = false,
 ): ValidationResult {
   const errors: FormErrors = {};
 
@@ -92,10 +93,12 @@ export function validateLectureForm(
       errors.general = "アンケート締切日時は講義日時より後に設定してください";
     }
 
-    // 過去の日時チェック
-    const now = new Date();
-    if (lectureDateTime < now) {
-      errors.lectureDate = "講義日時は現在時刻より後に設定してください";
+    // 過去の日時チェック（新規作成時のみ）
+    if (!isEditMode) {
+      const now = new Date();
+      if (lectureDateTime < now) {
+        errors.lectureDate = "講義日時は現在時刻より後に設定してください";
+      }
     }
   }
 
@@ -122,8 +125,11 @@ export function formatFormData(formData: LectureFormData): LectureFormData {
 /**
  * フォーム全体の有効性を判定する純粋関数
  */
-export function isFormValid(formData: LectureFormData): boolean {
-  const validation = validateLectureForm(formData);
+export function isFormValid(
+  formData: LectureFormData,
+  isEditMode = false,
+): boolean {
+  const validation = validateLectureForm(formData, isEditMode);
   return validation.isValid;
 }
 
@@ -145,8 +151,11 @@ export function getFormSubmitData(formData: LectureFormData): LectureFormData {
 /**
  * 各フィールドのエラー状態を計算する純粋関数
  */
-export function calculateFormErrors(formData: LectureFormData): FormErrors {
-  const validation = validateLectureForm(formData);
+export function calculateFormErrors(
+  formData: LectureFormData,
+  isEditMode = false,
+): FormErrors {
+  const validation = validateLectureForm(formData, isEditMode);
   return validation.errors;
 }
 
