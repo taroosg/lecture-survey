@@ -130,14 +130,14 @@ describe("index.ts", () => {
       expect(GENDER_OPTIONS[0].value).toBe("male");
       expect(GENDER_OPTIONS[1].value).toBe("female");
       expect(GENDER_OPTIONS[2].value).toBe("other");
-      expect(GENDER_OPTIONS[3].value).toBe("prefer_not_to_say");
+      expect(GENDER_OPTIONS[3].value).toBe("preferNotToSay");
     });
 
     it("AGE_GROUP_OPTIONSが正しく設定されること", () => {
       expect(AGE_GROUP_OPTIONS).toHaveLength(7);
-      expect(AGE_GROUP_OPTIONS[0].value).toBe("under_20");
+      expect(AGE_GROUP_OPTIONS[0].value).toBe("under20");
       expect(AGE_GROUP_OPTIONS[AGE_GROUP_OPTIONS.length - 1].value).toBe(
-        "over_70",
+        "over70",
       );
     });
 
@@ -164,19 +164,19 @@ describe("index.ts", () => {
         "male",
         "female",
         "other",
-        "prefer_not_to_say",
+        "preferNotToSay",
       ]);
     });
 
     it("VALID_AGE_GROUPSが正しく設定されること", () => {
       expect(VALID_AGE_GROUPS).toEqual([
-        "under_20",
+        "under20",
         "20s",
         "30s",
         "40s",
         "50s",
         "60s",
-        "over_70",
+        "over70",
       ]);
     });
 

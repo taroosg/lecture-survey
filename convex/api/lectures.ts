@@ -71,7 +71,7 @@ export const getLectureBySlugPublic = query({
     lectureDate: string;
     lectureTime: string;
     description: string | undefined;
-    surveyStatus: "active" | "closed";
+    surveyStatus: "active" | "closed" | "analyzed";
   } | null> => {
     // 認証不要（公開アンケート用）
     return await ctx.runQuery(

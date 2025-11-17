@@ -10,14 +10,12 @@ import {
 
 interface LectureCardProps {
   lecture: Doc<"lectures">;
-  onCloseSurvey: (lectureId: string) => Promise<void>;
   onDeleteLecture: (lectureId: string) => Promise<void>;
   loading: string | null;
 }
 
 export function LectureCard({
   lecture,
-  onCloseSurvey,
   onDeleteLecture,
   loading,
 }: LectureCardProps) {
@@ -36,12 +34,6 @@ export function LectureCard({
     } catch (error) {
       console.error("URL copy failed:", error);
       alert("URLのコピーに失敗しました");
-    }
-  };
-
-  const handleCloseSurvey = () => {
-    if (confirm("アンケートを締切ってもよろしいですか？")) {
-      onCloseSurvey(lecture._id);
     }
   };
 
@@ -119,18 +111,6 @@ export function LectureCard({
           >
             詳細・編集
           </Link>
-
-          {lecture.surveyStatus === "active" && (
-            <button
-              onClick={handleCloseSurvey}
-              disabled={loading === `close-${lecture._id}`}
-              className="rounded bg-yellow-600 px-3 py-1 text-sm text-white transition-colors hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-yellow-700 dark:hover:bg-yellow-600"
-            >
-              {loading === `close-${lecture._id}`
-                ? "処理中..."
-                : "アンケート終了"}
-            </button>
-          )}
 
           <button
             onClick={handleDelete}

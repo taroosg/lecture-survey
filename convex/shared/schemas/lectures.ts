@@ -14,8 +14,13 @@ export const lecturesTable = defineTable({
   // アンケート設定のみ（URL生成はlectureIdベース）
 
   // 状態管理
-  surveyStatus: v.union(v.literal("active"), v.literal("closed")),
+  surveyStatus: v.union(
+    v.literal("active"),
+    v.literal("closed"),
+    v.literal("analyzed"),
+  ),
   closedAt: v.optional(v.number()),
+  analyzedAt: v.optional(v.number()), // 分析完了日時
 
   // 作成者情報
   createdBy: v.id("users"),

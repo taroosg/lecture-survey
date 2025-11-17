@@ -31,7 +31,7 @@
           "sortOrder": 3
         },
         {
-          "value": "prefer_not_to_say",
+          "value": "preferNotToSay",
           "label": "回答しない",
           "sortOrder": 4
         }
@@ -46,7 +46,7 @@
       "analysisType": "categorical",
       "options": [
         {
-          "value": "under_20",
+          "value": "under20",
           "label": "20歳未満",
           "sortOrder": 1
         },
@@ -76,7 +76,7 @@
           "sortOrder": 6
         },
         {
-          "value": "over_70",
+          "value": "over70",
           "label": "70代以上",
           "sortOrder": 7
         }
