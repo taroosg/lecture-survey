@@ -3,8 +3,8 @@
  * 共通ヘッダーコンポーネントのテスト
  */
 
-import { render, screen } from "@testing-library/react";
-import { describe, test, expect, vi } from "vitest";
+import { render, screen, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, afterEach } from "vitest";
 import Header from "./Header";
 
 // Convex認証のモック
@@ -27,6 +27,10 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("Header", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   describe("表示テスト", () => {
     test("ヘッダーに「講義アンケートシステム」が表示されること", () => {
       render(<Header />);
