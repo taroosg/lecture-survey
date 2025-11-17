@@ -17,9 +17,16 @@ vi.mock("next/navigation", () => ({
 // Convex APIをモック
 const mockGetLecture = vi.fn();
 const mockUpdateLecture = vi.fn();
+const mockDeleteLecture = vi.fn();
 vi.mock("convex/react", () => ({
   useQuery: () => mockGetLecture(),
-  useMutation: () => mockUpdateLecture,
+  useMutation: vi.fn((mutation) => {
+    // 異なるミューテーションを区別
+    if (mutation === "removeLecture") {
+      return mockDeleteLecture;
+    }
+    return mockUpdateLecture;
+  }),
 }));
 
 // Convex APIの型をモック
@@ -96,8 +103,6 @@ describe("EditLecturePage", () => {
       // 講義状態が表示されている
       expect(screen.getByText("現在の状態")).toBeInTheDocument();
       expect(screen.getByText("受付中")).toBeInTheDocument();
-      expect(screen.getByText("アンケートURL")).toBeInTheDocument();
-      expect(screen.getByText("/survey/lecture123")).toBeInTheDocument();
 
       // フォームに既存データが設定されている
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();
@@ -321,6 +326,91 @@ describe("EditLecturePage", () => {
       expect(screen.getByDisplayValue("2025-12-02")).toBeInTheDocument();
       expect(screen.getByDisplayValue("10:00")).toBeInTheDocument();
       expect(screen.getByDisplayValue("既存の説明")).toBeInTheDocument();
+    });
+  });
+
+  describe("削除機能のテスト", () => {
+    it("Danger Zoneセクションが表示されること", () => {
+      mockGetLecture.mockReturnValue(mockLectureData);
+
+      render(<EditLecturePage />);
+
+      expect(screen.getByText("Danger Zone")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "以下の操作は元に戻すことができません。慎重に操作してください。",
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "この講義を削除" }),
+      ).toBeInTheDocument();
+    });
+
+    it("受付中の講義の場合は削除ボタンが無効", () => {
+      const activeLectureData = {
+        ...mockLectureData,
+        surveyStatus: "active" as const,
+      };
+      mockGetLecture.mockReturnValue(activeLectureData);
+
+      render(<EditLecturePage />);
+
+      const deleteButton = screen.getByRole("button", {
+        name: "この講義を削除",
+      });
+      expect(deleteButton).toBeDisabled();
+      expect(
+        screen.getByText("受付中の講義は削除できません。"),
+      ).toBeInTheDocument();
+    });
+
+    it("締切済みの講義の場合は削除ボタンが有効", () => {
+      const closedLectureData = {
+        ...mockLectureData,
+        surveyStatus: "closed" as const,
+      };
+      mockGetLecture.mockReturnValue(closedLectureData);
+
+      render(<EditLecturePage />);
+
+      const deleteButton = screen.getByRole("button", {
+        name: "この講義を削除",
+      });
+      expect(deleteButton).not.toBeDisabled();
+    });
+
+    it("分析済みの講義の場合は削除ボタンが有効", () => {
+      const analyzedLectureData = {
+        ...mockLectureData,
+        surveyStatus: "analyzed" as const,
+      };
+      mockGetLecture.mockReturnValue(analyzedLectureData);
+
+      render(<EditLecturePage />);
+
+      const deleteButton = screen.getByRole("button", {
+        name: "この講義を削除",
+      });
+      expect(deleteButton).not.toBeDisabled();
+    });
+
+    it("削除ボタンクリックで削除確認モーダルが表示される", async () => {
+      const user = userEvent.setup();
+      const closedLectureData = {
+        ...mockLectureData,
+        surveyStatus: "closed" as const,
+      };
+      mockGetLecture.mockReturnValue(closedLectureData);
+
+      render(<EditLecturePage />);
+
+      const deleteButton = screen.getByRole("button", {
+        name: "この講義を削除",
+      });
+      await user.click(deleteButton);
+
+      // モーダルが表示されることを確認
+      expect(screen.getByText("講義の削除確認")).toBeInTheDocument();
     });
   });
 });

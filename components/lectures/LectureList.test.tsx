@@ -8,23 +8,18 @@ import * as convexReact from "convex/react";
 // Convex のモック
 vi.mock("convex/react", () => ({
   useQuery: vi.fn(),
-  useMutation: vi.fn(),
 }));
 
 // LectureCard のモック
 interface LectureCardProps {
   lecture: Doc<"lectures">;
-  onDeleteLecture: (lectureId: string) => Promise<void>;
-  loading: string | null;
 }
 
 vi.mock("./LectureCard", () => ({
-  LectureCard: ({ lecture, onDeleteLecture, loading }: LectureCardProps) => (
+  LectureCard: ({ lecture }: LectureCardProps) => (
     <div data-testid={`lecture-card-${lecture._id}`}>
       <h3>{lecture.title}</h3>
       <span>{lecture.surveyStatus}</span>
-      <button onClick={() => onDeleteLecture(lecture._id)}>削除</button>
-      {loading === `delete-${lecture._id}` && <span>deleting...</span>}
     </div>
   ),
 }));
@@ -72,20 +67,11 @@ const mockLectures: Doc<"lectures">[] = [
   },
 ];
 
-const mockDeleteLecture = vi.fn();
 const mockUseQuery = vi.mocked(convexReact.useQuery);
-const mockUseMutation = vi.mocked(convexReact.useMutation);
-
-// グローバルオブジェクトのモック
-global.confirm = vi.fn().mockReturnValue(true);
-global.alert = vi.fn();
 
 describe("LectureList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
-    // useMutation呼び出し（removeLecture）にmockDeleteLectureを返す
-    mockUseMutation.mockReturnValue(mockDeleteLecture);
   });
 
   afterEach(() => {
@@ -300,25 +286,6 @@ describe("LectureList", () => {
       expect(
         screen.getByText("検索条件に一致する講義がありません"),
       ).toBeInTheDocument();
-    });
-  });
-
-  describe("アクション機能テスト", () => {
-    beforeEach(() => {
-      mockUseQuery.mockReturnValue(mockLectures);
-    });
-
-    it("削除アクションが正しく呼ばれること", async () => {
-      const user = userEvent.setup();
-      render(<LectureList />);
-
-      const deleteButtons = screen.getAllByText("削除");
-      await user.click(deleteButtons[0]);
-
-      // 最初の削除ボタンをクリック（デフォルトで作成日降順なのでID "2" が最初）
-      expect(mockDeleteLecture).toHaveBeenCalledWith({
-        lectureId: "2",
-      });
     });
   });
 

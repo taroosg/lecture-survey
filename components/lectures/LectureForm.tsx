@@ -24,6 +24,7 @@ export default function LectureForm({
   onCancel,
   submitLabel = "講義を作成",
   isLoading = false,
+  isEditMode = false,
 }: LectureFormProps) {
   const [formData, setFormData] = useState<LectureFormData>({
     title: initialData.title || "",
@@ -39,9 +40,9 @@ export default function LectureForm({
 
   // フォームデータが変更されたときにバリデーションを実行
   useEffect(() => {
-    const validation = validateLectureForm(formData);
+    const validation = validateLectureForm(formData, isEditMode);
     setErrors(validation.errors);
-  }, [formData]);
+  }, [formData, isEditMode]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -76,7 +77,7 @@ export default function LectureForm({
     );
     setTouched(allTouched);
 
-    const validation = validateLectureForm(formData);
+    const validation = validateLectureForm(formData, isEditMode);
     if (!validation.isValid) {
       setErrors(validation.errors);
       return;
@@ -93,7 +94,7 @@ export default function LectureForm({
     }
   };
 
-  const formIsValid = isFormValid(formData);
+  const formIsValid = isFormValid(formData, isEditMode);
 
   return (
     <form

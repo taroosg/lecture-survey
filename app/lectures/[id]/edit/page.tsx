@@ -9,6 +9,7 @@ import { LectureFormData } from "../../../../utils/lectureFormUtils";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Breadcrumb } from "../../../../components/common/Breadcrumb";
 import { useBreadcrumbForPath } from "../../../../lib/breadcrumb";
+import { DeleteConfirmationModal } from "../../../../components/common/DeleteConfirmationModal";
 
 export default function EditLecturePage() {
   const router = useRouter();
@@ -20,7 +21,10 @@ export default function EditLecturePage() {
     lectureId,
   });
   const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
+  const deleteLecture = useMutation(api.api.lectures.removeLecture);
   const [isLoading, setIsLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // パンくずリスト用データ
   const breadcrumbItems = useBreadcrumbForPath(pathname, {
@@ -59,6 +63,20 @@ export default function EditLecturePage() {
 
   const handleCancel = () => {
     router.push("/lectures");
+  };
+
+  const handleDeleteLecture = async () => {
+    try {
+      setDeleting(true);
+      await deleteLecture({ lectureId });
+      router.push("/lectures");
+    } catch (error) {
+      console.error("講義削除エラー:", error);
+      alert("講義削除に失敗しました");
+      throw error;
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // ローディング状態
@@ -105,6 +123,9 @@ export default function EditLecturePage() {
     surveyCloseTime: lecture.surveyCloseTime,
   };
 
+  // 削除可能条件の判定（受付中以外は削除可能）
+  const canDelete = lecture.surveyStatus !== "active";
+
   return (
     <main className="p-8 flex flex-col gap-8">
       <div className="max-w-4xl mx-auto w-full">
@@ -113,31 +134,27 @@ export default function EditLecturePage() {
 
         {/* 講義の状態表示 */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                現在の状態
-              </p>
-              <p className="font-medium">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    lecture.surveyStatus === "active"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-                  }`}
-                >
-                  {lecture.surveyStatus === "active" ? "受付中" : "締切済み"}
-                </span>
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                アンケートURL
-              </p>
-              <p className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                /survey/{lecture._id}
-              </p>
-            </div>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              現在の状態
+            </p>
+            <p className="font-medium">
+              <span
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  lecture.surveyStatus === "active"
+                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                    : lecture.surveyStatus === "analyzed"
+                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+                }`}
+              >
+                {lecture.surveyStatus === "active"
+                  ? "受付中"
+                  : lecture.surveyStatus === "analyzed"
+                    ? "分析完了"
+                    : "締切済み"}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -148,6 +165,62 @@ export default function EditLecturePage() {
           submitLabel="講義を更新"
           isLoading={isLoading}
           isEditMode={true}
+        />
+
+        {/* Danger Zone */}
+        <div className="mt-8 rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-950">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">
+              Danger Zone
+            </h3>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+              以下の操作は元に戻すことができません。慎重に操作してください。
+            </p>
+          </div>
+
+          <div className="rounded border border-red-300 bg-white p-4 dark:border-red-700 dark:bg-red-900">
+            <h4 className="font-medium text-red-900 dark:text-red-100">
+              この講義を削除
+            </h4>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+              講義を削除すると、以下のデータもすべて削除されます：
+            </p>
+            <ul className="mt-2 ml-5 list-disc text-sm text-red-700 dark:text-red-300">
+              <li>アンケート回答データ</li>
+              <li>分析結果データ</li>
+              <li>関連する履歴データ</li>
+            </ul>
+            <p className="mt-2 text-sm font-semibold text-red-800 dark:text-red-200">
+              ⚠️
+              この操作は取り消すことができません。削除されたデータは復旧できません。
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setDeleteModalOpen(true)}
+              disabled={!canDelete}
+              className="mt-4 rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-700 dark:bg-red-700 dark:hover:bg-red-600"
+              title={!canDelete ? "受付中の講義は削除できません" : ""}
+            >
+              この講義を削除
+            </button>
+
+            {!canDelete && (
+              <p className="mt-2 text-xs text-red-600 dark:text-red-400">
+                受付中の講義は削除できません。
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* 削除確認モーダル */}
+        <DeleteConfirmationModal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleDeleteLecture}
+          lectureTitle={lecture.title}
+          lectureId={lectureId}
+          isDeleting={deleting}
         />
       </div>
     </main>

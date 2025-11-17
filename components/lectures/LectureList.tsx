@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { LectureCard } from "./LectureCard";
@@ -19,15 +18,13 @@ const ITEMS_PER_PAGE = 10;
 
 export function LectureList() {
   const lectures = useQuery(api.api.lectures.getLectures, {});
-  const deleteLecture = useMutation(api.api.lectures.removeLecture);
 
   // State management
-  const [loading, setLoading] = useState<string | null>(null);
   const [filter, setFilter] = useState<LectureListFilter>({
     surveyStatus: "all",
     searchText: "",
   });
-  const [sortBy, setSortBy] = useState<SortBy>("createdAt");
+  const [sortBy, setSortBy] = useState<SortBy>("lectureDate");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -46,20 +43,6 @@ export function LectureList() {
   }, [lectures, filter, sortBy, sortOrder, currentPage]);
 
   // Event handlers
-  const handleDeleteLecture = async (lectureId: string) => {
-    if (!confirm("この講義を削除してもよろしいですか？")) return;
-
-    setLoading(`delete-${lectureId}`);
-    try {
-      await deleteLecture({ lectureId: lectureId as Id<"lectures"> });
-    } catch (error) {
-      console.error("講義削除エラー:", error);
-      alert("講義削除に失敗しました");
-    } finally {
-      setLoading(null);
-    }
-  };
-
   const handleFilterChange = (newFilter: Partial<LectureListFilter>) => {
     setFilter((prev) => ({ ...prev, ...newFilter }));
     setCurrentPage(1); // Reset to first page when filter changes
@@ -113,14 +96,19 @@ export function LectureList() {
               value={filter.surveyStatus || "all"}
               onChange={(e) =>
                 handleFilterChange({
-                  surveyStatus: e.target.value as "active" | "closed" | "all",
+                  surveyStatus: e.target.value as
+                    | "active"
+                    | "closed"
+                    | "analyzed"
+                    | "all",
                 })
               }
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             >
               <option value="all">すべて</option>
-              <option value="active">実施中</option>
+              <option value="active">受付中</option>
               <option value="closed">締切済み</option>
+              <option value="analyzed">分析完了</option>
             </select>
           </div>
 
@@ -215,12 +203,7 @@ export function LectureList() {
           {/* Lecture Cards */}
           <div className="grid gap-4">
             {processedLectures?.items.map((lecture) => (
-              <LectureCard
-                key={lecture._id}
-                lecture={lecture}
-                onDeleteLecture={handleDeleteLecture}
-                loading={loading}
-              />
+              <LectureCard key={lecture._id} lecture={lecture} />
             ))}
           </div>
 
