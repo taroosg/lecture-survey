@@ -19,11 +19,7 @@ interface LectureCardProps {
 }
 
 vi.mock("./LectureCard", () => ({
-  LectureCard: ({
-    lecture,
-    onDeleteLecture,
-    loading,
-  }: LectureCardProps) => (
+  LectureCard: ({ lecture, onDeleteLecture, loading }: LectureCardProps) => (
     <div data-testid={`lecture-card-${lecture._id}`}>
       <h3>{lecture.title}</h3>
       <span>{lecture.surveyStatus}</span>

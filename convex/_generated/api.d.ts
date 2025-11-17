@@ -67,6 +67,8 @@ import type * as services_analysis_transformers_index from "../services/analysis
 import type * as services_analysis_transformers_responseTransformer from "../services/analysis/transformers/responseTransformer.js";
 import type * as services_analysis_validators_analysisValidator from "../services/analysis/validators/analysisValidator.js";
 import type * as services_analysis_validators_index from "../services/analysis/validators/index.js";
+import type * as services_closure_aggregators from "../services/closure/aggregators.js";
+import type * as services_closure_processors from "../services/closure/processors.js";
 import type * as services_common_index from "../services/common/index.js";
 import type * as services_common_statistics from "../services/common/statistics.js";
 import type * as services_common_utilities from "../services/common/utilities.js";
@@ -150,6 +152,8 @@ declare const fullApi: ApiFromModules<{
   "services/analysis/transformers/responseTransformer": typeof services_analysis_transformers_responseTransformer;
   "services/analysis/validators/analysisValidator": typeof services_analysis_validators_analysisValidator;
   "services/analysis/validators/index": typeof services_analysis_validators_index;
+  "services/closure/aggregators": typeof services_closure_aggregators;
+  "services/closure/processors": typeof services_closure_processors;
   "services/common/index": typeof services_common_index;
   "services/common/statistics": typeof services_common_statistics;
   "services/common/utilities": typeof services_common_utilities;
