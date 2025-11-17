@@ -20,7 +20,6 @@ const ITEMS_PER_PAGE = 10;
 export function LectureList() {
   const lectures = useQuery(api.api.lectures.getLectures, {});
   const deleteLecture = useMutation(api.api.lectures.removeLecture);
-  const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
 
   // State management
   const [loading, setLoading] = useState<string | null>(null);
@@ -47,21 +46,6 @@ export function LectureList() {
   }, [lectures, filter, sortBy, sortOrder, currentPage]);
 
   // Event handlers
-  const handleCloseSurvey = async (lectureId: string) => {
-    setLoading(`close-${lectureId}`);
-    try {
-      await updateLecture({
-        lectureId: lectureId as Id<"lectures">,
-        surveyStatus: "closed",
-      });
-    } catch (error) {
-      console.error("アンケート終了エラー:", error);
-      alert("アンケート終了に失敗しました");
-    } finally {
-      setLoading(null);
-    }
-  };
-
   const handleDeleteLecture = async (lectureId: string) => {
     if (!confirm("この講義を削除してもよろしいですか？")) return;
 
@@ -237,7 +221,6 @@ export function LectureList() {
               <LectureCard
                 key={lecture._id}
                 lecture={lecture}
-                onCloseSurvey={handleCloseSurvey}
                 onDeleteLecture={handleDeleteLecture}
                 loading={loading}
               />

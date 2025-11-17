@@ -27,7 +27,6 @@ const mockClosedLecture: Doc<"lectures"> = {
 };
 
 // モック関数
-const mockOnCloseSurvey = vi.fn();
 const mockOnDeleteLecture = vi.fn();
 
 // グローバルオブジェクトのモック
@@ -61,7 +60,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -81,7 +79,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -96,7 +93,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockClosedLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -111,7 +107,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -119,7 +114,6 @@ describe("LectureCard", () => {
 
       expect(screen.getByText("詳細・編集")).toBeInTheDocument();
       expect(screen.getByText("URLコピー")).toBeInTheDocument();
-      expect(screen.getByText("アンケート終了")).toBeInTheDocument();
       expect(screen.getByText("削除")).toBeInTheDocument();
     });
 
@@ -127,7 +121,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -151,7 +144,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -176,7 +168,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -188,57 +179,12 @@ describe("LectureCard", () => {
       expect(mockAlert).toHaveBeenCalledWith("URLのコピーに失敗しました");
     });
 
-    it("アンケート終了ボタンクリック時に確認ダイアログが表示されること", async () => {
-      const user = userEvent.setup();
-      const mockConfirm = vi.spyOn(global, "confirm").mockReturnValue(true);
-
-      render(
-        <LectureCard
-          lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading={null}
-        />,
-      );
-
-      const closeButton = screen.getByText("アンケート終了");
-      await user.click(closeButton);
-
-      expect(mockConfirm).toHaveBeenCalledWith(
-        "アンケートを締切ってもよろしいですか？",
-      );
-      expect(mockOnCloseSurvey).toHaveBeenCalledWith("lecture1");
-    });
-
-    it("アンケート終了確認でキャンセルした場合、onCloseSurveyが呼ばれないこと", async () => {
-      const user = userEvent.setup();
-      const mockConfirm = vi.spyOn(global, "confirm").mockReturnValue(false);
-
-      render(
-        <LectureCard
-          lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading={null}
-        />,
-      );
-
-      const closeButton = screen.getByText("アンケート終了");
-      await user.click(closeButton);
-
-      expect(mockConfirm).toHaveBeenCalledWith(
-        "アンケートを締切ってもよろしいですか？",
-      );
-      expect(mockOnCloseSurvey).not.toHaveBeenCalled();
-    });
-
     it("削除ボタンクリック時にonDeleteLectureが呼ばれること", async () => {
       const user = userEvent.setup();
 
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -252,52 +198,10 @@ describe("LectureCard", () => {
   });
 
   describe("状態別表示テスト", () => {
-    it("アクティブ状態では締切ボタンが表示されること", () => {
-      render(
-        <LectureCard
-          lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading={null}
-        />,
-      );
-
-      expect(screen.getByText("アンケート終了")).toBeInTheDocument();
-    });
-
-    it("締切済み状態では締切ボタンが表示されないこと", () => {
-      render(
-        <LectureCard
-          lecture={mockClosedLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading={null}
-        />,
-      );
-
-      expect(screen.queryByText("アンケート終了")).not.toBeInTheDocument();
-    });
-
-    it("ローディング中はボタンが無効化され、処理中テキストが表示されること", () => {
-      render(
-        <LectureCard
-          lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading="close-lecture1"
-        />,
-      );
-
-      const closeButton = screen.getByText("処理中...");
-      expect(closeButton).toBeInTheDocument();
-      expect(closeButton).toBeDisabled();
-    });
-
     it("削除処理中は削除ボタンが無効化され、処理中テキストが表示されること", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading="delete-lecture1"
         />,
@@ -306,23 +210,6 @@ describe("LectureCard", () => {
       const deleteButton = screen.getByText("処理中...");
       expect(deleteButton).toBeInTheDocument();
       expect(deleteButton).toBeDisabled();
-    });
-
-    it("他の講義のローディング中でも、この講義のボタンは有効であること", () => {
-      render(
-        <LectureCard
-          lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
-          onDeleteLecture={mockOnDeleteLecture}
-          loading="close-lecture2"
-        />,
-      );
-
-      const closeButton = screen.getByText("アンケート終了");
-      const deleteButton = screen.getByText("削除");
-
-      expect(closeButton).not.toBeDisabled();
-      expect(deleteButton).not.toBeDisabled();
     });
   });
 
@@ -336,7 +223,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={lectureWithoutDescription}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,
@@ -358,7 +244,6 @@ describe("LectureCard", () => {
       render(
         <LectureCard
           lecture={mockActiveLecture}
-          onCloseSurvey={mockOnCloseSurvey}
           onDeleteLecture={mockOnDeleteLecture}
           loading={null}
         />,

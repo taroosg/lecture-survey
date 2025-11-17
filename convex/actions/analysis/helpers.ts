@@ -60,7 +60,11 @@ export async function executeCompleteAnalysisHelper(
     } catch (dataError) {
       // データ取得エラー（存在しない講義など）を適切にハンドリング
       const executionTime = Date.now() - startTime;
-      console.error(`[AnalysisHelper] データ取得失敗:`, dataError);
+      console.error(
+        `[AnalysisHelper] データ取得失敗:`,
+        dataError,
+        executionTime,
+      );
 
       // エラーを再スロー
       throw dataError;
@@ -232,7 +236,7 @@ export async function executeCompleteAnalysisHelper(
     };
   } catch (error) {
     const executionTime = Date.now() - startTime;
-    console.error(`[AnalysisHelper] 分析処理失敗:`, error);
+    console.error(`[AnalysisHelper] 分析処理失敗:`, error, executionTime);
 
     // エラーを再スローしてAction呼び出し元にエラーを伝播
     throw error;
