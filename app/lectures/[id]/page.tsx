@@ -5,9 +5,12 @@ import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import Link from "next/link";
 import React, { useState, use } from "react";
+import { usePathname } from "next/navigation";
 import SatisfactionSummary from "../../../components/analysis/SatisfactionSummary";
 import BasicStatsGrid from "../../../components/analysis/BasicStatsGrid";
 import CrossAnalysisChartsContainer from "../../../components/analysis/CrossAnalysisChartsContainer";
+import { Breadcrumb } from "../../../components/common/Breadcrumb";
+import { useBreadcrumbForPath } from "../../../lib/breadcrumb";
 
 export default function LectureDetailPage({
   params,
@@ -16,8 +19,8 @@ export default function LectureDetailPage({
 }) {
   const resolvedParams = use(params);
   return (
-    <main className="container mx-auto min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
-      <div className="mx-auto max-w-4xl">
+    <main className="p-8 flex flex-col gap-8">
+      <div className="max-w-4xl mx-auto w-full">
         <LectureDetailContent lectureId={resolvedParams.id} />
       </div>
     </main>
@@ -27,6 +30,7 @@ export default function LectureDetailPage({
 type TabType = "summary" | "basic" | "cross";
 
 function LectureDetailContent({ lectureId }: { lectureId: string }) {
+  const pathname = usePathname();
   const lecture = useQuery(api.api.lectures.getLecture, {
     lectureId: lectureId as Id<"lectures">,
   });
@@ -42,6 +46,12 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
       lectureId: lectureId as Id<"lectures">,
     },
   );
+
+  // パンくずリスト用データ
+  const breadcrumbItems = useBreadcrumbForPath(pathname, {
+    lectureTitle: lecture?.title,
+    lectureId,
+  });
 
   // タブ状態管理
   const [activeTab, setActiveTab] = useState<TabType>("summary");
@@ -100,11 +110,8 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          講義詳細
-        </h1>
-      </div>
+      <Breadcrumb items={breadcrumbItems} />
+      <h2 className="text-3xl font-bold text-center mb-8">講義詳細</h2>
 
       <div>
         {/* メイン情報 */}

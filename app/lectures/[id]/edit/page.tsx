@@ -2,16 +2,18 @@
 
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import LectureForm from "../../../../components/lectures/LectureForm";
 import { LectureFormData } from "../../../../utils/lectureFormUtils";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { Breadcrumb } from "../../../../components/common/Breadcrumb";
+import { useBreadcrumbForPath } from "../../../../lib/breadcrumb";
 
 export default function EditLecturePage() {
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const lectureId = params.id as Id<"lectures">;
 
   const lecture = useQuery(api.api.lectures.getLecture, {
@@ -19,6 +21,12 @@ export default function EditLecturePage() {
   });
   const updateLecture = useMutation(api.api.lectures.updateExistingLecture);
   const [isLoading, setIsLoading] = useState(false);
+
+  // パンくずリスト用データ
+  const breadcrumbItems = useBreadcrumbForPath(pathname, {
+    lectureTitle: lecture?.title,
+    lectureId,
+  });
 
   const handleSubmit = async (formData: LectureFormData) => {
     setIsLoading(true);
@@ -56,9 +64,11 @@ export default function EditLecturePage() {
   // ローディング状態
   if (lecture === undefined) {
     return (
-      <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-        <div className="py-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+      <main className="p-8 flex flex-col gap-8">
+        <div className="max-w-4xl mx-auto w-full">
+          <div className="py-8 text-center">
+            <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+          </div>
         </div>
       </main>
     );
@@ -67,21 +77,15 @@ export default function EditLecturePage() {
   // 講義が見つからない場合
   if (lecture === null) {
     return (
-      <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-        <div className="mx-auto max-w-2xl">
-          <div className="mb-6">
-            <Link
-              href="/lectures"
-              className="text-blue-600 hover:underline dark:text-blue-400"
-            >
-              ← 講義一覧に戻る
-            </Link>
-          </div>
+      <main className="p-8 flex flex-col gap-8">
+        <div className="max-w-4xl mx-auto w-full">
+          <Breadcrumb items={breadcrumbItems} />
+          <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
 
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
-            <h1 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
               講義が見つかりません
-            </h1>
+            </h3>
             <p className="text-red-600 dark:text-red-400">
               指定された講義が存在しないか、アクセス権限がありません。
             </p>
@@ -102,19 +106,10 @@ export default function EditLecturePage() {
   };
 
   return (
-    <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-6 flex items-center gap-4">
-          <Link
-            href="/lectures"
-            className="text-blue-600 hover:underline dark:text-blue-400"
-          >
-            ← 講義一覧に戻る
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            講義を編集
-          </h1>
-        </div>
+    <main className="p-8 flex flex-col gap-8">
+      <div className="max-w-4xl mx-auto w-full">
+        <Breadcrumb items={breadcrumbItems} />
+        <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
 
         {/* 講義の状態表示 */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">

@@ -9,6 +9,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: mockPush,
   }),
+  usePathname: () => "/lectures/create",
 }));
 
 // Convex APIをモック
@@ -48,9 +49,6 @@ describe("CreateLecturePage", () => {
 
       // ページタイトルが表示されている
       expect(screen.getByText("新しい講義を作成")).toBeInTheDocument();
-
-      // 戻るリンクが表示されている
-      expect(screen.getByText("← 講義一覧に戻る")).toBeInTheDocument();
 
       // フォームが表示されている
       expect(screen.getByLabelText("講義タイトル *")).toBeInTheDocument();
