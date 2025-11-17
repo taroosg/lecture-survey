@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { LectureCard } from "./LectureCard";
@@ -19,10 +18,8 @@ const ITEMS_PER_PAGE = 10;
 
 export function LectureList() {
   const lectures = useQuery(api.api.lectures.getLectures, {});
-  const deleteLecture = useMutation(api.api.lectures.removeLecture);
 
   // State management
-  const [loading, setLoading] = useState<string | null>(null);
   const [filter, setFilter] = useState<LectureListFilter>({
     surveyStatus: "all",
     searchText: "",
@@ -46,20 +43,6 @@ export function LectureList() {
   }, [lectures, filter, sortBy, sortOrder, currentPage]);
 
   // Event handlers
-  const handleDeleteLecture = async (lectureId: string) => {
-    if (!confirm("この講義を削除してもよろしいですか？")) return;
-
-    setLoading(`delete-${lectureId}`);
-    try {
-      await deleteLecture({ lectureId: lectureId as Id<"lectures"> });
-    } catch (error) {
-      console.error("講義削除エラー:", error);
-      alert("講義削除に失敗しました");
-    } finally {
-      setLoading(null);
-    }
-  };
-
   const handleFilterChange = (newFilter: Partial<LectureListFilter>) => {
     setFilter((prev) => ({ ...prev, ...newFilter }));
     setCurrentPage(1); // Reset to first page when filter changes
@@ -215,12 +198,7 @@ export function LectureList() {
           {/* Lecture Cards */}
           <div className="grid gap-4">
             {processedLectures?.items.map((lecture) => (
-              <LectureCard
-                key={lecture._id}
-                lecture={lecture}
-                onDeleteLecture={handleDeleteLecture}
-                loading={loading}
-              />
+              <LectureCard key={lecture._id} lecture={lecture} />
             ))}
           </div>
 

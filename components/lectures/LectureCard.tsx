@@ -10,15 +10,9 @@ import {
 
 interface LectureCardProps {
   lecture: Doc<"lectures">;
-  onDeleteLecture: (lectureId: string) => Promise<void>;
-  loading: string | null;
 }
 
-export function LectureCard({
-  lecture,
-  onDeleteLecture,
-  loading,
-}: LectureCardProps) {
+export function LectureCard({ lecture }: LectureCardProps) {
   const [copiedUrl, setCopiedUrl] = useState(false);
 
   const formattedLecture = formatLectureForDisplay(lecture);
@@ -35,10 +29,6 @@ export function LectureCard({
       console.error("URL copy failed:", error);
       alert("URLのコピーに失敗しました");
     }
-  };
-
-  const handleDelete = () => {
-    onDeleteLecture(lecture._id);
   };
 
   return (
@@ -106,19 +96,11 @@ export function LectureCard({
 
         <div className="flex flex-wrap gap-2">
           <Link
-            href={`/lectures/${lecture._id}`}
+            href={`/lectures/${lecture._id}/edit`}
             className="rounded bg-gray-600 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-400"
           >
             詳細・編集
           </Link>
-
-          <button
-            onClick={handleDelete}
-            disabled={loading === `delete-${lecture._id}`}
-            className="rounded bg-red-600 px-3 py-1 text-sm text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
-          >
-            {loading === `delete-${lecture._id}` ? "処理中..." : "削除"}
-          </button>
         </div>
       </div>
     </div>
