@@ -122,6 +122,42 @@ describe("lectureFormUtils", () => {
       expect(result.isValid).toBe(true);
       expect(result.errors.description).toBeUndefined();
     });
+
+    it("新規作成モード時は過去の講義日時でエラーになること", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 1); // 昨日
+      const pastFormData: LectureFormData = {
+        title: "過去の講義",
+        lectureDate: pastDate.toISOString().split("T")[0],
+        lectureTime: "10:00",
+        description: "テスト",
+        surveyCloseDate: "2025-12-01",
+        surveyCloseTime: "12:00",
+      };
+
+      const result = validateLectureForm(pastFormData, false); // isEditMode = false
+      expect(result.isValid).toBe(false);
+      expect(result.errors.lectureDate).toBe(
+        "講義日時は現在時刻より後に設定してください",
+      );
+    });
+
+    it("編集モード時は過去の講義日時でもエラーにならないこと", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 1); // 昨日
+      const pastFormData: LectureFormData = {
+        title: "過去の講義",
+        lectureDate: pastDate.toISOString().split("T")[0],
+        lectureTime: "10:00",
+        description: "テスト",
+        surveyCloseDate: pastDate.toISOString().split("T")[0],
+        surveyCloseTime: "12:00",
+      };
+
+      const result = validateLectureForm(pastFormData, true); // isEditMode = true
+      // 過去の日時でも編集モードではエラーにならない
+      expect(result.errors.lectureDate).toBeUndefined();
+    });
   });
 
   describe("formatFormData", () => {
@@ -180,6 +216,22 @@ describe("lectureFormUtils", () => {
       };
 
       expect(isFormValid(invalidData)).toBe(false);
+    });
+
+    it("編集モードでは過去の日時でも有効と判定されること", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 1);
+      const pastData: LectureFormData = {
+        title: "過去の講義",
+        lectureDate: pastDate.toISOString().split("T")[0],
+        lectureTime: "10:00",
+        description: "テスト",
+        surveyCloseDate: pastDate.toISOString().split("T")[0],
+        surveyCloseTime: "12:00",
+      };
+
+      expect(isFormValid(pastData, false)).toBe(false); // 新規作成モード
+      expect(isFormValid(pastData, true)).toBe(true); // 編集モード
     });
   });
 
@@ -248,6 +300,27 @@ describe("lectureFormUtils", () => {
 
       const errors = calculateFormErrors(dataWithMultipleErrors);
       expect(errors.title).toBe("講義タイトルは100文字以内で入力してください");
+    });
+
+    it("編集モードでは過去の日時エラーが表示されないこと", () => {
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - 1);
+      const pastData: LectureFormData = {
+        title: "過去の講義",
+        lectureDate: pastDate.toISOString().split("T")[0],
+        lectureTime: "10:00",
+        description: "テスト",
+        surveyCloseDate: pastDate.toISOString().split("T")[0],
+        surveyCloseTime: "12:00",
+      };
+
+      const createModeErrors = calculateFormErrors(pastData, false);
+      expect(createModeErrors.lectureDate).toBe(
+        "講義日時は現在時刻より後に設定してください",
+      );
+
+      const editModeErrors = calculateFormErrors(pastData, true);
+      expect(editModeErrors.lectureDate).toBeUndefined();
     });
   });
 

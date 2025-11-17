@@ -103,8 +103,6 @@ describe("EditLecturePage", () => {
       // 講義状態が表示されている
       expect(screen.getByText("現在の状態")).toBeInTheDocument();
       expect(screen.getByText("受付中")).toBeInTheDocument();
-      expect(screen.getByText("アンケートURL")).toBeInTheDocument();
-      expect(screen.getByText("/survey/lecture123")).toBeInTheDocument();
 
       // フォームに既存データが設定されている
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();

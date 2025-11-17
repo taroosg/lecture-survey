@@ -134,31 +134,21 @@ export default function EditLecturePage() {
 
         {/* 講義の状態表示 */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                現在の状態
-              </p>
-              <p className="font-medium">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    lecture.surveyStatus === "active"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-                  }`}
-                >
-                  {lecture.surveyStatus === "active" ? "受付中" : "締切済み"}
-                </span>
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                アンケートURL
-              </p>
-              <p className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                /survey/{lecture._id}
-              </p>
-            </div>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              現在の状態
+            </p>
+            <p className="font-medium">
+              <span
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  lecture.surveyStatus === "active"
+                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                }`}
+              >
+                {lecture.surveyStatus === "active" ? "受付中" : "締切済み"}
+              </span>
+            </p>
           </div>
         </div>
 
