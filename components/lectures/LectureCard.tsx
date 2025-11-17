@@ -33,8 +33,8 @@ export function LectureCard({ lecture }: LectureCardProps) {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex-1">
+      <div className="mb-4">
+        <div>
           <Link href={`/lectures/${lecture._id}`}>
             <h2 className="mb-2 text-xl font-semibold text-gray-900 transition-colors hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400 cursor-pointer">
               {lecture.title}
@@ -54,6 +54,13 @@ export function LectureCard({ lecture }: LectureCardProps) {
               <span className="font-medium">アンケート締切:</span>{" "}
               {formattedLecture.surveyCloseDateTime}
             </p>
+            <div className="mt-2">
+              <span
+                className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${formattedLecture.statusBadgeColor}`}
+              >
+                {formattedLecture.statusLabel}
+              </span>
+            </div>
             {statusInfo.shouldAutoClose && (
               <p className="text-orange-600 dark:text-orange-400">
                 <span className="font-medium">注意:</span>{" "}
@@ -61,13 +68,6 @@ export function LectureCard({ lecture }: LectureCardProps) {
               </p>
             )}
           </div>
-        </div>
-        <div className="ml-4 text-right">
-          <span
-            className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${formattedLecture.statusBadgeColor}`}
-          >
-            {formattedLecture.statusLabel}
-          </span>
         </div>
       </div>
 

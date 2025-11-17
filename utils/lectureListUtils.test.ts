@@ -108,9 +108,9 @@ describe("filterLectures", () => {
     const result = filterLectures(mockLectures, filter);
 
     expect(result).toHaveLength(2); // Vue.js応用講義とTypeScript応用
-    expect(result.every((lecture) => lecture.description?.includes("応用"))).toBe(
-      true,
-    );
+    expect(
+      result.every((lecture) => lecture.description?.includes("応用")),
+    ).toBe(true);
   });
 
   it("検索文字列による絞り込み: 大文字小文字を区別しないこと", () => {
