@@ -71,31 +71,33 @@ export function LectureCard({ lecture }: LectureCardProps) {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
-        <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              アンケートURL:
-            </p>
-            <button
-              onClick={handleCopyUrl}
-              className="rounded bg-gray-500 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500"
-            >
-              {copiedUrl ? "コピー済み" : "URLコピー"}
-            </button>
-          </div>
-          <div className="break-all text-sm">
-            <a
-              href={`${window.location.origin}/survey/${lecture._id}`}
-              className="text-blue-600 hover:underline dark:text-blue-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {window.location.origin}/survey/{lecture._id}
-            </a>
+      {lecture.surveyStatus === "active" && (
+        <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
+          <div className="mb-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                アンケートURL:
+              </p>
+              <button
+                onClick={handleCopyUrl}
+                className="rounded bg-gray-500 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500"
+              >
+                {copiedUrl ? "コピー済み" : "URLコピー"}
+              </button>
+            </div>
+            <div className="break-all text-sm">
+              <a
+                href={`${window.location.origin}/survey/${lecture._id}`}
+                className="text-blue-600 hover:underline dark:text-blue-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {window.location.origin}/survey/{lecture._id}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

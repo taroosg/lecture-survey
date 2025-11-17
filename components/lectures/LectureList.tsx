@@ -24,7 +24,7 @@ export function LectureList() {
     surveyStatus: "all",
     searchText: "",
   });
-  const [sortBy, setSortBy] = useState<SortBy>("createdAt");
+  const [sortBy, setSortBy] = useState<SortBy>("lectureDate");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -96,14 +96,19 @@ export function LectureList() {
               value={filter.surveyStatus || "all"}
               onChange={(e) =>
                 handleFilterChange({
-                  surveyStatus: e.target.value as "active" | "closed" | "all",
+                  surveyStatus: e.target.value as
+                    | "active"
+                    | "closed"
+                    | "analyzed"
+                    | "all",
                 })
               }
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             >
               <option value="all">すべて</option>
-              <option value="active">実施中</option>
+              <option value="active">受付中</option>
               <option value="closed">締切済み</option>
+              <option value="analyzed">分析完了</option>
             </select>
           </div>
 

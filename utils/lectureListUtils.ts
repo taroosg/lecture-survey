@@ -6,7 +6,7 @@ export type SortOrder = "asc" | "desc";
 
 // フィルタ条件タイプ
 export interface LectureListFilter {
-  surveyStatus?: "active" | "closed" | "all";
+  surveyStatus?: "active" | "closed" | "analyzed" | "all";
   searchText?: string;
   dateFrom?: string;
   dateTo?: string;
