@@ -98,7 +98,7 @@ describe("LectureList", () => {
 
       render(<LectureList />);
 
-      expect(screen.getByText("講義管理")).toBeInTheDocument();
+      // 講義データが表示されることを確認
       expect(screen.getByText("React基礎講義")).toBeInTheDocument();
       expect(screen.getByText("Vue.js応用講義")).toBeInTheDocument();
       expect(screen.getByText("JavaScript基礎")).toBeInTheDocument();

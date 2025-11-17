@@ -56,9 +56,11 @@ export default function EditLecturePage() {
   // ローディング状態
   if (lecture === undefined) {
     return (
-      <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-        <div className="py-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+      <main className="p-8 flex flex-col gap-8">
+        <div className="max-w-4xl mx-auto w-full">
+          <div className="py-8 text-center">
+            <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+          </div>
         </div>
       </main>
     );
@@ -67,8 +69,9 @@ export default function EditLecturePage() {
   // 講義が見つからない場合
   if (lecture === null) {
     return (
-      <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-        <div className="mx-auto max-w-2xl">
+      <main className="p-8 flex flex-col gap-8">
+        <div className="max-w-4xl mx-auto w-full">
+          <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
           <div className="mb-6">
             <Link
               href="/lectures"
@@ -79,9 +82,9 @@ export default function EditLecturePage() {
           </div>
 
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20">
-            <h1 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
               講義が見つかりません
-            </h1>
+            </h3>
             <p className="text-red-600 dark:text-red-400">
               指定された講義が存在しないか、アクセス権限がありません。
             </p>
@@ -102,18 +105,16 @@ export default function EditLecturePage() {
   };
 
   return (
-    <main className="container mx-auto min-h-screen bg-gray-50 p-8 pt-24 dark:bg-gray-900">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-6 flex items-center gap-4">
+    <main className="p-8 flex flex-col gap-8">
+      <div className="max-w-4xl mx-auto w-full">
+        <h2 className="text-3xl font-bold text-center mb-8">講義を編集</h2>
+        <div className="mb-6">
           <Link
             href="/lectures"
             className="text-blue-600 hover:underline dark:text-blue-400"
           >
             ← 講義一覧に戻る
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-            講義を編集
-          </h1>
         </div>
 
         {/* 講義の状態表示 */}

@@ -16,8 +16,8 @@ export default function LectureDetailPage({
 }) {
   const resolvedParams = use(params);
   return (
-    <main className="container mx-auto min-h-screen bg-gray-50 p-8 dark:bg-gray-900">
-      <div className="mx-auto max-w-4xl">
+    <main className="p-8 flex flex-col gap-8">
+      <div className="max-w-4xl mx-auto w-full">
         <LectureDetailContent lectureId={resolvedParams.id} />
       </div>
     </main>
@@ -100,11 +100,7 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          講義詳細
-        </h1>
-      </div>
+      <h2 className="text-3xl font-bold text-center mb-8">講義詳細</h2>
 
       <div>
         {/* メイン情報 */}

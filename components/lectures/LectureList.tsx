@@ -92,10 +92,7 @@ export function LectureList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          講義管理
-        </h1>
+      <div className="flex items-center justify-end">
         <Link
           href="/lectures/create"
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
