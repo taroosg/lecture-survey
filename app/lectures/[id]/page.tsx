@@ -150,16 +150,16 @@ function LectureDetailContent({ lectureId }: { lectureId: string }) {
                       className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
                         lecture.surveyStatus === "active"
                           ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          : lecture.surveyStatus === "closed"
-                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                            : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          : lecture.surveyStatus === "analyzed"
+                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                            : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                       }`}
                     >
                       {lecture.surveyStatus === "active"
-                        ? "実施中"
-                        : lecture.surveyStatus === "closed"
-                          ? "終了"
-                          : "分析完了"}
+                        ? "受付中"
+                        : lecture.surveyStatus === "analyzed"
+                          ? "分析完了"
+                          : "締切済み"}
                     </span>
                   </div>
                   <p>

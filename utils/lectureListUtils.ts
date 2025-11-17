@@ -143,17 +143,36 @@ export const paginateLectures = (
  * @returns 表示用フォーマット済み講義データ
  */
 export const formatLectureForDisplay = (lecture: Doc<"lectures">) => {
+  // ステータスラベルの決定
+  const statusLabel =
+    lecture.surveyStatus === "active"
+      ? "受付中"
+      : lecture.surveyStatus === "analyzed"
+        ? "分析完了"
+        : "締切済み";
+
+  // ステータスカラーの決定
+  const statusColor =
+    lecture.surveyStatus === "active"
+      ? "text-green-600"
+      : lecture.surveyStatus === "analyzed"
+        ? "text-blue-600"
+        : "text-yellow-600";
+
+  const statusBadgeColor =
+    lecture.surveyStatus === "active"
+      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+      : lecture.surveyStatus === "analyzed"
+        ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+
   return {
     ...lecture,
     lectureDateTime: `${lecture.lectureDate} ${lecture.lectureTime}`,
     surveyCloseDateTime: `${lecture.surveyCloseDate} ${lecture.surveyCloseTime}`,
-    statusLabel: lecture.surveyStatus === "active" ? "実施中" : "締切済み",
-    statusColor:
-      lecture.surveyStatus === "active" ? "text-green-600" : "text-yellow-600",
-    statusBadgeColor:
-      lecture.surveyStatus === "active"
-        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    statusLabel,
+    statusColor,
+    statusBadgeColor,
   };
 };
 

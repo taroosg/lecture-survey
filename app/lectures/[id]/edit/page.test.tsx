@@ -346,7 +346,7 @@ describe("EditLecturePage", () => {
       ).toBeInTheDocument();
     });
 
-    it("アクティブな講義の場合は削除ボタンが無効", () => {
+    it("受付中の講義の場合は削除ボタンが無効", () => {
       const activeLectureData = {
         ...mockLectureData,
         surveyStatus: "active" as const,
@@ -360,7 +360,7 @@ describe("EditLecturePage", () => {
       });
       expect(deleteButton).toBeDisabled();
       expect(
-        screen.getByText("アクティブな講義は削除できません。"),
+        screen.getByText("受付中の講義は削除できません。"),
       ).toBeInTheDocument();
     });
 
@@ -370,6 +370,21 @@ describe("EditLecturePage", () => {
         surveyStatus: "closed" as const,
       };
       mockGetLecture.mockReturnValue(closedLectureData);
+
+      render(<EditLecturePage />);
+
+      const deleteButton = screen.getByRole("button", {
+        name: "この講義を削除",
+      });
+      expect(deleteButton).not.toBeDisabled();
+    });
+
+    it("分析済みの講義の場合は削除ボタンが有効", () => {
+      const analyzedLectureData = {
+        ...mockLectureData,
+        surveyStatus: "analyzed" as const,
+      };
+      mockGetLecture.mockReturnValue(analyzedLectureData);
 
       render(<EditLecturePage />);
 

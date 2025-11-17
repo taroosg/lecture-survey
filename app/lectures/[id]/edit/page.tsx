@@ -123,8 +123,8 @@ export default function EditLecturePage() {
     surveyCloseTime: lecture.surveyCloseTime,
   };
 
-  // 削除可能条件の判定
-  const canDelete = lecture.surveyStatus === "closed";
+  // 削除可能条件の判定（受付中以外は削除可能）
+  const canDelete = lecture.surveyStatus !== "active";
 
   return (
     <main className="p-8 flex flex-col gap-8">
@@ -143,10 +143,16 @@ export default function EditLecturePage() {
                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   lecture.surveyStatus === "active"
                     ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                    : lecture.surveyStatus === "analyzed"
+                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
                 }`}
               >
-                {lecture.surveyStatus === "active" ? "受付中" : "締切済み"}
+                {lecture.surveyStatus === "active"
+                  ? "受付中"
+                  : lecture.surveyStatus === "analyzed"
+                    ? "分析完了"
+                    : "締切済み"}
               </span>
             </p>
           </div>
@@ -194,14 +200,14 @@ export default function EditLecturePage() {
               onClick={() => setDeleteModalOpen(true)}
               disabled={!canDelete}
               className="mt-4 rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-700 dark:bg-red-700 dark:hover:bg-red-600"
-              title={!canDelete ? "アクティブな講義は削除できません" : ""}
+              title={!canDelete ? "受付中の講義は削除できません" : ""}
             >
               この講義を削除
             </button>
 
             {!canDelete && (
               <p className="mt-2 text-xs text-red-600 dark:text-red-400">
-                アクティブな講義は削除できません。
+                受付中の講義は削除できません。
               </p>
             )}
           </div>

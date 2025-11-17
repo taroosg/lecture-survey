@@ -69,7 +69,7 @@ describe("LectureCard", () => {
     it("アクティブ状態のステータスバッジが適切に表示されること", () => {
       render(<LectureCard lecture={mockActiveLecture} />);
 
-      const statusBadge = screen.getByText("実施中");
+      const statusBadge = screen.getByText("受付中");
       expect(statusBadge).toBeInTheDocument();
       expect(statusBadge).toHaveClass("bg-green-100", "text-green-800");
     });

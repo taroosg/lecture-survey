@@ -52,6 +52,21 @@ const mockLectures: Doc<"lectures">[] = [
     createdAt: 1705000000000, // 2024-01-12
     updatedAt: 1705000000000,
   },
+  {
+    _id: "4" as any,
+    title: "TypeScript応用",
+    lectureDate: "2024-01-25",
+    lectureTime: "13:00",
+    description: "TypeScriptの応用的な使い方",
+    surveyCloseDate: "2024-01-26",
+    surveyCloseTime: "18:00",
+    surveyStatus: "analyzed",
+    closedAt: 1706284800000,
+    analyzedAt: 1706288400000,
+    createdBy: "user1" as any,
+    createdAt: 1706100000000,
+    updatedAt: 1706288400000,
+  },
 ];
 
 describe("filterLectures", () => {
@@ -77,7 +92,7 @@ describe("filterLectures", () => {
     const filter: LectureListFilter = { surveyStatus: "all" };
     const result = filterLectures(mockLectures, filter);
 
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
   });
 
   it("検索文字列による絞り込み: タイトルに一致する講義が返されること", () => {
@@ -92,8 +107,10 @@ describe("filterLectures", () => {
     const filter: LectureListFilter = { searchText: "応用" };
     const result = filterLectures(mockLectures, filter);
 
-    expect(result).toHaveLength(1);
-    expect(result[0].description).toContain("応用");
+    expect(result).toHaveLength(2); // Vue.js応用講義とTypeScript応用
+    expect(result.every((lecture) => lecture.description?.includes("応用"))).toBe(
+      true,
+    );
   });
 
   it("検索文字列による絞り込み: 大文字小文字を区別しないこと", () => {
@@ -108,7 +125,7 @@ describe("filterLectures", () => {
     const filter: LectureListFilter = { dateFrom: "2024-01-15" };
     const result = filterLectures(mockLectures, filter);
 
-    expect(result).toHaveLength(2);
+    expect(result).toHaveLength(3); // React基礎, Vue.js応用, TypeScript応用
     expect(result.every((lecture) => lecture.lectureDate >= "2024-01-15")).toBe(
       true,
     );
@@ -142,7 +159,7 @@ describe("filterLectures", () => {
     const filter: LectureListFilter = {};
     const result = filterLectures(mockLectures, filter);
 
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
   });
 });
 
@@ -158,9 +175,10 @@ describe("sortLectures", () => {
   it("作成日時順ソート: 降順でソートされること", () => {
     const result = sortLectures(mockLectures, "createdAt", "desc");
 
-    expect(result[0].createdAt).toBe(1705600000000);
-    expect(result[1].createdAt).toBe(1705200000000);
-    expect(result[2].createdAt).toBe(1705000000000);
+    expect(result[0].createdAt).toBe(1706100000000); // TypeScript応用
+    expect(result[1].createdAt).toBe(1705600000000); // Vue.js応用
+    expect(result[2].createdAt).toBe(1705200000000); // React基礎
+    expect(result[3].createdAt).toBe(1705000000000); // JavaScript基礎
   });
 
   it("講義日時順ソート: 昇順でソートされること", () => {
@@ -174,9 +192,10 @@ describe("sortLectures", () => {
   it("講義日時順ソート: 降順でソートされること", () => {
     const result = sortLectures(mockLectures, "lectureDate", "desc");
 
-    expect(result[0].lectureDate).toBe("2024-01-20");
-    expect(result[1].lectureDate).toBe("2024-01-15");
-    expect(result[2].lectureDate).toBe("2024-01-10");
+    expect(result[0].lectureDate).toBe("2024-01-25"); // TypeScript応用
+    expect(result[1].lectureDate).toBe("2024-01-20"); // Vue.js応用
+    expect(result[2].lectureDate).toBe("2024-01-15"); // React基礎
+    expect(result[3].lectureDate).toBe("2024-01-10"); // JavaScript基礎
   });
 
   it("タイトル順ソート: 昇順でソートされること", () => {
@@ -184,15 +203,17 @@ describe("sortLectures", () => {
 
     expect(result[0].title).toBe("JavaScript基礎");
     expect(result[1].title).toBe("React基礎講義");
-    expect(result[2].title).toBe("Vue.js応用講義");
+    expect(result[2].title).toBe("TypeScript応用");
+    expect(result[3].title).toBe("Vue.js応用講義");
   });
 
   it("タイトル順ソート: 降順でソートされること", () => {
     const result = sortLectures(mockLectures, "title", "desc");
 
     expect(result[0].title).toBe("Vue.js応用講義");
-    expect(result[1].title).toBe("React基礎講義");
-    expect(result[2].title).toBe("JavaScript基礎");
+    expect(result[1].title).toBe("TypeScript応用");
+    expect(result[2].title).toBe("React基礎講義");
+    expect(result[3].title).toBe("JavaScript基礎");
   });
 
   it("元の配列が変更されないこと", () => {
@@ -209,14 +230,14 @@ describe("paginateLectures", () => {
 
     expect(result.items).toHaveLength(2);
     expect(result.currentPage).toBe(1);
-    expect(result.totalItems).toBe(3);
+    expect(result.totalItems).toBe(4);
     expect(result.totalPages).toBe(2);
   });
 
   it("ページネーション計算: 2ページ目の要素が正しく返されること", () => {
     const result = paginateLectures(mockLectures, { page: 2, itemsPerPage: 2 });
 
-    expect(result.items).toHaveLength(1);
+    expect(result.items).toHaveLength(2);
     expect(result.currentPage).toBe(2);
     expect(result.hasNextPage).toBe(false);
     expect(result.hasPreviousPage).toBe(true);
@@ -226,7 +247,7 @@ describe("paginateLectures", () => {
     const result = paginateLectures(mockLectures, { page: 1, itemsPerPage: 1 });
 
     expect(result.items).toHaveLength(1);
-    expect(result.totalPages).toBe(3);
+    expect(result.totalPages).toBe(4);
   });
 
   it("最終ページの処理: hasNextPageがfalseになること", () => {
@@ -271,7 +292,7 @@ describe("formatLectureForDisplay", () => {
   it("ステータス表示の変換: active状態の場合", () => {
     const result = formatLectureForDisplay(mockLectures[0]);
 
-    expect(result.statusLabel).toBe("実施中");
+    expect(result.statusLabel).toBe("受付中");
     expect(result.statusColor).toBe("text-green-600");
     expect(result.statusBadgeColor).toContain("bg-green-100");
   });
@@ -282,6 +303,14 @@ describe("formatLectureForDisplay", () => {
     expect(result.statusLabel).toBe("締切済み");
     expect(result.statusColor).toBe("text-yellow-600");
     expect(result.statusBadgeColor).toContain("bg-yellow-100");
+  });
+
+  it("ステータス表示の変換: analyzed状態の場合", () => {
+    const result = formatLectureForDisplay(mockLectures[3]);
+
+    expect(result.statusLabel).toBe("分析完了");
+    expect(result.statusColor).toBe("text-blue-600");
+    expect(result.statusBadgeColor).toContain("bg-blue-100");
   });
 
   it("元のデータが保持されること", () => {
