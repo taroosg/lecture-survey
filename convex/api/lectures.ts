@@ -3,9 +3,10 @@ import { internal } from "../_generated/api";
 import { Doc } from "../_generated/dataModel";
 import { v } from "convex/values";
 import { requireAuth, requireActiveAuth } from "../shared/helpers/authHelpers";
+import type { LectureWithAnalysis } from "../shared/types/analysis";
 
 /**
- * 認証済みユーザーの講義一覧を取得
+ * 認証済みユーザーの講義一覧を取得（分析データ付き）
  */
 export const getLectures = query({
   args: {
@@ -13,7 +14,7 @@ export const getLectures = query({
     dateFrom: v.optional(v.string()),
     dateTo: v.optional(v.string()),
   },
-  handler: async (ctx, args): Promise<Doc<"lectures">[]> => {
+  handler: async (ctx, args): Promise<LectureWithAnalysis[]> => {
     const { userId } = await requireActiveAuth(ctx);
     return await ctx.runQuery(
       internal.queries.lectures.getLectures.getLecturesByUser,

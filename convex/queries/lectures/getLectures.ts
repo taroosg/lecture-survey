@@ -6,6 +6,10 @@
 import { internalQuery } from "../../_generated/server";
 import { v } from "convex/values";
 import type { Doc, Id } from "../../_generated/dataModel";
+import type {
+  LectureWithAnalysis,
+  AnalysisDataSummary,
+} from "../../shared/types/analysis";
 
 /**
  * 講義データの型定義
@@ -26,7 +30,7 @@ export interface LectureFilter {
  * ユーザー別の講義一覧を取得する
  * @param userId - ユーザーID
  * @param filter - フィルター条件
- * @returns 講義一覧
+ * @returns 講義一覧（分析データ付き）
  */
 export const getLecturesByUser = internalQuery({
   args: {
@@ -41,7 +45,7 @@ export const getLecturesByUser = internalQuery({
       }),
     ),
   },
-  handler: async (ctx, args): Promise<LectureData[]> => {
+  handler: async (ctx, args): Promise<LectureWithAnalysis[]> => {
     let query = ctx.db
       .query("lectures")
       .withIndex("by_creator", (q) => q.eq("createdBy", args.userId));
@@ -76,7 +80,60 @@ export const getLecturesByUser = internalQuery({
       return b.lectureTime.localeCompare(a.lectureTime);
     });
 
-    return filteredLectures;
+    // 分析済み講義の分析データを取得
+    const lecturesWithAnalysis: LectureWithAnalysis[] = await Promise.all(
+      filteredLectures.map(async (lecture) => {
+        if (lecture.surveyStatus !== "analyzed") {
+          return lecture as LectureWithAnalysis;
+        }
+
+        // 最新の結果セットを取得
+        const latestResultSet = await ctx.db
+          .query("resultSets")
+          .withIndex("by_lecture_closedAt", (q) =>
+            q.eq("lectureId", lecture._id),
+          )
+          .order("desc")
+          .first();
+
+        if (!latestResultSet) {
+          return lecture as LectureWithAnalysis;
+        }
+
+        // サマリー統計（平均値）を取得
+        const summaryFacts = await ctx.db
+          .query("resultFacts")
+          .withIndex("by_set_type_dim1", (q) =>
+            q.eq("resultSetId", latestResultSet._id).eq("statType", "summary"),
+          )
+          .collect();
+
+        // 理解度と満足度の平均値を取得
+        const understandingAvg = summaryFacts.find(
+          (f) =>
+            f.targetQuestionCode === "understanding" &&
+            f.dim1QuestionCode === "_total",
+        );
+        const satisfactionAvg = summaryFacts.find(
+          (f) =>
+            f.targetQuestionCode === "satisfaction" &&
+            f.dim1QuestionCode === "_total",
+        );
+
+        const analysisData: AnalysisDataSummary = {
+          understanding: understandingAvg?.avgScore ?? 0,
+          satisfaction: satisfactionAvg?.avgScore ?? 0,
+          responseCount: latestResultSet.totalResponses,
+        };
+
+        return {
+          ...lecture,
+          analysisData,
+        } as LectureWithAnalysis;
+      }),
+    );
+
+    return lecturesWithAnalysis;
   },
 });
 

@@ -2,11 +2,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LectureCard } from "./LectureCard";
-import { Doc, Id } from "../../convex/_generated/dataModel";
+import { Id } from "../../convex/_generated/dataModel";
+import type { LectureWithAnalysis } from "../../convex/shared/types/analysis";
 
 // テスト用のモックデータ
-const mockActiveLecture: Doc<"lectures"> = {
+const mockActiveLecture: LectureWithAnalysis = {
   _id: "lecture1" as Id<"lectures">,
+  _creationTime: 1705200000000,
   title: "React基礎講義",
   lectureDate: "2024-01-15",
   lectureTime: "10:00",
@@ -19,11 +21,25 @@ const mockActiveLecture: Doc<"lectures"> = {
   updatedAt: 1705200000000,
 };
 
-const mockClosedLecture: Doc<"lectures"> = {
+const mockClosedLecture: LectureWithAnalysis = {
   ...mockActiveLecture,
   _id: "lecture2" as Id<"lectures">,
   title: "Vue.js応用講義",
   surveyStatus: "closed",
+};
+
+const mockAnalyzedLecture: LectureWithAnalysis = {
+  ...mockActiveLecture,
+  _id: "lecture3" as Id<"lectures">,
+  title: "TypeScript応用講義",
+  surveyStatus: "analyzed",
+  closedAt: 1705284800000,
+  analyzedAt: 1705288400000,
+  analysisData: {
+    understanding: 4.2,
+    satisfaction: 4.5,
+    responseCount: 25,
+  },
 };
 
 // グローバルオブジェクトのモック
@@ -175,6 +191,60 @@ describe("LectureCard", () => {
       ).toBeInTheDocument();
 
       vi.useRealTimers();
+    });
+  });
+
+  describe("分析データ表示のテスト", () => {
+    it("分析済み講義では分析データが表示されること", () => {
+      render(<LectureCard lecture={mockAnalyzedLecture} />);
+
+      expect(screen.getByText("理解度")).toBeInTheDocument();
+      expect(screen.getByText("満足度")).toBeInTheDocument();
+      expect(screen.getByText("4.2")).toBeInTheDocument();
+      expect(screen.getByText("4.5")).toBeInTheDocument();
+      expect(screen.getByText("(25件)")).toBeInTheDocument();
+    });
+
+    it("分析済み講義のステータスバッジが適切に表示されること", () => {
+      render(<LectureCard lecture={mockAnalyzedLecture} />);
+
+      const statusBadge = screen.getByText("分析完了");
+      expect(statusBadge).toBeInTheDocument();
+      expect(statusBadge).toHaveClass("bg-blue-100", "text-blue-800");
+    });
+
+    it("分析済み講義ではアンケートURLが表示されないこと", () => {
+      render(<LectureCard lecture={mockAnalyzedLecture} />);
+
+      expect(screen.queryByText("アンケートURL:")).not.toBeInTheDocument();
+      expect(screen.queryByText("URLコピー")).not.toBeInTheDocument();
+    });
+
+    it("アクティブ講義では分析データが表示されないこと", () => {
+      render(<LectureCard lecture={mockActiveLecture} />);
+
+      expect(screen.queryByText("理解度")).not.toBeInTheDocument();
+      expect(screen.queryByText("満足度")).not.toBeInTheDocument();
+    });
+
+    it("締切済み講義では分析データが表示されないこと", () => {
+      render(<LectureCard lecture={mockClosedLecture} />);
+
+      expect(screen.queryByText("理解度")).not.toBeInTheDocument();
+      expect(screen.queryByText("満足度")).not.toBeInTheDocument();
+    });
+
+    it("分析済み講義では簡略化されたレイアウトが表示されること", () => {
+      render(<LectureCard lecture={mockAnalyzedLecture} />);
+
+      // タイトルと日付のみ表示
+      expect(screen.getByText("TypeScript応用講義")).toBeInTheDocument();
+      expect(screen.getByText("2024-01-15")).toBeInTheDocument();
+
+      // 説明文、講義時刻、締切時刻は表示されない
+      expect(screen.queryByText(/講義日時:/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/アンケート締切:/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/10:00/)).not.toBeInTheDocument();
     });
   });
 });
