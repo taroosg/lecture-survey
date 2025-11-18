@@ -196,6 +196,105 @@ describe("getLecturesByUser", () => {
     expect(result[0].lectureDate).toBe("2025-12-03");
     expect(result[1].lectureDate).toBe("2025-12-01");
   });
+
+  test("分析済み講義に分析データが含まれること", async () => {
+    const t = convexTest(schema);
+
+    const { testUserId1, analyzedLectureId } = await t.run(async (ctx) => {
+      // テストユーザーを作成
+      const testUserId1 = await ctx.db.insert("users", testUserData1);
+
+      // 分析済み講義を作成
+      const analyzedLectureId = await ctx.db.insert("lectures", {
+        ...createLectureData1(testUserId1),
+        surveyStatus: "analyzed" as const,
+        closedAt: Date.now() - 1000,
+        analyzedAt: Date.now(),
+      });
+
+      // 結果セットを作成
+      const resultSetId = await ctx.db.insert("resultSets", {
+        lectureId: analyzedLectureId,
+        closedAt: Date.now() - 1000,
+        totalResponses: 25,
+        createdAt: Date.now() - 1000,
+      });
+
+      // サマリー統計（平均値）を作成
+      await ctx.db.insert("resultFacts", {
+        resultSetId,
+        lectureId: analyzedLectureId,
+        statType: "summary",
+        dim1QuestionCode: "_total",
+        dim1OptionCode: "_all",
+        targetQuestionCode: "understanding",
+        avgScore: 4.2,
+        baseN: 25,
+        createdAt: Date.now() - 1000,
+      });
+
+      await ctx.db.insert("resultFacts", {
+        resultSetId,
+        lectureId: analyzedLectureId,
+        statType: "summary",
+        dim1QuestionCode: "_total",
+        dim1OptionCode: "_all",
+        targetQuestionCode: "satisfaction",
+        avgScore: 4.5,
+        baseN: 25,
+        createdAt: Date.now() - 1000,
+      });
+
+      return { testUserId1, analyzedLectureId };
+    });
+
+    // getLecturesByUserを実行
+    const result = await t.query(
+      internal.queries.lectures.getLectures.getLecturesByUser,
+      {
+        userId: testUserId1,
+      },
+    );
+
+    expect(result).toHaveLength(1);
+    const analyzedLecture = result[0];
+
+    // 分析データが含まれることを確認
+    expect(analyzedLecture.surveyStatus).toBe("analyzed");
+    expect(analyzedLecture.analysisData).toBeDefined();
+    expect(analyzedLecture.analysisData?.understanding).toBe(4.2);
+    expect(analyzedLecture.analysisData?.satisfaction).toBe(4.5);
+    expect(analyzedLecture.analysisData?.responseCount).toBe(25);
+  });
+
+  test("分析済みでない講義には分析データが含まれないこと", async () => {
+    const t = convexTest(schema);
+
+    const testUserId1 = await t.run(async (ctx) => {
+      // テストユーザーを作成
+      const testUserId1 = await ctx.db.insert("users", testUserData1);
+
+      // アクティブな講義を作成
+      await ctx.db.insert("lectures", createLectureData1(testUserId1));
+
+      return testUserId1;
+    });
+
+    // getLecturesByUserを実行
+    const result = await t.query(
+      internal.queries.lectures.getLectures.getLecturesByUser,
+      {
+        userId: testUserId1,
+      },
+    );
+
+    expect(result).toHaveLength(1);
+    const activeLecture = result[0];
+
+    // 分析データが含まれないことを確認
+    expect(activeLecture.surveyStatus).toBe("active");
+    expect(activeLecture.analysisData).toBeUndefined();
+  });
 });
 
 describe("getActiveLecturesForAutoClosure", () => {

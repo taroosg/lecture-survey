@@ -1,5 +1,6 @@
 // 分析関連の型定義
 import { v } from "convex/values";
+import type { Doc } from "../../_generated/dataModel";
 
 /**
  * 分析データ行
@@ -270,3 +271,20 @@ export const CompleteAnalysisResultsValidator = v.object({
     executionTime: v.number(),
   }),
 });
+
+/**
+ * 分析データサマリー（講義一覧表示用）
+ */
+export interface AnalysisDataSummary {
+  understanding: number; // 1.0-5.0
+  satisfaction: number; // 1.0-5.0
+  responseCount: number;
+}
+
+/**
+ * 分析データ付き講義型
+ * 講義一覧で使用
+ */
+export interface LectureWithAnalysis extends Doc<"lectures"> {
+  analysisData?: AnalysisDataSummary;
+}
