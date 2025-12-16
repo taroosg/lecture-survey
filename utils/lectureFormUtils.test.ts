@@ -12,10 +12,10 @@ describe("lectureFormUtils", () => {
   describe("validateLectureForm", () => {
     const validFormData: LectureFormData = {
       title: "プログラミング入門講座",
-      lectureDate: "2025-12-01",
+      lectureDate: "2099-12-01",
       lectureTime: "10:00",
       description: "基本的なプログラミング概念を学習する講座です。",
-      surveyCloseDate: "2025-12-01",
+      surveyCloseDate: "2099-12-01",
       surveyCloseTime: "12:00",
     };
 
@@ -71,10 +71,10 @@ describe("lectureFormUtils", () => {
     it("締切日時の妥当性チェックテスト", () => {
       const invalidFormData: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "12:00",
         description: "テスト",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "10:00", // 講義時間より前
       };
 
@@ -91,10 +91,10 @@ describe("lectureFormUtils", () => {
 
       const invalidFormData: LectureFormData = {
         title: longTitle,
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: longDescription,
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -111,10 +111,10 @@ describe("lectureFormUtils", () => {
     it("説明文が任意項目であることのテスト", () => {
       const formDataWithoutDescription: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -131,7 +131,7 @@ describe("lectureFormUtils", () => {
         lectureDate: pastDate.toISOString().split("T")[0],
         lectureTime: "10:00",
         description: "テスト",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -164,27 +164,27 @@ describe("lectureFormUtils", () => {
     it("フォーム入力値の正規化テスト", () => {
       const unformattedData: LectureFormData = {
         title: "  テスト講義  ",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "  テスト説明  ",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
       const result = formatFormData(unformattedData);
       expect(result.title).toBe("テスト講義");
       expect(result.description).toBe("テスト説明");
-      expect(result.lectureDate).toBe("2025-12-01");
+      expect(result.lectureDate).toBe("2099-12-01");
       expect(result.lectureTime).toBe("10:00");
     });
 
     it("空の説明文の処理テスト", () => {
       const dataWithEmptyDescription: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "   ", // 空白のみ
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -197,10 +197,10 @@ describe("lectureFormUtils", () => {
     it("フォーム全体の有効性判定テスト", () => {
       const validData: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "テスト説明",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -208,10 +208,10 @@ describe("lectureFormUtils", () => {
 
       const invalidData: LectureFormData = {
         title: "",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "テスト説明",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -239,29 +239,29 @@ describe("lectureFormUtils", () => {
     it("送信用データの変換テスト", () => {
       const formData: LectureFormData = {
         title: "  テスト講義  ",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "  テスト説明  ",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
       const result = getFormSubmitData(formData);
       expect(result.title).toBe("テスト講義");
       expect(result.description).toBe("テスト説明");
-      expect(result.lectureDate).toBe("2025-12-01");
+      expect(result.lectureDate).toBe("2099-12-01");
       expect(result.lectureTime).toBe("10:00");
-      expect(result.surveyCloseDate).toBe("2025-12-01");
+      expect(result.surveyCloseDate).toBe("2099-12-01");
       expect(result.surveyCloseTime).toBe("12:00");
     });
 
     it("不要なフィールドの除去テスト", () => {
       const formData: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "", // 空文字
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -277,7 +277,7 @@ describe("lectureFormUtils", () => {
         lectureDate: "invalid",
         lectureTime: "10:00",
         description: "テスト説明",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -291,10 +291,10 @@ describe("lectureFormUtils", () => {
     it("エラーメッセージの優先順位テスト", () => {
       const dataWithMultipleErrors: LectureFormData = {
         title: "a".repeat(101), // 長すぎる（エラーメッセージが表示される）
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "テスト説明",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -329,10 +329,10 @@ describe("lectureFormUtils", () => {
       const exactLimitTitle = "a".repeat(100);
       const formData: LectureFormData = {
         title: exactLimitTitle,
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "テスト説明",
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -345,10 +345,10 @@ describe("lectureFormUtils", () => {
       const exactLimitDescription = "a".repeat(500);
       const formData: LectureFormData = {
         title: "テスト講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: exactLimitDescription,
-        surveyCloseDate: "2025-12-01",
+        surveyCloseDate: "2099-12-01",
         surveyCloseTime: "12:00",
       };
 
@@ -364,10 +364,10 @@ describe("lectureFormUtils", () => {
       validTimes.forEach((time) => {
         const formData: LectureFormData = {
           title: "テスト講義",
-          lectureDate: "2025-12-01",
+          lectureDate: "2099-12-01",
           lectureTime: time,
           description: "テスト説明",
-          surveyCloseDate: "2025-12-01",
+          surveyCloseDate: "2099-12-01",
           surveyCloseTime: "23:59",
         };
 
@@ -378,10 +378,10 @@ describe("lectureFormUtils", () => {
       invalidTimes.forEach((time) => {
         const formData: LectureFormData = {
           title: "テスト講義",
-          lectureDate: "2025-12-01",
+          lectureDate: "2099-12-01",
           lectureTime: time,
           description: "テスト説明",
-          surveyCloseDate: "2025-12-01",
+          surveyCloseDate: "2099-12-01",
           surveyCloseTime: "23:59",
         };
 

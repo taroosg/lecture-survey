@@ -31,10 +31,10 @@ const testUserData2 = {
 // テスト用の講義データファクトリー関数
 const createLectureData1 = (userId: Id<"users">) => ({
   title: "プログラミング基礎",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "プログラミングの基礎を学ぶ講義です",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,
@@ -44,10 +44,10 @@ const createLectureData1 = (userId: Id<"users">) => ({
 
 const createLectureData2 = (userId: Id<"users">) => ({
   title: "データベース設計",
-  lectureDate: "2025-12-03",
+  lectureDate: "2099-12-03",
   lectureTime: "14:00",
   description: "データベース設計の基本を学ぶ",
-  surveyCloseDate: "2025-12-04",
+  surveyCloseDate: "2099-12-04",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,
@@ -57,10 +57,10 @@ const createLectureData2 = (userId: Id<"users">) => ({
 
 const createLectureData3 = (userId: Id<"users">) => ({
   title: "ウェブプログラミング",
-  lectureDate: "2025-12-05",
+  lectureDate: "2099-12-05",
   lectureTime: "16:00",
   description: "ウェブアプリケーション開発を学ぶ",
-  surveyCloseDate: "2025-12-06",
+  surveyCloseDate: "2099-12-06",
   surveyCloseTime: "18:00",
   surveyStatus: "closed" as const,
   createdBy: userId,
@@ -70,7 +70,7 @@ const createLectureData3 = (userId: Id<"users">) => ({
 
 const createExpiredLectureData = (userId: Id<"users">) => ({
   title: "期限切れ講義",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "期限が切れた講義",
   surveyCloseDate: "2025-01-01", // 過去の日付
@@ -150,23 +150,23 @@ describe("getLecturesByUser", () => {
       const testUserId1 = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成
-      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2025-12-01
-      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2025-12-03
+      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2099-12-01
+      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2099-12-03
 
       return testUserId1;
     });
 
-    // 2025-12-02以降の講義のみ取得
+    // 2099-12-02以降の講義のみ取得
     const result = await t.query(
       internal.queries.lectures.getLectures.getLecturesByUser,
       {
         userId: testUserId1,
-        filter: { dateFrom: "2025-12-02" },
+        filter: { dateFrom: "2099-12-02" },
       },
     );
 
     expect(result).toHaveLength(1);
-    expect(result[0].lectureDate).toBe("2025-12-03");
+    expect(result[0].lectureDate).toBe("2099-12-03");
   });
 
   test("講義が日付順にソートされていること", async () => {
@@ -177,8 +177,8 @@ describe("getLecturesByUser", () => {
       const testUserId1 = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成（日付順ではない順序で挿入）
-      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2025-12-03
-      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2025-12-01
+      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2099-12-03
+      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2099-12-01
 
       return testUserId1;
     });
@@ -193,8 +193,8 @@ describe("getLecturesByUser", () => {
 
     expect(result).toHaveLength(2);
     // 新しい順にソートされているか確認
-    expect(result[0].lectureDate).toBe("2025-12-03");
-    expect(result[1].lectureDate).toBe("2025-12-01");
+    expect(result[0].lectureDate).toBe("2099-12-03");
+    expect(result[1].lectureDate).toBe("2099-12-01");
   });
 
   test("分析済み講義に分析データが含まれること", async () => {
@@ -310,8 +310,8 @@ describe("getActiveLecturesForAutoClosure", () => {
       await ctx.db.insert("lectures", createExpiredLectureData(userId)); // 過去の締切
     });
 
-    // 現在時刻として2025年12月1日を使用
-    const currentTime = new Date("2025-12-01T20:00:00").getTime();
+    // 現在時刻として2099年12月1日を使用
+    const currentTime = new Date("2099-12-01T20:00:00").getTime();
 
     // getActiveLecturesForAutoClosureを実行
     const result = await t.query(
@@ -336,8 +336,8 @@ describe("getActiveLecturesForAutoClosure", () => {
       await ctx.db.insert("lectures", createLectureData1(userId));
     });
 
-    // 現在時刻として2025年12月1日を使用
-    const currentTime = new Date("2025-12-01T12:00:00").getTime();
+    // 現在時刻として2099年12月1日を使用
+    const currentTime = new Date("2099-12-01T12:00:00").getTime();
 
     // getActiveLecturesForAutoClosureを実行
     const result = await t.query(
@@ -463,25 +463,25 @@ describe("getLecturesByDate", () => {
       const userId = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成
-      await ctx.db.insert("lectures", createLectureData1(userId)); // 2025-12-01
-      await ctx.db.insert("lectures", createLectureData2(userId)); // 2025-12-03
+      await ctx.db.insert("lectures", createLectureData1(userId)); // 2099-12-01
+      await ctx.db.insert("lectures", createLectureData2(userId)); // 2099-12-03
       await ctx.db.insert("lectures", {
         ...createLectureData1(userId),
         lectureTime: "15:00",
-      }); // 2025-12-01
+      }); // 2099-12-01
     });
 
-    // 2025-12-01の講義を取得
+    // 2099-12-01の講義を取得
     const result = await t.query(
       internal.queries.lectures.getLectures.getLecturesByDate,
       {
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
       },
     );
 
     expect(result).toHaveLength(2);
     result.forEach((lecture) => {
-      expect(lecture.lectureDate).toBe("2025-12-01");
+      expect(lecture.lectureDate).toBe("2099-12-01");
     });
 
     // 時間順にソートされているか確認
@@ -500,23 +500,23 @@ describe("getLecturesByDateRange", () => {
       const testUserId2 = await ctx.db.insert("users", testUserData2);
 
       // テスト講義を作成
-      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2025-12-01
-      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2025-12-03
-      await ctx.db.insert("lectures", createLectureData3(testUserId2)); // 2025-12-05
+      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2099-12-01
+      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2099-12-03
+      await ctx.db.insert("lectures", createLectureData3(testUserId2)); // 2099-12-05
     });
 
-    // 2025-12-01から2025-12-03の範囲で取得
+    // 2099-12-01から2099-12-03の範囲で取得
     const result = await t.query(
       internal.queries.lectures.getLectures.getLecturesByDateRange,
       {
-        dateFrom: "2025-12-01",
-        dateTo: "2025-12-03",
+        dateFrom: "2099-12-01",
+        dateTo: "2099-12-03",
       },
     );
 
     expect(result).toHaveLength(2);
-    expect(result[0].lectureDate).toBe("2025-12-01");
-    expect(result[1].lectureDate).toBe("2025-12-03");
+    expect(result[0].lectureDate).toBe("2099-12-01");
+    expect(result[1].lectureDate).toBe("2099-12-03");
   });
 
   test("日付順にソートされていること", async () => {
@@ -527,22 +527,22 @@ describe("getLecturesByDateRange", () => {
       const testUserId1 = await ctx.db.insert("users", testUserData1);
 
       // テスト講義を作成（日付順ではない順序で挿入）
-      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2025-12-03
-      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2025-12-01
+      await ctx.db.insert("lectures", createLectureData2(testUserId1)); // 2099-12-03
+      await ctx.db.insert("lectures", createLectureData1(testUserId1)); // 2099-12-01
     });
 
     // getLecturesByDateRangeを実行
     const result = await t.query(
       internal.queries.lectures.getLectures.getLecturesByDateRange,
       {
-        dateFrom: "2025-12-01",
-        dateTo: "2025-12-03",
+        dateFrom: "2099-12-01",
+        dateTo: "2099-12-03",
       },
     );
 
     expect(result).toHaveLength(2);
     // 古い順にソートされているか確認
-    expect(result[0].lectureDate).toBe("2025-12-01");
-    expect(result[1].lectureDate).toBe("2025-12-03");
+    expect(result[0].lectureDate).toBe("2099-12-01");
+    expect(result[1].lectureDate).toBe("2099-12-03");
   });
 });
