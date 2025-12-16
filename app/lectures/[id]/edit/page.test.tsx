@@ -50,10 +50,10 @@ describe("EditLecturePage", () => {
   const mockLectureData = {
     _id: "lecture123",
     title: "既存の講義",
-    lectureDate: "2025-12-01",
+    lectureDate: "2099-12-01",
     lectureTime: "10:00",
     description: "既存の説明",
-    surveyCloseDate: "2025-12-02",
+    surveyCloseDate: "2099-12-02",
     surveyCloseTime: "12:00",
     surveyStatus: "active" as const,
     createdBy: "user123",
@@ -106,8 +106,8 @@ describe("EditLecturePage", () => {
 
       // フォームに既存データが設定されている
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-01")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-02")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-01")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-02")).toBeInTheDocument();
       expect(screen.getByDisplayValue("10:00")).toBeInTheDocument();
       expect(screen.getByDisplayValue("既存の説明")).toBeInTheDocument();
 
@@ -155,10 +155,10 @@ describe("EditLecturePage", () => {
         expect(mockUpdateLecture).toHaveBeenCalledWith({
           lectureId: "lecture123",
           title: "更新された講義",
-          lectureDate: "2025-12-01",
+          lectureDate: "2099-12-01",
           lectureTime: "10:00",
           description: "既存の説明",
-          surveyCloseDate: "2025-12-02",
+          surveyCloseDate: "2099-12-02",
           surveyCloseTime: "12:00",
         });
 
@@ -322,8 +322,8 @@ describe("EditLecturePage", () => {
 
       // 全てのフィールドが正しく設定されている
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-01")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-02")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-01")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-02")).toBeInTheDocument();
       expect(screen.getByDisplayValue("10:00")).toBeInTheDocument();
       expect(screen.getByDisplayValue("既存の説明")).toBeInTheDocument();
     });

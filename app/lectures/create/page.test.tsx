@@ -73,11 +73,11 @@ describe("CreateLecturePage", () => {
 
       // フォームに入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
@@ -89,10 +89,10 @@ describe("CreateLecturePage", () => {
         // APIが呼ばれたことを確認
         expect(mockCreateLecture).toHaveBeenCalledWith({
           title: "テスト講義",
-          lectureDate: "2025-12-01",
+          lectureDate: "2099-12-01",
           lectureTime: "10:00",
           description: undefined,
-          surveyCloseDate: "2025-12-01",
+          surveyCloseDate: "2099-12-01",
           surveyCloseTime: "12:00",
         });
 
@@ -116,11 +116,11 @@ describe("CreateLecturePage", () => {
 
       // フォームに入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
@@ -157,11 +157,11 @@ describe("CreateLecturePage", () => {
 
       // フォームに入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
@@ -209,11 +209,11 @@ describe("CreateLecturePage", () => {
 
       // フォームに入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
