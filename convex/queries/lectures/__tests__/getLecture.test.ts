@@ -31,10 +31,10 @@ const testUserData2 = {
 // テスト用の講義データファクトリー関数
 const createLectureData1 = (userId: Id<"users">) => ({
   title: "プログラミング基礎",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "プログラミングの基礎を学ぶ講義です",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,
@@ -44,10 +44,10 @@ const createLectureData1 = (userId: Id<"users">) => ({
 
 const createLectureData2 = (userId: Id<"users">) => ({
   title: "データベース設計",
-  lectureDate: "2025-12-03",
+  lectureDate: "2099-12-03",
   lectureTime: "14:00",
   description: "データベース設計の基本を学ぶ",
-  surveyCloseDate: "2025-12-04",
+  surveyCloseDate: "2099-12-04",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,
@@ -57,10 +57,10 @@ const createLectureData2 = (userId: Id<"users">) => ({
 
 const createLectureData3 = (userId: Id<"users">) => ({
   title: "ウェブプログラミング",
-  lectureDate: "2025-12-05",
+  lectureDate: "2099-12-05",
   lectureTime: "16:00",
   description: "ウェブアプリケーション開発を学ぶ",
-  surveyCloseDate: "2025-12-06",
+  surveyCloseDate: "2099-12-06",
   surveyCloseTime: "18:00",
   surveyStatus: "closed" as const,
   createdBy: userId,

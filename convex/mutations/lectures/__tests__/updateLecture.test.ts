@@ -22,10 +22,10 @@ const testUserData = {
 // テスト用の講義データファクトリー関数
 const createLectureData = (userId: Id<"users">) => ({
   title: "プログラミング基礎",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "プログラミングの基礎を学ぶ講義です",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,
@@ -62,7 +62,7 @@ describe("updateLecture", () => {
     expect(result).not.toBeNull();
     expect(result?.title).toBe("プログラミング応用");
     expect(result?.description).toBe("より高度なプログラミング技法を学ぶ");
-    expect(result?.lectureDate).toBe("2025-12-01"); // 更新されていない値は保持
+    expect(result?.lectureDate).toBe("2099-12-01"); // 更新されていない値は保持
   });
 
   test("存在しない講義IDでnullが返されること", async () => {
@@ -230,7 +230,7 @@ describe("autoCloseLecture", () => {
     });
 
     // 現在時刻として2025年12月1日を使用
-    const currentTime = new Date("2025-12-01T20:00:00").getTime();
+    const currentTime = new Date("2099-12-01T20:00:00").getTime();
 
     const result = await t.mutation(
       internal.mutations.lectures.updateLecture.autoCloseLecture,
@@ -251,12 +251,12 @@ describe("autoCloseLecture", () => {
       const userId = await ctx.db.insert("users", testUserData);
       const futureLectureData = {
         ...createLectureData(userId),
-        surveyCloseDate: "2025-12-10", // 未来の日付
+        surveyCloseDate: "2099-12-10", // 未来の日付
       };
       return await ctx.db.insert("lectures", futureLectureData);
     });
 
-    const currentTime = new Date("2025-12-01T12:00:00").getTime();
+    const currentTime = new Date("2099-12-01T12:00:00").getTime();
 
     const result = await t.mutation(
       internal.mutations.lectures.updateLecture.autoCloseLecture,
@@ -282,7 +282,7 @@ describe("autoCloseLecture", () => {
       return await ctx.db.insert("lectures", closedLectureData);
     });
 
-    const currentTime = new Date("2025-12-01T20:00:00").getTime();
+    const currentTime = new Date("2099-12-01T20:00:00").getTime();
 
     const result = await t.mutation(
       internal.mutations.lectures.updateLecture.autoCloseLecture,

@@ -21,10 +21,10 @@ const testUserData = {
 // テスト用の講義データファクトリー関数
 const createLectureTestData = (userId: any) => ({
   title: "プログラミング基礎",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "プログラミングの基礎を学ぶ講義です",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
   userId: userId,
 });
@@ -46,7 +46,7 @@ describe("createLecture", () => {
 
     expect(result).not.toBeNull();
     expect(result?.title).toBe("プログラミング基礎");
-    expect(result?.lectureDate).toBe("2025-12-01");
+    expect(result?.lectureDate).toBe("2099-12-01");
     expect(result?.surveyStatus).toBe("active");
     expect(result?.createdBy).toBe(userId);
     expect(result?.createdAt).toBeDefined();
@@ -114,18 +114,18 @@ describe("bulkCreateLectures", () => {
     const lecturesData = [
       {
         title: "プログラミング基礎",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "プログラミングの基礎を学ぶ講義です",
-        surveyCloseDate: "2025-12-02",
+        surveyCloseDate: "2099-12-02",
         surveyCloseTime: "18:00",
       },
       {
         title: "データベース設計",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "プログラミングの基礎を学ぶ講義です",
-        surveyCloseDate: "2025-12-02",
+        surveyCloseDate: "2099-12-02",
         surveyCloseTime: "18:00",
       },
     ];
@@ -169,18 +169,18 @@ describe("bulkCreateLectures", () => {
     const lecturesData = [
       {
         title: "プログラミング基礎",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "プログラミングの基礎を学ぶ講義です",
-        surveyCloseDate: "2025-12-02",
+        surveyCloseDate: "2099-12-02",
         surveyCloseTime: "18:00",
       },
       {
         title: "データベース設計",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "プログラミングの基礎を学ぶ講義です",
-        surveyCloseDate: "2025-12-02",
+        surveyCloseDate: "2099-12-02",
         surveyCloseTime: "18:00",
       },
     ];

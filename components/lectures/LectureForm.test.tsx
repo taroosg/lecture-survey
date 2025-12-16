@@ -41,10 +41,10 @@ describe("LectureForm", () => {
     it("編集モードで既存データが正しく表示されること", () => {
       const initialData: LectureFormData = {
         title: "既存の講義",
-        lectureDate: "2025-12-01",
+        lectureDate: "2099-12-01",
         lectureTime: "10:00",
         description: "既存の説明",
-        surveyCloseDate: "2025-12-02",
+        surveyCloseDate: "2099-12-02",
         surveyCloseTime: "12:00",
       };
 
@@ -60,8 +60,8 @@ describe("LectureForm", () => {
 
       // 初期値が設定されているか確認
       expect(screen.getByDisplayValue("既存の講義")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-01")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("2025-12-02")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-01")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2099-12-02")).toBeInTheDocument();
       expect(screen.getByDisplayValue("10:00")).toBeInTheDocument();
       expect(screen.getByDisplayValue("既存の説明")).toBeInTheDocument();
 
@@ -137,11 +137,11 @@ describe("LectureForm", () => {
 
       // 必須フィールドを入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
@@ -172,12 +172,12 @@ describe("LectureForm", () => {
 
       // フォームに入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(screen.getByLabelText("講義説明"), "テスト説明");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 
@@ -188,10 +188,10 @@ describe("LectureForm", () => {
       await waitFor(() => {
         expect(mockOnSubmit).toHaveBeenCalledWith({
           title: "テスト講義",
-          lectureDate: "2025-12-01",
+          lectureDate: "2099-12-01",
           lectureTime: "10:00",
           description: "テスト説明",
-          surveyCloseDate: "2025-12-01",
+          surveyCloseDate: "2099-12-01",
           surveyCloseTime: "12:00",
         });
       });
@@ -236,11 +236,11 @@ describe("LectureForm", () => {
 
       // 有効なフォームデータを入力
       await user.type(screen.getByLabelText("講義タイトル *"), "テスト講義");
-      await user.type(screen.getByLabelText("講義日 *"), "2025-12-01");
+      await user.type(screen.getByLabelText("講義日 *"), "2099-12-01");
       await user.type(screen.getByLabelText("講義時間 *"), "10:00");
       await user.type(
         screen.getByLabelText("アンケート締切日 *"),
-        "2025-12-01",
+        "2099-12-01",
       );
       await user.type(screen.getByLabelText("アンケート締切時間 *"), "12:00");
 

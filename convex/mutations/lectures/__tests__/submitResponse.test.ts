@@ -22,10 +22,10 @@ const testUserData = {
 // テスト用の講義データファクトリー関数
 const createLectureData = (userId: Id<"users">) => ({
   title: "プログラミング基礎",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "プログラミングの基礎を学ぶ講義です",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
   surveyStatus: "active" as const,
   createdBy: userId,

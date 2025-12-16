@@ -14,13 +14,13 @@ import {
   type LectureUpdateData,
 } from "../lectureValidator";
 
-// テスト用データ
+// テスト用データ（日付は将来の固定日付を使用）
 const validLectureData: LectureData = {
   title: "テスト講義",
-  lectureDate: "2025-12-01",
+  lectureDate: "2099-12-01",
   lectureTime: "10:00",
   description: "テスト講義の説明",
-  surveyCloseDate: "2025-12-02",
+  surveyCloseDate: "2099-12-02",
   surveyCloseTime: "18:00",
 };
 
