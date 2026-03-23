@@ -32,21 +32,21 @@ export const getBasicStatisticsInternal = internalQuery({
       return null;
     }
 
-    // 単純集計結果を取得
-    const simpleFacts = await ctx.db
-      .query("resultFacts")
-      .withIndex("by_set_type_dim1", (q) =>
-        q.eq("resultSetId", latestResultSet._id).eq("statType", "simple"),
-      )
-      .collect();
-
-    // サマリー統計結果を取得（平均値）
-    const summaryFacts = await ctx.db
-      .query("resultFacts")
-      .withIndex("by_set_type_dim1", (q) =>
-        q.eq("resultSetId", latestResultSet._id).eq("statType", "summary"),
-      )
-      .collect();
+    // 単純集計結果とサマリー統計結果を並列取得
+    const [simpleFacts, summaryFacts] = await Promise.all([
+      ctx.db
+        .query("resultFacts")
+        .withIndex("by_set_type_dim1", (q) =>
+          q.eq("resultSetId", latestResultSet._id).eq("statType", "simple"),
+        )
+        .collect(),
+      ctx.db
+        .query("resultFacts")
+        .withIndex("by_set_type_dim1", (q) =>
+          q.eq("resultSetId", latestResultSet._id).eq("statType", "summary"),
+        )
+        .collect(),
+    ]);
 
     // 質問コードごとに分類
     const distributions = {

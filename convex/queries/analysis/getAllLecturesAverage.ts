@@ -46,35 +46,47 @@ export const getAllLecturesAverageInternal = internalQuery({
       };
     }
 
-    // 2. 各講義の最新結果セットから平均スコアを取得
-    const averages: number[] = [];
+    // 2. 各講義の最新結果セットから平均スコアを並列取得
+    const resultSets = await Promise.all(
+      analyzedLectures.map((lecture) =>
+        ctx.db
+          .query("resultSets")
+          .withIndex("by_lecture_closedAt", (q) =>
+            q.eq("lectureId", lecture._id),
+          )
+          .order("desc")
+          .first(),
+      ),
+    );
 
-    for (const lecture of analyzedLectures) {
-      // 最新の結果セットを取得
-      const latestResultSet = await ctx.db
-        .query("resultSets")
-        .withIndex("by_lecture_closedAt", (q) => q.eq("lectureId", lecture._id))
-        .order("desc")
-        .first();
+    // 有効な結果セットのみでサマリーファクトを並列取得
+    const validResultSets = resultSets.filter(
+      (rs): rs is NonNullable<typeof rs> => rs !== null,
+    );
 
-      if (!latestResultSet) continue;
+    const summaryFacts = await Promise.all(
+      validResultSets.map((rs) =>
+        ctx.db
+          .query("resultFacts")
+          .withIndex("by_set_type_dim1", (q) =>
+            q
+              .eq("resultSetId", rs._id)
+              .eq("statType", "summary")
+              .eq("dim1QuestionCode", "_total"),
+          )
+          .filter((q) =>
+            q.eq(q.field("targetQuestionCode"), args.targetQuestion),
+          )
+          .first(),
+      ),
+    );
 
-      // 該当する質問のサマリー統計を取得（全体平均）
-      const summaryFact = await ctx.db
-        .query("resultFacts")
-        .withIndex("by_set_type_dim1", (q) =>
-          q
-            .eq("resultSetId", latestResultSet._id)
-            .eq("statType", "summary")
-            .eq("dim1QuestionCode", "_total"),
-        )
-        .filter((q) => q.eq(q.field("targetQuestionCode"), args.targetQuestion))
-        .first();
-
-      if (summaryFact && summaryFact.avgScore !== undefined) {
-        averages.push(summaryFact.avgScore);
-      }
-    }
+    const averages: number[] = summaryFacts
+      .filter(
+        (fact): fact is NonNullable<typeof fact> =>
+          fact !== null && fact.avgScore !== undefined,
+      )
+      .map((fact) => fact.avgScore!);
 
     // 3. 全講義の平均を計算
     if (averages.length === 0) {
