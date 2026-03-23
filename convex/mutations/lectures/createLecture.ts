@@ -65,25 +65,27 @@ export const bulkCreateLectures = internalMutation({
   },
   handler: async (ctx, args) => {
     const now = Date.now();
-    const createdLectures = [];
 
-    for (const lectureData of args.lectures) {
-      const fullLectureData = {
-        ...lectureData,
-        surveyStatus: "active" as const,
-        createdBy: args.userId,
-        createdAt: now,
-        updatedAt: now,
-      };
+    // 全講義を並列でinsert
+    const lectureIds = await Promise.all(
+      args.lectures.map((lectureData) =>
+        ctx.db.insert("lectures", {
+          ...lectureData,
+          surveyStatus: "active" as const,
+          createdBy: args.userId,
+          createdAt: now,
+          updatedAt: now,
+        }),
+      ),
+    );
 
-      const lectureId = await ctx.db.insert("lectures", fullLectureData);
+    // 作成結果を並列で取得
+    const createdLectures = await Promise.all(
+      lectureIds.map((id) => ctx.db.get(id)),
+    );
 
-      const createdLecture = await ctx.db.get(lectureId);
-      if (createdLecture) {
-        createdLectures.push(createdLecture);
-      }
-    }
-
-    return createdLectures;
+    return createdLectures.filter(
+      (lecture): lecture is NonNullable<typeof lecture> => lecture !== null,
+    );
   },
 });

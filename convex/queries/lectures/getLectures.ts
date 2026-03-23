@@ -183,20 +183,34 @@ export const getAllLectures = internalQuery({
     ),
   },
   handler: async (ctx, args): Promise<LectureData[]> => {
-    const lectures = await ctx.db.query("lectures").collect();
-
-    // フィルターの適用
-    let filteredLectures = lectures;
-
-    if (args.filter?.surveyStatus) {
-      filteredLectures = filteredLectures.filter(
-        (lecture) => lecture.surveyStatus === args.filter?.surveyStatus,
-      );
-    }
+    // 最も選択的なフィルターに対応するインデックスを使用
+    let lectures: LectureData[];
 
     if (args.filter?.createdBy) {
+      lectures = await ctx.db
+        .query("lectures")
+        .withIndex("by_creator", (q) =>
+          q.eq("createdBy", args.filter!.createdBy!),
+        )
+        .collect();
+    } else if (args.filter?.surveyStatus) {
+      lectures = await ctx.db
+        .query("lectures")
+        .withIndex("by_survey_status", (q) =>
+          q.eq("surveyStatus", args.filter!.surveyStatus!),
+        )
+        .collect();
+    } else {
+      lectures = await ctx.db.query("lectures").collect();
+    }
+
+    // インデックスで絞れなかった条件をメモリフィルタ
+    let filteredLectures = lectures;
+
+    // createdByインデックス使用時はsurveyStatusをメモリフィルタ
+    if (args.filter?.surveyStatus && args.filter?.createdBy) {
       filteredLectures = filteredLectures.filter(
-        (lecture) => lecture.createdBy === args.filter?.createdBy,
+        (lecture) => lecture.surveyStatus === args.filter?.surveyStatus,
       );
     }
 
@@ -257,12 +271,12 @@ export const getLecturesByDate = internalQuery({
     lectureDate: v.string(),
   },
   handler: async (ctx, args): Promise<LectureData[]> => {
-    const allLectures = await ctx.db.query("lectures").collect();
-
-    // 指定日の講義をフィルタリング
-    const lecturesOnDate = allLectures.filter(
-      (lecture) => lecture.lectureDate === args.lectureDate,
-    );
+    const lecturesOnDate = await ctx.db
+      .query("lectures")
+      .withIndex("by_lecture_date", (q) =>
+        q.eq("lectureDate", args.lectureDate),
+      )
+      .collect();
 
     // 時間順でソート
     lecturesOnDate.sort((a, b) => a.lectureTime.localeCompare(b.lectureTime));
@@ -283,14 +297,12 @@ export const getLecturesByDateRange = internalQuery({
     dateTo: v.string(),
   },
   handler: async (ctx, args): Promise<LectureData[]> => {
-    const allLectures = await ctx.db.query("lectures").collect();
-
-    // 日付範囲内の講義をフィルタリング
-    const lecturesInRange = allLectures.filter(
-      (lecture) =>
-        lecture.lectureDate >= args.dateFrom &&
-        lecture.lectureDate <= args.dateTo,
-    );
+    const lecturesInRange = await ctx.db
+      .query("lectures")
+      .withIndex("by_lecture_date", (q) =>
+        q.gte("lectureDate", args.dateFrom).lte("lectureDate", args.dateTo),
+      )
+      .collect();
 
     // 講義日時順でソート
     lecturesInRange.sort((a, b) => {
