@@ -71,29 +71,43 @@ export const bulkSubmitResponses = internalMutation({
     ),
   },
   handler: async (ctx, args) => {
-    const createdResponses = [];
     const now = Date.now();
 
-    for (const responseArgs of args.responses) {
-      // 講義の存在確認
-      const lecture = await ctx.db.get(responseArgs.lectureId);
-      if (!lecture || lecture.surveyStatus !== "active") {
-        continue;
-      }
+    // ユニークな講義IDの存在確認を並列実行
+    const uniqueLectureIds = [
+      ...new Set(args.responses.map((r) => r.lectureId)),
+    ];
+    const lectures = await Promise.all(
+      uniqueLectureIds.map((id) => ctx.db.get(id)),
+    );
+    const activeLectureIds = new Set(
+      uniqueLectureIds.filter((_, i) => {
+        const lecture = lectures[i];
+        return lecture !== null && lecture.surveyStatus === "active";
+      }),
+    );
 
-      const responseData = {
-        ...responseArgs,
-        createdAt: now,
-      };
+    // 有効な回答のみinsertを並列実行
+    const validResponses = args.responses.filter((r) =>
+      activeLectureIds.has(r.lectureId),
+    );
+    const responseIds = await Promise.all(
+      validResponses.map((responseArgs) =>
+        ctx.db.insert("requiredResponses", {
+          ...responseArgs,
+          createdAt: now,
+        }),
+      ),
+    );
 
-      const responseId = await ctx.db.insert("requiredResponses", responseData);
-      const createdResponse = await ctx.db.get(responseId);
-      if (createdResponse) {
-        createdResponses.push(createdResponse);
-      }
-    }
+    // 作成結果を並列取得
+    const createdResponses = await Promise.all(
+      responseIds.map((id) => ctx.db.get(id)),
+    );
 
-    return createdResponses;
+    return createdResponses.filter(
+      (r): r is NonNullable<typeof r> => r !== null,
+    );
   },
 });
 
@@ -124,12 +138,13 @@ export const submitResponseWithDuplicateCheck = internalMutation({
       return { success: false, reason: "survey_not_active" };
     }
 
-    // IPアドレスによる重複チェック
+    // IPアドレスによる重複チェック（複合インデックス使用）
     if (args.ipAddress) {
       const existingResponse = await ctx.db
         .query("requiredResponses")
-        .withIndex("by_ip", (q) => q.eq("ipAddress", args.ipAddress))
-        .filter((q) => q.eq(q.field("lectureId"), args.lectureId))
+        .withIndex("by_lecture_ip", (q) =>
+          q.eq("lectureId", args.lectureId).eq("ipAddress", args.ipAddress),
+        )
         .first();
 
       if (existingResponse) {
