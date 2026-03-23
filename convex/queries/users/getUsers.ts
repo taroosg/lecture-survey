@@ -111,21 +111,29 @@ export const getAllUsers = internalQuery({
     ),
   },
   handler: async (ctx, args): Promise<UserData[]> => {
-    const users = await ctx.db.query("users").collect();
+    // 最も選択的なフィルターに対応するインデックスを使用
+    let users: UserData[];
 
-    // フィルターの適用
-    return users.filter((user) => {
-      if (args.filter?.role && user.role !== args.filter.role) {
-        return false;
-      }
-      if (
-        args.filter?.isActive !== undefined &&
-        user.isActive !== args.filter.isActive
-      ) {
-        return false;
-      }
-      return true;
-    });
+    if (args.filter?.role) {
+      users = await ctx.db
+        .query("users")
+        .withIndex("role", (q) => q.eq("role", args.filter!.role!))
+        .collect();
+    } else if (args.filter?.isActive !== undefined) {
+      users = await ctx.db
+        .query("users")
+        .withIndex("active", (q) => q.eq("isActive", args.filter!.isActive!))
+        .collect();
+    } else {
+      users = await ctx.db.query("users").collect();
+    }
+
+    // インデックスで絞れなかった条件をメモリフィルタ
+    if (args.filter?.role && args.filter?.isActive !== undefined) {
+      return users.filter((user) => user.isActive === args.filter!.isActive);
+    }
+
+    return users;
   },
 });
 
@@ -136,21 +144,33 @@ export const getAllUsers = internalQuery({
 export const getUserStats = internalQuery({
   args: {},
   handler: async (ctx): Promise<UserStatistics> => {
-    const users = await ctx.db.query("users").collect();
-
-    // 統計計算
-    const total = users.length;
-    const active = users.filter((user) => user.isActive !== false).length;
-    const inactive = total - active;
-    const admins = users.filter((user) => user.role === "admin").length;
-    const usersCount = users.filter((user) => user.role !== "admin").length;
+    // 各カテゴリをインデックスで並列取得
+    const [activeUsers, inactiveUsers, adminUsers, regularUsers] =
+      await Promise.all([
+        ctx.db
+          .query("users")
+          .withIndex("active", (q) => q.eq("isActive", true))
+          .collect(),
+        ctx.db
+          .query("users")
+          .withIndex("active", (q) => q.eq("isActive", false))
+          .collect(),
+        ctx.db
+          .query("users")
+          .withIndex("role", (q) => q.eq("role", "admin"))
+          .collect(),
+        ctx.db
+          .query("users")
+          .withIndex("role", (q) => q.eq("role", "user"))
+          .collect(),
+      ]);
 
     return {
-      total,
-      active,
-      inactive,
-      admins,
-      users: usersCount,
+      total: activeUsers.length + inactiveUsers.length,
+      active: activeUsers.length,
+      inactive: inactiveUsers.length,
+      admins: adminUsers.length,
+      users: regularUsers.length,
     };
   },
 });
@@ -198,17 +218,27 @@ export const getUsersInternal = internalQuery({
     ),
     requestingUserId: v.id("users"),
   },
-  handler: async (ctx, { filter, requestingUserId }) => {
-    let query = ctx.db.query("users");
-
+  handler: async (ctx, { filter }) => {
+    // インデックスを優先使用してフルテーブルスキャンを回避
     if (filter?.role) {
-      query = query.filter((q) => q.eq(q.field("role"), filter.role));
+      const users = await ctx.db
+        .query("users")
+        .withIndex("role", (q) => q.eq("role", filter.role!))
+        .collect();
+
+      if (filter.isActive !== undefined) {
+        return users.filter((user) => user.isActive === filter.isActive);
+      }
+      return users;
     }
 
     if (filter?.isActive !== undefined) {
-      query = query.filter((q) => q.eq(q.field("isActive"), filter.isActive));
+      return await ctx.db
+        .query("users")
+        .withIndex("active", (q) => q.eq("isActive", filter.isActive!))
+        .collect();
     }
 
-    return await query.collect();
+    return await ctx.db.query("users").collect();
   },
 });
