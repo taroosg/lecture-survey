@@ -20,5 +20,6 @@ export const requiredResponsesTable = defineTable({
   createdAt: v.number(),
 })
   .index("by_lecture", ["lectureId"])
-  .index("by_ip", ["ipAddress"]) // 重複チェック用
+  .index("by_ip", ["ipAddress"])
+  .index("by_lecture_ip", ["lectureId", "ipAddress"]) // 講義×IPの重複チェック用
   .index("by_created_at", ["createdAt"]);
