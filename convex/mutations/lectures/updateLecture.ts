@@ -176,20 +176,13 @@ export const bulkUpdateLectures = internalMutation({
     ),
   },
   handler: async (ctx, args) => {
-    const updatedLectures = [];
     const now = Date.now();
 
-    for (const update of args.updates) {
-      const existingLecture = await ctx.db.get(update.lectureId);
-      if (!existingLecture) {
-        continue;
-      }
-
-      const updateData: any = {
-        updatedAt: now,
-      };
-
-      // 更新するフィールドのみ追加
+    // 更新データを構築するヘルパー
+    const buildUpdateData = (
+      update: (typeof args.updates)[number],
+    ): Record<string, unknown> => {
+      const updateData: Record<string, unknown> = { updatedAt: now };
       if (update.title !== undefined) updateData.title = update.title;
       if (update.lectureDate !== undefined)
         updateData.lectureDate = update.lectureDate;
@@ -207,14 +200,32 @@ export const bulkUpdateLectures = internalMutation({
           updateData.closedAt = now;
         }
       }
+      return updateData;
+    };
 
-      await ctx.db.patch(update.lectureId, updateData);
-      const updatedLecture = await ctx.db.get(update.lectureId);
-      if (updatedLecture) {
-        updatedLectures.push(updatedLecture);
-      }
-    }
+    // 存在確認を並列実行
+    const existingLectures = await Promise.all(
+      args.updates.map((update) => ctx.db.get(update.lectureId)),
+    );
 
-    return updatedLectures;
+    // 存在する講義のみ更新を並列実行
+    const validUpdates = args.updates.filter(
+      (_, i) => existingLectures[i] !== null,
+    );
+
+    await Promise.all(
+      validUpdates.map((update) =>
+        ctx.db.patch(update.lectureId, buildUpdateData(update)),
+      ),
+    );
+
+    // 更新後のデータを並列取得
+    const updatedLectures = await Promise.all(
+      validUpdates.map((update) => ctx.db.get(update.lectureId)),
+    );
+
+    return updatedLectures.filter(
+      (lecture): lecture is NonNullable<typeof lecture> => lecture !== null,
+    );
   },
 });
